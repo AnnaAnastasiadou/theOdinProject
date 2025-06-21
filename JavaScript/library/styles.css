@@ -1,0 +1,39 @@
+:root {
+    --text-color: #333;
+    --background-color: #f8f9fa;
+    --card-background: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.book-card {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    max-width: 200px;
+}
+
+.status.read { color: green; }
+
+.status.unread { color: red; }
+
+@media screen and (max-width: 600px) {
+    .html {
+        font-size: 14px;
+    }
+}
