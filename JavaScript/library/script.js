@@ -1,6 +1,8 @@
 const myLibrary = [];
 const libraryElement = document.getElementById("library");
 const addButton = document.getElementById("add-button");
+const bookDialog = document.getElementById("book-dialog");
+const cancelDialogButton = document.getElementById("cancel-dialog");
 
 function Book (title, author, pages, hasRead) {
     this.id = crypto.randomUUID();
@@ -21,21 +23,21 @@ function addBookToLibrary(title, author, pages, hasRead) {
 function displayBooks() {
     libraryElement.innerHTML = "";
     myLibrary.forEach(book => {
-        libraryElement.innerHTML += `
-            <div class="book-card">
-                <h3 class="title">${book.title}</h3>
-                <p class="author"> Author: ${book.author}</p>
-                <p class="pages">Pages: ${book.pages}</p>
-                <div class="status ${book.hasRead ? 'read' : 'unread'}">${book.hasRead ? "Read" : "Not Read"}</div>
-                <button class="toggle-read-button"><i class="fa-solid fa-toggle-${book.hasRead ? "on" : "off"}"></i></button>
-                <button class="remove-button"><i class="fa-solid fa-trash"></i></button>
+        const bookCard = document.createElement("div");
+        bookCard.classList.add("book-card");
+        bookCard.innerHTML = `
+            <h3 class="title">${book.title}</h3>
+            <p class="author"> Author: ${book.author}</p>
+            <p class="pages">Pages: ${book.pages}</p>
+            <div class="status ${book.hasRead ? 'read' : 'unread'}">
+                ${book.hasRead ? "Read" : "Not Read"}
+                <i class="fa-solid fa-toggle-${book.hasRead ? "on" : "off"} icon"></i>
             </div>
-        `
-    })
-}
-
-const addBookForm = () => {
+            <i class="fa-solid fa-trash icon"></i>
+        `;
+    libraryElement.appendChild(bookCard);
     
+    })
 }
 
 // Add test books to the library
@@ -48,6 +50,11 @@ addBookToLibrary("Project Hail Mary", "Andy Weir", 476, false);
 displayBooks();
 
 addButton.addEventListener("click", (event) => {
-    preventDefault();
-    addBookForm();
+    event.preventDefault();
+    bookDialog.showModal();
+});
+
+cancelDialogButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    bookDialog.close();
 });
