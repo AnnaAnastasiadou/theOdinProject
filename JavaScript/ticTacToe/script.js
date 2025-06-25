@@ -5,18 +5,24 @@ const gameBoard = ( () =>{
     const size = 3;
     let board = Array(size).fill().map( () => Array(size).fill(null));
 
-    const reset = () => Array(size).fill().map( () => Array(size).fill(null));
+    const reset = () => { 
+        board = Array(size).fill().map( () => Array(size).fill(null));
+    };
 
-    const getCell = (row, col) => board[row][col];
+    const getCell = (row, col) => {
+        if (row >= 0 && row < size && col >= 0 && col < size) {
+            return board[row][col];
+        }
+        return null;
+    };
 
-    const setCell = (row, cell, marker) => {
-        if (board[row][cell] === null) {
-            board[row][cell] = marker;
+    const setCell = (row, col, marker) => {
+        if (row >= 0 && row < size && col >= 0 && col < size && board[row][col] === null) {
+            board[row][col] = marker;
             return true;
         }
         return false;
-        
-    }
+    };
 
     const isFull = () => board.every(row => row.every(cell => cell !== null));
 
@@ -27,12 +33,8 @@ const gameBoard = ( () =>{
 
 //player factory function
 const createPlayer = (name, marker) => {
-    return {name, marker, wins};
+    return {name, marker};
 }
-
-//display controller module IIFE
-//This module will handle the UI updates and interactions.
-const displayController = (() => {})();
 
 //game controller module IIFE
 //This module will manage the game logic and interactions between the game board and players.
@@ -52,7 +54,7 @@ const gameController = ( () => {
         currentPlayerIndex = 1 - currentPlayerIndex;
     };
 
-    const stringifyBoard = () => {
+    const stringifyBoard = (board) => {
         return board
             .map(row => row.map(cell => cell ? cell : 0).join("|"))
             .join("\n");
@@ -63,7 +65,7 @@ const gameController = ( () => {
         const board = gameBoard.getBoard();
 
         // Check rows
-        for (let row = 0; row < size; row++) {
+        for (let row = 0; row < board.length; row++) {
             const first = board[row][0];
             if (first && board[row].every(cell => cell === first)) {
                 return first;
@@ -71,7 +73,7 @@ const gameController = ( () => {
         }
         
         // Check columns
-        for (let col = 0; col < size; col++) {
+        for (let col = 0; col < board.length; col++) {
             const first = board[0][col];
             if (first && board.every(row => row[col] === first)) {
                 return first;
@@ -86,7 +88,7 @@ const gameController = ( () => {
         
         const antiDiagSet = new Set(board.map((row, i) => row[board.length-1-i]));
         if (antiDiagSet.size === 1 && !antiDiagSet.has(null)) {
-            return board[0][size-1];
+            return board[0][board.length-1];
         }
         
         return null;
@@ -129,8 +131,36 @@ const gameController = ( () => {
     //     console.log("The board is full.");
     //     console.log("Game Over");
     // }
-    return {makeMove, getCurrentPlayer, resetGame}
+    return {makeMove, getCurrentPlayer, resetGame, stringifyBoard}
 })();
+
+gameBoard.reset();
+console.log("Game Reset");
+console.log(gameController.stringifyBoard(gameBoard.getBoard()));
+
+const moves = [
+    [0, 0], // X moves
+    [0, 1], // O moves
+    [0, 2], // X moves
+    [1, 0], // O moves
+    [1, 1], // X moves
+    [1, 2], // O moves
+    [2, 0], // X moves
+    [2, 1], // O moves
+    [2, 2]  // X moves
+]
+
+for (const [row, col] of moves) {
+    const result = gameController.makeMove(row, col);
+    console.log(`Player ${gameController.getCurrentPlayer().marker} moved to (${row}, ${col})`);
+    if (result.status === "win") {
+        break;
+    }
+}
+
+const board = gameBoard.getBoard();
+console.log("Current Board State:");
+console.log(gameController.stringifyBoard(board));
 
 
 //referene to gameboard and two players
@@ -139,3 +169,108 @@ const gameController = ( () => {
 //add html, css and DOM mainpulation
 //connst DOM to game logic (when a cell is click
 //call the gameController to update the board state)
+
+//display controller module IIFE
+//This module will handle the UI updates and interactions.
+const displayController = (() => {
+    const gameboardElement = document.getElementById("gameboard");
+    const welcomeMessage = document.getElementById("welcome-message");
+    const startButton = document.getElementById("start-game");
+    const gameInfo = document.getElementById("game-info");
+    const cells = document.querySelectorAll(".cell");
+
+    renderBoard = () => {
+        const board = gameBoard.getBoard();
+        gameboardElement.innerHTML = board.map((row, rowIndex) => `
+            <div class="row">
+                ${row.map((_, colIndex) => `
+                    <div class="cell" data-row="${rowIndex}" data-col="${colIndex}"}>
+                    </div>
+                `).join("")}
+            </div>
+        `).join("");
+    };
+    
+    startButton.addEventListener("click", () => {
+        gameController.resetGame();
+        renderBoard();
+        startButton.classList.add("hide");
+        welcomeMessage.classList.add("hide");
+        const gameStatus = document.createElement("h2");
+        gameStatus.classList.add("timeout-message");
+        gameStatus.textContent = "Are you ready to play?";
+        gameInfo.appendChild(gameStatus);
+
+        const showMessages = async () => {
+            //Initial fade in (2s)
+            await fadeMessage(gameStatus, "Are you ready?", 2000);
+
+            // Instruction fade in (2s)
+            await fadeMessage(gameStatus, "Press any cell to start playing", 2000);
+
+            // Final fade in (2s)
+            await fadeMessage(gameStatus, `Current Player: ${gameController.getCurrentPlayer().marker}`, 2000);
+
+        }
+
+        const fadeMessage = async (element, message, duration) => {
+            element.style.opacity = "0";
+            await new Promise(r => setTimeout(r, 500)); // wait for fade out
+            element.textContent = message;
+            element.style.opacity = "1";
+            await new Promise(r => setTimeout(r, duration)); // wait for fade in
+        }
+
+        showMessages();
+        
+
+
+        // setTimeout(() => {
+        //     // fade out the welcome message
+        //     gameStatus.style.opacity = "0";
+        
+        //     setTimeout(() => {
+        //         // Fade in the instruction
+        //         gameStatus.textContent = "Press any cell to start playing!";
+        //         gameStatus.style.opacity = "1";
+
+        //         setTimeout(() => {
+        //             // Fade out the instruction
+        //             gameStatus.style.opacity = "0";
+
+        //             setTimeout(() => {
+        //                 // Fade in the current player
+        //                 gameStatus.textContent = `Current Player: ${gameController.getCurrentPlayer().marker}`;
+        //                 gameStatus.style.opacity = "1";
+                        
+        //             }, 500);
+
+        //         }, 2000);
+        //     }, 500);
+        
+        // }, 2000);
+    });
+
+
+    // gameboardElement.innerHTML = `
+    //     <div class="row">
+    //         <div class="cell" data-row="0" data-col="0" marker="X">
+    //             <i class="fa-solid fa-xmark"></i>
+    //         </div>
+    //         <div class="cell" data-row="0" data-col="1" marker="O">
+    //             <i class="fa-solid fa-o"></i>
+    //         </div>
+    //         <div class="cell" data-row="0" data-col="2"></div>
+    //     </div>
+    //     <div class="row">
+    //         <div class="cell" data-row="1" data-col="0"></div>
+    //         <div class="cell" data-row="1" data-col="1"></div>
+    //         <div class="cell" data-row="1" data-col="2"></div>
+    //     </div>
+    //     <div class="row">
+    //         <div class="cell" data-row="2" data-col="0"></div>
+    //         <div class="cell" data-row="2" data-col="1"></div>
+    //         <div class="cell" data-row="2" data-col="2"></div>
+    //     </div>
+    // `;
+})();
