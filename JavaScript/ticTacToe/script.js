@@ -91,7 +91,6 @@ const gameController = ( () => {
                 
                 return {status: "continue"};
             }
-            return { status: "invalid"};
     };
 
     const resetGame = () => {
