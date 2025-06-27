@@ -1,5 +1,7 @@
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 html {
@@ -36,11 +38,18 @@ h1, h2, h3 {
     text-align: center;
 }
 
+#gameboard {
+    transform: translateY(1rem);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+#gameboard.visible {
+    transform: translateY(0);
+}
+
 .row {
     display: flex;
 }
-
-
 
 .cell {
     width: 20vw;
@@ -93,6 +102,8 @@ h1, h2, h3 {
     align-items: center;
     font-weight: bold;
     position: relative;
+    pointer-events: none;
+    animation: pulse 0.5s ease;
 }
 
 .cell i {
@@ -107,9 +118,6 @@ h1, h2, h3 {
     color: #ff6347;
 }
 
-.cell[marker="O"], .cell[marker="X"] {
-    pointer-events: none;
-}
 
 .disabled {
     cursor: not-allowed;
@@ -127,26 +135,100 @@ h1, h2, h3 {
     border-radius: 5px;
 }
 
-#start-game:hover {
+#start-restart-game:hover {
     background-color: rgb(15, 105, 15);
+    transform: scale(1.05);
     box-shadow: 0 0 15px rgba(15, 105, 15, 0.8);
+    transition: all 0.4s ease;
+}
+
+#start-restart-game:active {
+    transform: scale(0.95);
 }
 
 .hide {
     display: none;
 }
 
-#game-status {
-    height: 1.2rem;
+@keyframes slideUpFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(1rem);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
 }
 
-.timeout-message {
-    transition: opacity 0.5s ease-in-out;
+.slide-up {
+  animation: slideUpFadeIn 0.6s ease forwards;
+}
+
+/* @keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(0.4rem);
+    filter: blur(2px);
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.6s ease forwards;
+} */
+
+#results {
+  opacity: 1;
+}
+
+#game-status, #results {
+    opacity: 0;
+    transform: translateY(0.4rem);
+    /* transform: scale(1.05); */
+    transition: 0.6s ease;  
+    filter: blur(2px);
+}
+
+#game-status.show, #results.show {
+    opacity: 1;
+    /* transform: scale(1); */
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+#results {
+    color: #34495e; 
+    font-weight: bold;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.winner {
+    color: rgb(7, 105, 7);
+}
+
+@keyframes pulse {
+    0% {transform: scale(1);}
+    50% {transform: scale(1.05);}
+    100% {transform: scale(1);}
+}
+
+.game-over {
+    color: rgb(124, 5, 5);
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 @media screen and (max-width: 600px) {
     html { 
         font-size: 14px;
     }
-
 }

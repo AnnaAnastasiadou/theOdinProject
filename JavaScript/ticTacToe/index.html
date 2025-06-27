@@ -11,8 +11,15 @@
     <h1>Tic Tac Toe</h1>
     <h2 id="welcome-message">Welcome! Press the button below to start the game.</h2>
     <div id="gameboard" class="disabled"></div>
-    <h2 id="game-status" class="timeout-message hide"></h2>
+    <h2 id="game-status" class="hide"></h2>
+    <p id="results" class="hide"></p>
     <button id="start-restart-game">Start Game</button>
+    <dialog id="players-form">
+        <label for="name1">Player 1 Name:</label>
+        <input id="name1" type="text">
+        <label for="name2">Player 2 Name:</label>
+        <input id="name1" type="text">
+    </dialog>
     <script src="script.js"></script>
 </body>
 </html>

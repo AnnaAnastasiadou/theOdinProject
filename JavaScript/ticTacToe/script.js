@@ -31,7 +31,7 @@ const gameBoard = ( () =>{
 
 //player factory function
 const createPlayer = (name, marker) => {
-    return {name, marker};
+    return {name, marker, wins: 0};
 }
 
 //game controller module IIFE
@@ -42,8 +42,13 @@ const gameController = ( () => {
     ];
 
     let currentPlayerIndex = 0;
+    let currentRound = 1;
+
+    const getPlayers = () => [ {...players[0]}, {...players[1]}];
 
     const getCurrentPlayer = () => players[currentPlayerIndex];
+
+    const getCurrentRound = () => currentRound;
 
     const switchPlayer = () => {
         currentPlayerIndex = 1 - currentPlayerIndex;
@@ -84,21 +89,39 @@ const gameController = ( () => {
     };
 
     const makeMove = (row,col) => {
-            if (gameBoard.setCell(row, col, getCurrentPlayer().marker)) {
-                const winner = checkWinner();
-                if (winner) return {status: "win", winner};
-                if (gameBoard.isFull()) return {status: "tie"};
-                
-                return {status: "continue"};
+            const currentPlayer = getCurrentPlayer();
+            if (!gameBoard.setCell(row, col, currentPlayer.marker)) {
+                return { status: "invalid"};
             }
+
+            const winner = checkWinner();
+            if (winner) {
+                currentPlayer.wins++;
+                currentRound++;
+                return {status: "win", winner: currentPlayer};
+            } 
+            if (gameBoard.isFull()) {
+                currentRound++;
+                return {status: "tie"};
+            }
+            
+            return {status: "continue"};
+        
     };
 
-    const resetGame = () => {
+    const restartGame = () => {
         gameBoard.reset();
         currentPlayerIndex = 0;
+    }
+
+    const resetGame = () => {
+        restartGame();
+        players[0].wins = 0;
+        players[1].wins = 0;
+        currentRound = 1;
     };
 
-    return {makeMove, getCurrentPlayer, switchPlayer, resetGame}
+    return {getPlayers, getCurrentPlayer, getCurrentRound, switchPlayer, makeMove, restartGame, resetGame}
 })();
 
 const displayController = (() => {
@@ -106,96 +129,105 @@ const displayController = (() => {
     const welcomeMessage = document.getElementById("welcome-message");
     const gameStatus = document.getElementById("game-status");
     const startRestartButton = document.getElementById("start-restart-game");
-    
+    const resultsElement = document.getElementById("results");
 
-    renderBoard = () => {
+    const renderBoard = () => {
         const board = gameBoard.getBoard();
         gameboardElement.innerHTML = board.map((row, rowIndex) => `
             <div class="row">
                 ${row.map((_, colIndex) => `
-                    <div class="cell" data-row="${rowIndex}" data-col="${colIndex}"}>
-                    </div>
+                    <div class="cell" data-row="${rowIndex}" data-col="${colIndex}"></div>
                 `).join("")}
             </div>
         `).join("");
     };
+
+    const animateElement = (el, classes) => {
+        el.classList.remove(...classes);
+        setTimeout(() => {
+            el.classList.add(...classes);
+        }, 10);
+        // void el.offsetWidth;
+        // el.classList.add(...classes);
+    }
+
+    const handleCellClick = (event) => {
+        if (!event.target.classList.contains("cell") || gameboardElement.classList.contains("disabled")) {
+            return;
+        }
+        
+        const cell = event.target;
+        const row = parseInt(cell.getAttribute("data-row"));
+        const col = parseInt(cell.getAttribute("data-col"));
+        const round = gameController.getCurrentRound();
+        const result = gameController.makeMove(row, col);
+        cell.innerHTML = `<i class="fa-solid fa-${gameController.getCurrentPlayer().marker.toLowerCase()}"></i>`;
+        cell.setAttribute("marker", gameController.getCurrentPlayer().marker);
+        if (result.status === "win") {
+            gameStatus.textContent = `Player ${result.winner.name} wins round ${round}!`;
+            animateElement(gameStatus, ["slide-up"]);
+            gameboardElement.classList.add("disabled");
+            resultsElement.textContent = gameController.getPlayers()
+                .map(player => `${player.name}: ${player.wins}`).join(" ");
+            animateElement(resultsElement, ["show"]);
+            resultsElement.style.display = "block";
+            startRestartButton.textContent = "Next Round";
+            startRestartButton.classList.remove("hide");
+            if (result.winner.wins === 3) {
+                gameStatus.innerHTML = `<div class="game-over slide-up">Game Over! </div><div class="winner slide-up">${result.winner.name} wins!</div>`;
+                animateElement(gameStatus, ["show"]);
+                startRestartButton.textContent = "New Game"
+               animateElement(resultsElement, ["show"]);
+            }
+        }
+        else if (result.status === "continue") {
+            gameController.switchPlayer();
+            gameStatus.textContent = `Current Player: ${gameController.getCurrentPlayer().marker}`;
+        }
+        else if (result.status ==="tie"){
+            gameStatus.textContent = "It's a tie!";
+            // animateElement(gameStatus, ["show"]);
+            gameboardElement.classList.add("disabled");
+            startRestartButton.textContent = "Restart Game"; 
+            startRestartButton.classList.remove("hide"); 
+            resultsElement.textContent = gameController.getPlayers()
+                .map(player => `${player.name}: ${player.wins}`).join(" ");
+            // animateElement(resultsElement, ["show"]);
+            resultsElement.style.display = "block";
+        }
+        else if (result.status === "invalid") {
+            gameStatus.textContent = "Invalid move! Try another cell";
+            // animateElement(gameStatus, ["show"]);
+        }
+    };
+
+    const setupBoardListeners = () => {
+        gameboardElement.removeEventListener("click", handleCellClick);
+        gameboardElement.addEventListener("click", handleCellClick);
+    };
     
     startRestartButton.addEventListener("click", () => {
-        gameController.resetGame();
+        // animateElement(gameStatus, ["fade-out"]);
+        // animateElement(resultsElement, ["fade-out"]);
+
+        const isNewGame = gameController.getPlayers().some(player => player.wins === 3);
+        isNewGame ? gameController.resetGame() : gameController.restartGame();
+        
         renderBoard();
+
+        gameboardElement.classList.add("visible");
+        setupBoardListeners();
+        gameboardElement.classList.remove("disabled");
+        gameStatus.classList.remove("game-over");
         startRestartButton.classList.add("hide");
         welcomeMessage.classList.add("hide");
         gameStatus.classList.remove("hide");
-
-        const restartGame = () => {
-            startRestartButton.textContent= "Restart Game";
-            startRestartButton.classList.remove("hide");
-        }
-
-        const handleCellClick = (event) => {
-            if (!event.target.classList.contains("cell") || event.target.classList.contains("disabled")) {
-                console.log("not a cell or disabled")
-                gameStatus.textContent = `Player ${gameController.getCurrentPlayer().marker} choose an available cell`
-                return;
-            }
-            else {
-                const cell = event.target;
-                const row = parseInt(cell.getAttribute("data-row"));
-                const col = parseInt(cell.getAttribute("data-col"));
-                const result = gameController.makeMove(row, col);
-
-                if (result.status === "invalid") {
-                    gameStatus.textContent = "Invalid move. Try again.";
-                    return;
-                }
-                
-                cell.innerHTML = `<i class="fa-solid fa-${gameController.getCurrentPlayer().marker.toLowerCase()}"></i>`;
-                cell.setAttribute("marker", gameController.getCurrentPlayer().marker);
-
-                if (result.status === "win") {
-                    gameStatus.textContent = `Player ${result.winner} wins!`;
-                    gameboardElement.classList.add("disabled");
-                    restartGame();
-                }
-                else if (result.status === "continue") {
-                    gameController.switchPlayer();
-                    gameStatus.textContent = `Current Player: ${gameController.getCurrentPlayer().marker}`;
-                }
-                else if (result.status ==="tie"){
-                    gameStatus.textContent = "It's a tie!"
-                    restartGame();
-                }
-
-            }
-        };
-
-        const fadeMessage = async (element, message, fadeInDuration = 2000, fadeOutDuration = 500) => {
-            if (element.style.opacity !== "0") {
-                element.style.opacity = "0";
-                await new Promise(r => setTimeout(r, fadeOutDuration)); // Wait for fade out to complete
-            }
-            element.textContent = message;
-            element.style.opacity = "1";
-            await new Promise(r => setTimeout(r, fadeInDuration)); // Wait for fade in to complete
-        }
-
-        const showMessages = async () => {
-            try {
-                await fadeMessage(gameStatus, "Are you ready?");
-                await fadeMessage(gameStatus, "Press any cell to start playing!");
-                await fadeMessage(gameStatus, `Current Player: ${gameController.getCurrentPlayer().marker}`, 0);
-                
-                // enable interactions after messages
-                gameboardElement.classList.remove("disabled");
-
-                gameboardElement.addEventListener("click", handleCellClick); 
-            } catch (error) {
-                console.error("Error in showing messages:", error);
-            }
-
-        }
-
-        showMessages();
+        resultsElement.classList.add("hide");
+        gameStatus.textContent = `Current Player: ${gameController.getCurrentPlayer().marker}`;
+        animateElement(gameStatus, ["show"]);
+        resultsElement.textContent = ""; 
+        animateElement(resultsElement, ["show"]);
+        resultsElement.style.display = "none";
     });
     
 })();
