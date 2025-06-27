@@ -15,10 +15,20 @@
     <p id="results" class="hide"></p>
     <button id="start-restart-game">Start Game</button>
     <dialog id="players-form">
-        <label for="name1">Player 1 Name:</label>
-        <input id="name1" type="text">
-        <label for="name2">Player 2 Name:</label>
-        <input id="name1" type="text">
+        <div class="dialog-content">
+            <h3>Enter Player Names (optional)</h3>
+            <p class="form-description">
+                You can enter custom names, or leave the fields empty to use the default names.
+            </p>
+            <label for="name1">Player 1 Name:</label>
+            <input id="name1" type="text">
+            <label for="name2">Player 2 Name:</label>
+            <input id="name2" type="text">
+            <div class="button-container">
+                <button id="submit-names">Submit Names</button>
+                <button id="close-dialog">Close</button>
+            </div>
+        </div>
     </dialog>
     <script src="script.js"></script>
 </body>
