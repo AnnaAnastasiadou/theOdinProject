@@ -40,7 +40,9 @@ const gameController = ( () => {
         createPlayer("Player 1", "X"),
         createPlayer("Player 2", "O")
     ];
-    let currentPlayerIndex = 0;
+    let firstPlayerIndex = 1;
+
+    let currentPlayerIndex = firstPlayerIndex;
     let currentRound = 1;
 
     const setPlayerNames = (name1, name2) => {
@@ -97,11 +99,14 @@ const gameController = ( () => {
 
     const restartGame = () => {
         gameBoard.reset();
-        currentPlayerIndex = 0;
+        firstPlayerIndex = 1 - firstPlayerIndex;
+        currentPlayerIndex = firstPlayerIndex;
     }
 
     const resetGame = () => {
-        restartGame();
+        gameBoard.reset();
+        firstPlayerIndex = 0;
+        currentPlayerIndex = firstPlayerIndex;
         players.forEach(player => player.wins = 0);
         currentRound = 1;
     };
@@ -188,6 +193,7 @@ const displayController = (() => {
     };
 
     const submitNames = () => {
+        console.log("In");
         const name1 = document.getElementById("name1").value.trim();
         const name2 = document.getElementById("name2").value.trim();
         if (confirm(`Are these names correct?\n\nPlayer 1: ${name1}\nPlayer 2: ${name2}`)) {
@@ -201,6 +207,7 @@ const displayController = (() => {
 
     playersForm.addEventListener("keydown", e => {
         if (e.key === "Enter") {
+            e.preventDefault();
             submitNames();
         }
     })
