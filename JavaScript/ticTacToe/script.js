@@ -64,16 +64,16 @@ const gameController = ( () => {
         // Check rows and columns
         for (let i = 0; i < board.length; i++) {
             if (board[i][0] && board[i].every(cell => cell === board[i][0])) {
-                return board[i][0];
+                return {winner: board[i][0], line: {type: "row", index: i}};
             }
             if (board[0][i] && board.every(row => row[i] === board[0][i])) {
-                return board[0][i];
+                return {winner: board[0][i], line: {type: "column", index: i}};
             }
         }
     
         // Check diagonals
-        if (board.every((row, i) => row[i] === board[0][0] && row[i] != null)) return board[0][0];
-        if (board.every((row, i) => row[board.length - 1 - i] === board[0][board.length - 1] && row[board.length - 1 - i] != null)) return board[0][board.length - 1];
+        if (board.every((row, i) => row[i] === board[0][0] && row[i] != null)) return {winner: board[0][0], line: {type: "main-diagonal"}};
+        if (board.every((row, i) => row[board.length - 1 - i] === board[0][board.length - 1] && row[board.length - 1 - i] != null)) return {winner: board[0][board.length - 1], line: {type: "anti-diagonal"}};
         
         return null;
     };
@@ -82,11 +82,11 @@ const gameController = ( () => {
             const currentPlayer = getCurrentPlayer();
             if (!gameBoard.setCell(row, col, currentPlayer.marker)) return { status: "invalid"};
     
-            const winner = checkWinner();
-            if (winner) {
+            const result = checkWinner();
+            if (result) {
                 currentPlayer.wins++;
                 currentRound++;
-                return {status: "win", winner: currentPlayer};
+                return {status: "win", winner: currentPlayer, line: result.line};
             } 
             if (gameBoard.isFull()) {
                 currentRound++;
@@ -126,19 +126,59 @@ const displayController = (() => {
 
     const renderBoard = () => {
         const board = gameBoard.getBoard();
-        gameboardElement.innerHTML = board.map((row, rowIndex) => `
-            <div class="row">
-                ${row.map((_, colIndex) => `
-                    <div class="cell" data-row="${rowIndex}" data-col="${colIndex}"></div>
-                `).join("")}
-            </div>
-        `).join("");
+        gameboardElement.innerHTML = board.map((row, rowIndex) =>
+            row.map((_, colIndex) =>
+                `<div class="cell" data-row="${rowIndex}" data-col="${colIndex}"></div>`
+            ).join("")
+        ).join("");
     };
 
     const animateElement = (el, classes) => {
         el.classList.remove(...classes);
         requestAnimationFrame(() => el.classList.add(...classes));
     }
+
+    const showWinLine = ({type, index = 0}) => {
+        const line = document.getElementById("win-line");
+        const cellSize = gameboardElement.querySelector(".cell")?.offsetWidth;
+        const boardSize = 3;
+        const gameboardPadding = parseFloat(getComputedStyle(gameboardElement).paddingLeft);
+        const gameboardGap = parseFloat(getComputedStyle(gameboardElement).gap);
+
+        line.style.height = '4px';
+        line.style.position = "absolute";
+        line.style.transition = "all 0.3s ease";
+
+        switch (type) {
+            case "row":
+                line.style.top = `${gameboardPadding + (index * cellSize) + (index * gameboardGap) + (cellSize / 2) - (line.offsetHeight / 2)}px`;
+                line.style.left = `${gameboardPadding}px`;
+                line.style.width = `${cellSize * boardSize + (gameboardGap * (boardSize - 1))}px`; 
+                line.style.transform = "rotate(0deg)";
+                break;
+            case "column":
+                line.style.width = `${cellSize * boardSize + (gameboardGap * (boardSize - 1))}px`; 
+                line.style.top = `${gameboardPadding + (cellSize * boardSize / 2) - (line.offsetHeight / 2) + (gameboardGap * (boardSize - 1)) / 2}px`;
+                line.style.left = `${gameboardPadding + (index * cellSize) + (index * gameboardGap) + (cellSize / 2) - (line.offsetHeight / 2)}px`;
+                line.style.transform = "rotate(90deg)";
+                break;
+            case "main-diagonal":
+                line.style.top = `${gameboardPadding}px`;
+                line.style.left = `${gameboardPadding}px`;
+                line.style.width = `${Math.sqrt(2) * (cellSize * boardSize + (gameboardGap * (boardSize - 1)))}px`; 
+                line.style.transform = "rotate(45deg)";
+                line.style.transformOrigin = "top left";
+                break;
+            case "anti-diagonal":
+                line.style.top = `${gameboardPadding}px`;
+                line.style.left = `${gameboardPadding + (cellSize * boardSize + (gameboardGap * (boardSize - 1)))}px`; 
+                line.style.width = `${Math.sqrt(2) * (cellSize * boardSize + (gameboardGap * (boardSize - 1)))}px`; 
+                line.style.transform = "rotate(-45deg)";
+                line.style.transformOrigin = "top right";
+                break;
+        }
+        line.style.display = "block";
+    };
 
     const handleCellClick = (event) => {
         if (!event.target.classList.contains("cell") || gameboardElement.classList.contains("disabled")) return;
@@ -158,6 +198,7 @@ const displayController = (() => {
                 gameStatus.innerHTML = `${result.winner.name} wins round ${gameController.getCurrentRound() - 1}!`;
                 animateElement(gameStatus, ["slide-up"]);
                 gameboardElement.classList.add("disabled");
+                showWinLine(result.line);
                 resultsElement.textContent = gameController.getPlayers()
                     .map(player => `${player.name}: ${player.wins}`).join(" ");
                 animateElement(resultsElement, ["slide-up"]);
@@ -221,6 +262,14 @@ const displayController = (() => {
         renderBoard();
         setupBoardListeners();
 
+        // requestAnimationFrame(() => {
+        //     gameboardElement.classList.add("visible");
+        // });
+
+        // setTimeout(() => {
+        //     gameBoard.classList.add("visible");
+        // }, 600);
+
         gameboardElement.classList.add("visible");
         gameboardElement.classList.remove("disabled");
         gameStatus.classList.remove("game-over", "hide");
@@ -231,6 +280,8 @@ const displayController = (() => {
         startRestartButton.classList.add("hide");
         welcomeMessage.classList.add("hide");
         animateElement(gameStatus, ["slide-up"]);
+        document.getElementById("win-line").style.display = "none";
+        document.getElementById("win-line").style.width = "0"; 
     };
     
     startRestartButton.addEventListener("click", () => {
