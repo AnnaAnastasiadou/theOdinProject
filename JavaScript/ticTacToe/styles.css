@@ -1,3 +1,26 @@
+:root {
+    --background-image: url('https://www.transparenttextures.com/patterns/dark-denim-3.png');
+    --background-color: #fff5de;
+    --heading-color-one: #333;
+    --heading-color-two: #555;
+    --form-background-color: #fefefe;
+    --form-secondary-color: #1e90ff;
+    --text-color: #555;
+    --label-color: #444;
+    --cell-background-color: rgb(110, 95, 95);
+    --cell-hover-background-color: rgb(147, 128, 128);
+    --cell-border-color: #aa8773;
+    --x-marker-color: #1e90ff;
+    --o-marker-color: #ff6347;
+    --start-button-background-color: rgb(11, 81, 11);
+    --start-hover-color: rgb(15, 105, 15);
+    --start-hover-shadow-color: rgba(15, 105, 15, 0.8);
+    --results-color: #34495e;
+    --winner-color: rgb(7, 105, 7);
+    --game-over-color: rgb(124, 5, 5);
+    --dark-shadow-color: rgba(0, 0, 0, 0.6);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -10,8 +33,9 @@ html {
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #fff5de;
-    background-image: url('https://www.transparenttextures.com/patterns/dark-denim-3.png');
+    background-color: var(--background-color);
+    background-image: var(--background-image);
+    color: var(--text-color);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -28,12 +52,12 @@ h1, h2, h3 {
 
 h1 {
     font-size: 2.5rem;
-    color: #333;
+    color: var(--heading-color-one);
 }
 
 h2 {
     font-size: 1.5rem;
-    color: #555;
+    color: var(--heading-color-two);
 }
 
 #players-form {
@@ -46,10 +70,9 @@ h2 {
     transform: translate(-50%, -50%);
     border: none;
     border-radius: 1rem;
-    background-color: #fefefe;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    background-color: var(--form-background-color);
+    box-shadow: 0 10px 25px var(--dark-shadow-color);
     padding: 2rem;
-    color: #333;
     z-index: 1000;
     animation: fadeIn 0.4s ease;
 }
@@ -76,7 +99,6 @@ h2 {
     gap: 1rem;
     padding: 1rem;
     text-align: center;
-    color: #666;
 }
 
 .dialog-content input {
@@ -89,18 +111,18 @@ h2 {
 }
 
 .dialog-content input:focus {
-    border-color: #1e90ff;
-    box-shadow: 0 0 5px rgba(30, 144, 255, 0.3);
+    border-color: var(--form-secondary-color);
+    box-shadow: 0 0 5px var(--form-secondary-color);
 }
 
 .dialog-content label {
     font-size: 1.1rem;
     font-weight: bold;
-    color: #444;
+    color: var(--label-color);
 }
 
 .dialog-content #submit-names, .dialog-content #close-dialog {
-    border: 2px solid #1e90ff;
+    border: 2px solid var(--form-secondary-color);
     padding: 1rem;
     font-size: 1.1rem;
     font-weight: bold;
@@ -111,17 +133,16 @@ h2 {
 }
 
 .dialog-content #submit-names {
-    background-color: #1e90ff;
+    background-color: var(--form-secondary-color);
     color: #fff;
 }
 
 .dialog-content #close-dialog {
-    color: #1e90ff;
+    color: var(--form-secondary-color);
 }
 
 
 .dialog-content button:hover {
-    background-color: #187bcd;
     transform: scale(1.02);
 }
 
@@ -147,27 +168,27 @@ h2 {
     height: 20vw;
     max-width: 100px;
     max-height: 100px;
-    background-color: rgb(110, 95, 95);
-    border: 10px solid #aa8773;
+    background-color: var(--cell-background-color);
+    border: 10px solid var(--cell-border-color);
     border-right: none;
     border-bottom: none;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6) inset;
+    box-shadow: 0 0 10px var(--dark-shadow-color) inset;
     padding: 1rem;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
 }
 
 .cell:hover {
-    background-color: rgb(147, 128, 128);
+    background-color: var(--cell-hover-background-color);
 }
 
 .row .cell:last-child {
-    border-right: 10px solid #aa8773;
+    border-right: 10px solid var(--cell-border-color);
 }
 
 .row:last-child .cell {
-    border-bottom: 10px solid #aa8773;
+    border-bottom: 10px solid var(--cell-border-color);
 }
 
 .row:first-child .cell:first-child{
@@ -207,11 +228,11 @@ h2 {
 }
 
 .cell[marker="X"] {
-    color: #1e90ff;
+    color: var(--x-marker-color);
 }
 
 .cell[marker="O"] {
-    color: #ff6347;
+    color: var(--o-marker-color);
 }
 
 
@@ -221,21 +242,21 @@ h2 {
 }
 
 #start-restart-game {
-    background-color: rgb(11, 81, 11);
+    background-color: var(--start-button-background-color);
     color: #fff;
     border: none;
     padding: 0.5rem 1rem;
     font-size: 1.5rem;
     cursor: pointer;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 10px var(--dark-shadow-color);
     transition: all 0.4s ease;
 }
 
 #start-restart-game:hover {
-    background-color: rgb(15, 105, 15);
+    background-color: var(--start-hover-color);
     transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(15, 105, 15, 0.8)
+    box-shadow: 0 0 15px var(--start-hover-shadow-color);
 }
 
 #start-restart-game:active {
@@ -264,18 +285,18 @@ h2 {
 }
 
 #results {
-    color: #34495e; 
+    color: var(--results-color); 
     font-weight: bold;
     font-size: 1.3rem;
     text-align: center;
 }
 
 .winner {
-    color: rgb(7, 105, 7);
+    color: var(--winner-color);
 }
 
 .game-over {
-    color: rgb(124, 5, 5);
+    color: var(--game-over-color);
     display: block;
     font-size: 2rem;
     margin-bottom: 1.5rem;

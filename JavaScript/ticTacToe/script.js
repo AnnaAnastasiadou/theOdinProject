@@ -150,7 +150,7 @@ const displayController = (() => {
 
         switch (result.status) {
             case "win":
-                gameStatus.innerHTML = `Player ${result.winner.name} wins round ${gameController.getCurrentRound() - 1}!`;
+                gameStatus.innerHTML = `${result.winner.name} wins round ${gameController.getCurrentRound() - 1}!`;
                 animateElement(gameStatus, ["slide-up"]);
                 gameboardElement.classList.add("disabled");
                 resultsElement.textContent = gameController.getPlayers()
