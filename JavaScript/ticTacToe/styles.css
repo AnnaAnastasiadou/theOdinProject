@@ -286,7 +286,6 @@ h2 {
     width: 100%;
     display: none;
     position: absolute;
-    transform-origin: center center;
 }
 
 .winner {

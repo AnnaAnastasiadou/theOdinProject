@@ -159,7 +159,7 @@ const displayController = (() => {
             case "column":
                 line.style.width = `${cellSize * boardSize + (gameboardGap * (boardSize - 1))}px`; 
                 line.style.top = `${gameboardPadding + (cellSize * boardSize / 2) - (line.offsetHeight / 2) + (gameboardGap * (boardSize - 1)) / 2}px`;
-                line.style.left = `${gameboardPadding + (index * cellSize) + (index * gameboardGap) + (cellSize / 2) - (line.offsetHeight / 2)}px`;
+                line.style.left = `${gameboardPadding + ((index - 1) * cellSize) + ((index - 1) * gameboardGap) + (cellSize / 2) - 0.5 * cellSize}px`;
                 line.style.transform = "rotate(90deg)";
                 break;
             case "main-diagonal":
@@ -171,7 +171,7 @@ const displayController = (() => {
                 break;
             case "anti-diagonal":
                 line.style.top = `${gameboardPadding}px`;
-                line.style.left = `${gameboardPadding + (cellSize * boardSize + (gameboardGap * (boardSize - 1)))}px`; 
+                line.style.left = `${gameboardPadding - 1.5 * cellSize}px`;
                 line.style.width = `${Math.sqrt(2) * (cellSize * boardSize + (gameboardGap * (boardSize - 1)))}px`; 
                 line.style.transform = "rotate(-45deg)";
                 line.style.transformOrigin = "top right";
