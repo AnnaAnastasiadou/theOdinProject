@@ -140,46 +140,59 @@ const displayController = (() => {
 
     const showWinLine = ({type, index = 0}) => {
         const line = document.getElementById("win-line");
-        const cellSize = gameboardElement.querySelector(".cell")?.offsetWidth;
-        const boardSize = 3;
-        const gameboardPadding = parseFloat(getComputedStyle(gameboardElement).paddingLeft);
-        const gameboardGap = parseFloat(getComputedStyle(gameboardElement).gap);
-
+        const gameboardRect = gameboardElement.getBoundingClientRect();
+        
+        // Get gap value and convert to pixels (e.g., "8px" -> 8)
+        const gapValue = window.getComputedStyle(gameboardElement).getPropertyValue("gap");
+        const gap = parseFloat(gapValue) || 0; // Fallback to 0 if gap isn't defined
+        
+        // Calculate effective cell size accounting for gaps
+        const totalGapSpace = gap * 2; // Gap on both sides of each cell
+        const cellSize = (gameboardRect.width - totalGapSpace) / 3;
+        
+        // Reset line styles
+        line.style.display = 'block';
+        line.style.backgroundColor = 'yellow';
         line.style.height = '4px';
-        line.style.position = "absolute";
-        line.style.transition = "all 0.3s ease";
-
+        line.style.position = 'absolute';
+        line.style.margin = '0';
+        line.style.padding = '0';
+        line.style.transformOrigin = 'center center';
+        
         switch (type) {
             case "row":
-                line.style.top = `${gameboardPadding + (index * cellSize) + (index * gameboardGap) + (cellSize / 2) - (line.offsetHeight / 2)}px`;
-                line.style.left = `${gameboardPadding}px`;
-                line.style.width = `${cellSize * boardSize + (gameboardGap * (boardSize - 1))}px`; 
-                line.style.transform = "rotate(0deg)";
+                line.style.width = `calc(100% - ${gap * 2}px)`;
+                line.style.top = `${gap + (index * (cellSize + gap)) + (cellSize / 2) - 2}px`;
+                line.style.left = `${gap}px`;
+                line.style.transform = 'none';
                 break;
+                
             case "column":
-                line.style.width = `${cellSize * boardSize + (gameboardGap * (boardSize - 1))}px`; 
-                line.style.top = `${gameboardPadding + (cellSize * boardSize / 2) - (line.offsetHeight / 2) + (gameboardGap * (boardSize - 1)) / 2}px`;
-                line.style.left = `${gameboardPadding + ((index - 1) * cellSize) + ((index - 1) * gameboardGap) + (cellSize / 2) - 0.5 * cellSize}px`;
-                line.style.transform = "rotate(90deg)";
+                line.style.height = `calc(100% - ${gap * 2}px)`;
+                line.style.width = '4px';
+                line.style.top = `${gap}px`;
+                line.style.left = `${gap + (index * (cellSize + gap)) + (cellSize / 2) - 2}px`;
+                line.style.transform = 'none';
                 break;
+                
             case "main-diagonal":
-                line.style.top = `${gameboardPadding}px`;
-                line.style.left = `${gameboardPadding}px`;
-                line.style.width = `${Math.sqrt(2) * (cellSize * boardSize + (gameboardGap * (boardSize - 1)))}px`; 
-                line.style.transform = "rotate(45deg)";
-                line.style.transformOrigin = "top left";
+                line.style.width = `${Math.sqrt(2) * 100}%`;
+                line.style.top = `${gap}px`;
+                line.style.left = `${gap}px`;
+                line.style.transform = 'rotate(45deg)';
+                line.style.transformOrigin = '0 0';
                 break;
+                
             case "anti-diagonal":
-                line.style.top = `${gameboardPadding}px`;
-                line.style.left = `${gameboardPadding - 1.5 * cellSize}px`;
-                line.style.width = `${Math.sqrt(2) * (cellSize * boardSize + (gameboardGap * (boardSize - 1)))}px`; 
-                line.style.transform = "rotate(-45deg)";
-                line.style.transformOrigin = "top right";
+                line.style.width = `${Math.sqrt(2) * 100}%`;
+                line.style.top = `${gap}px`;
+                line.style.right = `${gap}px`;
+                line.style.left = 'auto';
+                line.style.transform = 'rotate(-45deg)';
+                line.style.transformOrigin = '100% 0';
                 break;
         }
-        line.style.display = "block";
     };
-
     const handleCellClick = (event) => {
         if (!event.target.classList.contains("cell") || gameboardElement.classList.contains("disabled")) return;
         
@@ -234,7 +247,6 @@ const displayController = (() => {
     };
 
     const submitNames = () => {
-        console.log("In");
         const name1 = document.getElementById("name1").value.trim();
         const name2 = document.getElementById("name2").value.trim();
         if (confirm(`Are these names correct?\n\nPlayer 1: ${name1}\nPlayer 2: ${name2}`)) {
