@@ -97,7 +97,7 @@ h2 {
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    padding: 1rem;
+    padding: 2rem;
     text-align: center;
 }
 
@@ -220,6 +220,7 @@ h2 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    font-size: 1em;
 }
 
 .cell[marker="X"] {
@@ -287,11 +288,14 @@ h2 {
 }
 
 #win-line {
+    position: absolute;
     background-color: yellow;
+    display: none;
+    z-index: 10;
     height: 4px;
     width: 100%;
-    display: none;
-    position: absolute;
+    transform-origin: center;
+    transition: all 0.3s ease;
 }
 
 .winner {

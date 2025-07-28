@@ -147,8 +147,8 @@ const displayController = (() => {
         const gap = parseFloat(gapValue) || 0; // Fallback to 0 if gap isn't defined
         
         // Calculate effective cell size accounting for gaps
-        const totalGapSpace = gap * 2; // Gap on both sides of each cell
-        const cellSize = (gameboardRect.width - totalGapSpace) / 3;
+        const cellSize = (gameboardRect.width - 4 * gap) / 3;
+        const diagonalLength = Math.sqrt(2) * (3 * cellSize + 2 * gap); // 3 cells + 2 gaps
         
         // Reset line styles
         line.style.display = 'block';
@@ -176,7 +176,7 @@ const displayController = (() => {
                 break;
                 
             case "main-diagonal":
-                line.style.width = `${Math.sqrt(2) * 100}%`;
+                line.style.width = `${diagonalLength}px`;
                 line.style.top = `${gap}px`;
                 line.style.left = `${gap}px`;
                 line.style.transform = 'rotate(45deg)';
@@ -184,7 +184,7 @@ const displayController = (() => {
                 break;
                 
             case "anti-diagonal":
-                line.style.width = `${Math.sqrt(2) * 100}%`;
+                line.style.width = `${diagonalLength}px`;
                 line.style.top = `${gap}px`;
                 line.style.right = `${gap}px`;
                 line.style.left = 'auto';
@@ -193,6 +193,7 @@ const displayController = (() => {
                 break;
         }
     };
+    
     const handleCellClick = (event) => {
         if (!event.target.classList.contains("cell") || gameboardElement.classList.contains("disabled")) return;
         
