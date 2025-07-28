@@ -190,6 +190,9 @@ h2 {
     justify-content: center;
     align-items: center;
     border: none;
+    font-size: min(10vw, 10vh, 80px);
+    aspect-ratio: 1; /* To ensure square cells*/
+    position: relative;
 }
 
 .cell:hover {
@@ -213,7 +216,10 @@ h2 {
 }
 
 .cell i {
-    font-size: min(15vw, 70px);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .cell[marker="X"] {
