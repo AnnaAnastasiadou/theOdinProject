@@ -142,12 +142,15 @@ const displayController = (() => {
         const line = document.getElementById("win-line");
         const gameboardRect = gameboardElement.getBoundingClientRect();
         
-        // Get gap value and convert to pixels (e.g., "8px" -> 8)
+        // Get gap and padding value and convert to pixels (e.g., "8px" -> 8)
         const gapValue = window.getComputedStyle(gameboardElement).getPropertyValue("gap");
-        const gap = parseFloat(gapValue) || 0; // Fallback to 0 if gap isn't defined
+        const paddingValue = window.getComputedStyle(gameboardElement).getPropertyValue("padding");
+        const gap = parseFloat(gapValue) || 0;
+        const padding = parseFloat(paddingValue) || 0;
+        console.log(padding);
         
         // Calculate effective cell size accounting for gaps
-        const cellSize = (gameboardRect.width - 4 * gap) / 3;
+        const cellSize = (gameboardRect.width - 2 * gap - 2 * padding) / 3;
         const diagonalLength = Math.sqrt(2) * (3 * cellSize + 2 * gap); // 3 cells + 2 gaps
         
         // Reset line styles
@@ -161,32 +164,32 @@ const displayController = (() => {
         
         switch (type) {
             case "row":
-                line.style.width = `calc(100% - ${gap * 2}px)`;
-                line.style.top = `${gap + (index * (cellSize + gap)) + (cellSize / 2) - 2}px`;
-                line.style.left = `${gap}px`;
+                line.style.width = `calc(100% - ${padding * 2}px)`;
+                line.style.top = `${gap + (index * (cellSize + padding)) + (cellSize / 2) - 2}px`;
+                line.style.left = `${padding}px`;
                 line.style.transform = 'none';
                 break;
                 
             case "column":
-                line.style.height = `calc(100% - ${gap * 2}px)`;
+                line.style.height = `calc(100% - ${padding * 2}px)`;
                 line.style.width = '4px';
-                line.style.top = `${gap}px`;
-                line.style.left = `${gap + (index * (cellSize + gap)) + (cellSize / 2) - 2}px`;
+                line.style.top = `${padding}px`;
+                line.style.left = `${padding + (index * (cellSize + padding)) + (cellSize / 2) - 2}px`;
                 line.style.transform = 'none';
                 break;
                 
             case "main-diagonal":
                 line.style.width = `${diagonalLength}px`;
-                line.style.top = `${gap}px`;
-                line.style.left = `${gap}px`;
+                line.style.top = `${padding}px`;
+                line.style.left = `${padding}px`;
                 line.style.transform = 'rotate(45deg)';
                 line.style.transformOrigin = '0 0';
                 break;
                 
             case "anti-diagonal":
                 line.style.width = `${diagonalLength}px`;
-                line.style.top = `${gap}px`;
-                line.style.right = `${gap}px`;
+                line.style.top = `${padding}px`;
+                line.style.right = `${padding}px`;
                 line.style.left = 'auto';
                 line.style.transform = 'rotate(-45deg)';
                 line.style.transformOrigin = '100% 0';
