@@ -57,6 +57,7 @@ h1 {
     justify-content: center;
     gap: 0.5rem;
     word-break: break-word;
+    text-align: center;
 }
 
 .status {
