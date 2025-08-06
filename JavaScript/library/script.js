@@ -49,7 +49,7 @@ class Library {
             throw new Error("Invalid book data");
         }
         this.#books.push(book);
-        this.render();
+        this.refreshBookCard(book);
         return book;
     }
 
@@ -57,8 +57,9 @@ class Library {
         const index = this.#books.findIndex(book => book.id === bookId);
         if (index !== -1) {
             this.#books.splice(index, 1);
+            const card = this.libraryElement.querySelector(`.book-card[data-id="${bookId}"]`);
+            card.remove();
         }
-        this.render();
     }
 
     getBook(bookId) {
@@ -86,6 +87,17 @@ class Library {
         return bookCard;
     }
 
+    refreshBookCard(book) {
+        const existingCard = this.libraryElement.querySelector(`.book-card[data-id="${book.id}"]`);
+        if (existingCard) {
+            const newCard = this.createBookCard(book);
+            existingCard.replaceWith(newCard);
+        }
+        else {
+            this.libraryElement.appendChild(this.createBookCard(book));
+        }
+    }
+
     render() {
         this.libraryElement.innerHTML = "";
         this.#books.forEach(book => {
@@ -106,7 +118,7 @@ class Library {
                 this.handleToggleReadStatus(book, card);
             }  
             else if (event.target.classList.contains("delete")) {
-                this.handleDeleteBook(book, card);
+                this.handleDeleteBook(book);
             }
         });
    
@@ -122,9 +134,10 @@ class Library {
         statusIcon.classList.toggle("fa-toggle-off", !book.hasRead);
         card.querySelector(".status").classList.toggle("read", book.hasRead);
         card.querySelector(".status").classList.toggle("unread", !book.hasRead);
+        this.render(book.id);
     }
 
-    handleDeleteBook(book, card) {
+    handleDeleteBook(book) {
         if (confirm(`Are you sure you want to delete "${book.title}" by ${book.author}?`)) {
             this.removeBook(book.id);
         }
