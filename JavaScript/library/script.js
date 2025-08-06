@@ -1,82 +1,118 @@
-const myLibrary = [];
-const libraryElement = document.getElementById("library");
-const addButton = document.getElementById("add-button");
-const toggleButtons = document.getElementsByClassName("toggle");
-const deleteButtons = document.getElementsByClassName("delete");
-const bookDialog = document.getElementById("book-dialog");
-const cancelDialogButton = document.getElementById("cancel-book");
-
-
 class Book {
+    #id;
 
     constructor(title, author, pages, hasRead) {
-        this.id = crypto.randomUUID();
+        this.#id = crypto.randomUUID();
         this.title = title;
         this.author = author;
         this.pages = pages;
         this.hasRead = hasRead;
     }
     
-    getInfo() {
-        return `${this.title} by ${this.author}, ${this.pages} pages, ${this.hasRead ? 'read' : 'not read yet'}`;
-    };
+    get id() {
+        return this.#id;
+    }
 
     toggleReadStatus() {
         this.hasRead = !this.hasRead;
     };
 }
 
-function addBookToLibrary(title, author, pages, hasRead) {
-    const book = new Book(title, author, pages, hasRead);
-    myLibrary.push(book);
-    displayBook(book);
-}
+class Library {
+    #books = [];
 
-function createBookCard(book) {
-    const bookCard = document.createElement("div");
-    bookCard.classList.add("book-card");
-    bookCard.setAttribute("data-id", book.id);
-    bookCard.innerHTML = `
-        <h3 class="title">${book.title}</h3>
-        <p class="author"> Author: ${book.author}</p>
-        <p class="pages">Pages: ${book.pages}</p>
-        <div class="status ${book.hasRead ? 'read' : 'unread'}">
-            <span class="status-text">${book.hasRead ? "Read" : "Not Read"}</span>
-            <i class="fa-solid fa-toggle-${book.hasRead ? "on" : "off"} toggle icon"></i>
-        </div>
-        <i class="fa-solid fa-trash delete icon"></i>
-    `;
-    return bookCard;
-}
+    constructor () {
+        this.libraryElement = document.getElementById("library");
+        this.initialize();
+    }
 
-function displayBooks() {
-    libraryElement.innerHTML = "";
-    myLibrary.forEach(book => {
-        displayBook(book);
-    })
-}
+    initialize () {
+        this.#addTestBooks();
+        this.render();
+        this.setupEventListeners();
+    }
 
-function displayBook(book) {
-    libraryElement.appendChild(createBookCard(book));
-}
+    #addTestBooks() {
+        this.addBook("The Hobbit", "J.R.R. Tolkien", 295, true);
+        this.addBook("Dune", "Frank Herbert", 412, false);
+        this.addBook("Atomic Habits", "James Clear", 320, true);
+        this.addBook("Project Hail Mary", "Andy Weir", 476, false);
+    }
 
-// Add test books to the library
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, true);
-addBookToLibrary("Dune", "Frank Herbert", 412, false);
-addBookToLibrary("Atomic Habits", "James Clear", 320, true);
-addBookToLibrary("Project Hail Mary", "Andy Weir", 476, false);
+    #validateBook(book) {
+        return book.title && book.author && book.pages > 0;
+    }
 
-// Display all books
-displayBooks();
+    addBook(title, author, pages, hasRead) {
+        const book = new Book(title, author, pages, hasRead);
+        if (!this.#validateBook(book)) {
+            throw new Error("Invalid book data");
+        }
+        this.#books.push(book);
+        this.render();
+        return book;
+    }
 
-libraryElement.addEventListener("click", (event) => {
-    const card = event.target.closest(".book-card");
-    if (!card) return;
+    removeBook(bookId) {
+        const index = this.#books.findIndex(book => book.id === bookId);
+        if (index !== -1) {
+            this.#books.splice(index, 1);
+        }
+        this.render();
+    }
 
-    const book = myLibrary.find(book => book.id === card.getAttribute("data-id"));
-    if (!book) return;
+    getBook(bookId) {
+        return this.#books.find(book => book.id === bookId);
+    }
 
-    if (event.target.classList.contains("toggle")) {
+    get books() {
+        return [...this.#books];
+    }
+
+    createBookCard(book) {
+        const bookCard = document.createElement("div");
+        bookCard.classList.add("book-card");
+        bookCard.setAttribute("data-id", book.id);
+        bookCard.innerHTML = `
+            <h3 class="title">${book.title}</h3>
+            <p class="author"> Author: ${book.author}</p>
+            <p class="pages">Pages: ${book.pages}</p>
+            <div class="status ${book.hasRead ? 'read' : 'unread'}">
+                <span class="status-text">${book.hasRead ? "Read" : "Not Read"}</span>
+                <i class="fa-solid fa-toggle-${book.hasRead ? "on" : "off"} toggle icon"></i>
+            </div>
+            <i class="fa-solid fa-trash delete icon"></i>
+        `;
+        return bookCard;
+    }
+
+    render() {
+        this.libraryElement.innerHTML = "";
+        this.#books.forEach(book => {
+            this.libraryElement.appendChild(this.createBookCard(book));
+        });
+    }
+
+    setupEventListeners() {
+        this.libraryElement.addEventListener("click", (event) => {
+            const card = event.target.closest(".book-card");
+            if (!card) return;
+
+            const bookId = card.getAttribute("data-id");
+            const book = this.getBook(bookId);
+            if (!book) return;
+
+            if (event.target.classList.contains("toggle")) {
+                this.handleToggleReadStatus(book, card);
+            }  
+            else if (event.target.classList.contains("delete")) {
+                this.handleDeleteBook(book, card);
+            }
+        });
+   
+    }
+
+    handleToggleReadStatus(book, card) {
         book.toggleReadStatus();
         const statusText = card.querySelector(".status .status-text");
         const statusIcon = card.querySelector(".status .icon");
@@ -86,53 +122,80 @@ libraryElement.addEventListener("click", (event) => {
         statusIcon.classList.toggle("fa-toggle-off", !book.hasRead);
         card.querySelector(".status").classList.toggle("read", book.hasRead);
         card.querySelector(".status").classList.toggle("unread", !book.hasRead);
-        
-    }  
-    else if (event.target.classList.contains("delete")) {
+    }
+
+    handleDeleteBook(book, card) {
         if (confirm(`Are you sure you want to delete "${book.title}" by ${book.author}?`)) {
-            myLibrary.splice(myLibrary.indexOf(book), 1);
-            card.remove();
+            this.removeBook(book.id);
         }
     }
-});
 
-addButton.addEventListener("click", () => {
-    bookDialog.showModal();
-});
+}
 
-
-document.getElementById("submit-book").addEventListener("click", (event) => {
-    event.preventDefault();
-
-    const title = document.getElementById("title").value.trim();
-    const author = document.getElementById("author").value.trim();
-    const pages = parseInt(document.getElementById("pages").value, 10);
-    const hasRead = document.querySelector("input[name='read-status']:checked");
-
-    if (!title) {
-        alert("Please enter a title for the book.");
-        return;
-    }
-    if (!author) {
-        alert("Please enter an author for the book.");
-        return;
-    }
-    if (isNaN(pages) || pages <= 0) {
-        alert("Please enter a valid number of pages.");
-        return;
-    }
-    if (!hasRead) {
-        alert("Please select whether you have read the book or not.");
-        return;
+class BookForm {
+    constructor(library) {
+        this.library = library;
+        this.dialog = document.getElementById("book-dialog");
+        this.form = document.getElementById("add-book-form");
+        this.setupEventListeners();
     }
 
-    addBookToLibrary(title, author, pages, hasRead.value === "read");
-    bookDialog.close();
-    document.getElementById("add-book-form").reset();
+    setupEventListeners() {
+        document.getElementById("add-button").addEventListener("click", () => {
+            this.dialog.showModal();
+        });
 
-});
+        document.getElementById("submit-book").addEventListener("click", (event) => {
+            this.handleSubmit(event);
+        });
 
-cancelDialogButton.addEventListener("click", (event) => {
-    document.getElementById("add-book-form").reset();
-    bookDialog.close();
-});
+        document.getElementById("cancel-book").addEventListener("click", (event) => {
+            this.form.reset();
+            this.dialog.close();
+        }); 
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+
+            const title = document.getElementById("title").value.trim();
+            const author = document.getElementById("author").value.trim();
+            const pages = parseInt(document.getElementById("pages").value, 10);
+            const hasRead = document.querySelector("input[name='read-status']:checked");
+
+            if (!this.validateInputs(title, author, pages, hasRead)) {
+                return;
+            }
+
+            this.library.addBook(title, author, pages, hasRead.value === "read");
+            this.form.reset();
+            this.dialog.close();
+
+    }
+
+    validateInputs(title, author, pages, hasRead) {
+            if (!title) {
+                alert("Please enter a title for the book.");
+                return false;
+            }
+            if (!author) {
+                alert("Please enter an author for the book.");
+                return false;
+            }
+            if (isNaN(pages) || pages <= 0) {
+                alert("Please enter a valid number of pages.");
+                return false;
+            }
+            if (!hasRead) {
+                alert("Please select whether you have read the book or not.");
+                return false;
+            }
+            return true;
+    }
+    
+}
+
+// Initialize the application
+const library = new Library();
+const bookForm = new BookForm(library);
+
