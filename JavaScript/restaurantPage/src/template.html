@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>restaurantPage</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <button>Loop Restaurant</button>
+            <button>Menu</button>
+            <button>About</button>
+            <button>Contact</button>
+        </nav>
+    </header>
+    <div id = "content">
+        <div id = "home-page">
+            <div id = "welcome-section">
+                <h2>Welcome to the Loop Restaurant</h2>
+                <p>Comfort food that brings you back again and again</p>
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5" alt="Cozy restaurant atmosphere">
+                <a href="#" class="reservation-link">Make a reservation now!</a>
+            </div>
+        </div>
+        <div id = "menu-page">
+            <h2>Our Menu</h2>
+            <p>All dishes are prepared with locally sourced ingredients and served with passion.</p>
+            <div class = "menu-category">
+                <h3>Appetizers</h3>
+                <div class = "menu-item">
+                    <div class = "item-name">Garlic Bread <span class = "item-price">£7.99</span></div>
+                    <div class = "item-description">Freshly baked bread with garlic butter and herbs</div>
+                </div>
+                <div class = "menu-item">
+                    <div class = "item-name">Bruschetta <span class = "item-price">£9.99</span></div>
+                    <div class = "item-description">Toasted bread topped with tomatoes, garlic, and basil</div>
+                </div>
+                <div class = "menu-item">
+                    <div class = "item-name">Mozzarella Sticks <span class = "item-price">£8.99</span></div>
+                    <div class = "item-description">Breaded and fried mozzarella served with marinara sauce</div>
+                </div>
+            </div>
+            <div class = "menu-category">
+                <h3>Main Courses</h3>
+                <div class = "menu-item">
+                    <div class = "item-name">Spaghetti Carbonara <span class = "item-price">£16.99</span></div>
+                    <div class = "item-description">Classic pasta with bacon, eggs, and parmesan cheese</div>
+                </div>
+                <div class = "menu-item">
+                    <div class = "item-name">Grilled Salmon <span class = "item-price">£22.99</span></div>
+                    <div class = "item-description">Fresh salmon fillet with lemon butter sauce and vegetables</div>
+                </div>
+                <div class = "menu-item">
+                    <div class = "item-name">Beef burger <span class = "item-price">£14.99</span></div>
+                    <div class = "item-description">8oz beef patty with lettuce, tomato, and Loop sauce</div>
+                </div>
+            </div>
+            <div class = "menu-category">
+                <h3>Desserts</h3>
+                <div class = "menu-item">
+                    <div class = "item-name">Tiramisu <span class = "item-price">£8.99</span></div>
+                    <div class = "item-description">Classic Italian dessert with coffee-soaked ladyfingers</div>
+                </div>
+                <div class = "menu-item">
+                    <div class = "item-name">Chocolate Lava Cake <span class = "item-price">£9.99</span></div>
+                    <div class = "item-description">Warm chocolate cake with a molten center, served with ice cream</div>
+                </div>
+                <div class = "menu-item">
+                    <div class = "item-name">Cheesecake <span class = "item-price">£7.99</span></div>
+                    <div class = "item-description">New York style cheesecake with berry compote</div>
+                </div>
+            </div>
+        </div>
+        <div id = "about-page">
+            <h2>Our Story</h2>
+            <div class = "about-content"></div>
+            <div class = "about-text">
+                <p>Loop Restaurant was founded in 2010 by chef Maria Rodriguez, who dreamed of creating a place where people could enjoy delicious comfort food in a warm, inviting atmosphere.</p>
+                <p>Our philosophy is simple: use the freshest ingredients, prepare everything with care, and treat every customer like family. Over the years, we've become a beloved neighborhood spot where people come to celebrate, connect, and of course, enjoy great food.</p>
+                <p>We're proud to source our ingredients from local farms and producers, supporting our community while ensuring the highest quality for our dishes.</p>
+                <h3>Our Team</h3>
+                <p>Our talented team of chefs and staff work tirelessly to create memorable dining experiences. From our head chef with 20 years of experience to our friendly servers who know many of our regulars by name, everyone at Loop Restaurant is dedicated to making your visit special.</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1554679665-f5537f187268" alt="Restaurant interior">
+                <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e" alt="Chef preparing food">
+            </div>
+        </div>
+        <div id = "contact-page">
+            <h2>Contact Us</h2>
+            <p>We'd love to hear from you! Reach out with any questions, comments, or to make a reservation.</p>
+            <div class = "contact-info">
+                <div class = "contact-card">
+                    <h3>Visit Us</h3>
+                    <p>123 Main Street<br>Anytown, UK 12345</p>
+                </div>
+                <div class = "contact-card">
+                    <h3>Call Us</h3>
+                    <p>Phone: (555) 123-4567<br>Email: info@looprestaurant.com</p>
+                </div>
+                <div class = "contact-card">
+                    <h3>Hours</h3>
+                    <table class="hours-table">
+                        <tr>
+                            <td class="day">Monday - Thursday</td>
+                            <td>11:00 AM - 10:00 PM</td>
+                        </tr>
+                        <tr>
+                            <td class="day">Friday - Saturday</td>
+                            <td>11:00 AM - 11:00 PM</td>
+                        </tr>
+                        <tr>
+                            <td class="day">Sunday</td>
+                            <td>10:00 AM - 9:00 PM</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="contact-form">
+                <h3>Send Us a Message</h3>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+
+            <a href="#" class="reservation-link">Make a reservation now!</a>
+        </div>
+    </div>
+</body>
+</html>
