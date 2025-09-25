@@ -14,9 +14,6 @@ function loadHome() {
         </div>
     `;
     content.innerHTML = homeHTML;
-
-    // Make logo button to appear selected
-    setActiveButton('logo-btn');
 }   
 
 export default loadHome;

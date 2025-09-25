@@ -14,4 +14,9 @@ function setActiveButton (activeID) {
     }
 }
 
-export {clearContent, setActiveButton};
+function navigate(loadfunction, buttonID) {
+    loadfunction();
+    setActiveButton(buttonID);
+}
+
+export {clearContent, navigate};

@@ -62,9 +62,6 @@ function loadContact() {
         </div>
     `;
     content.innerHTML = contactHTML;
-
-    // Make contact buttoon appear selected
-    setActiveButton('contact-btn');
 }
 
 export default loadContact;
