@@ -1,10 +1,10 @@
-import { setActiveButton } from './utility.js';
+import {clearContent, setActiveButton} from './utility.js';
 
 function loadHome() {
     const content = document.getElementById('content');
 
-    // Clear existing content to load the home page
-    content.innerHTML = '';
+    // Clear existing content
+    clearContent();
 
     // Create home page div and append to content
     const homePage = document.createElement('div');

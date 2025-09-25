@@ -1,3 +1,9 @@
+// Clears the content section in HTML to prepare the load of the pages
+function clearContent() {
+    document.getElementById('content').innerHTML = '';
+}
+
+// Make a button appear selected 
 function setActiveButton (activeID) {
     const allButtons = document.querySelectorAll('.nav-btn');
     allButtons.forEach(btn => btn.classList.remove('active'));
@@ -8,4 +14,4 @@ function setActiveButton (activeID) {
     }
 }
 
-export {setActiveButton};
+export {clearContent, setActiveButton};

@@ -1,9 +1,9 @@
 import {clearContent, setActiveButton } from './utility.js';
 
-function loadContact() {
+function loadAbout() {
     // Clear existing content
     clearContent();
-    setActiveButton('contact-btn');
+    setActiveButton('about-btn');
 }
 
-export default loadContact;
+export default loadAbout;
