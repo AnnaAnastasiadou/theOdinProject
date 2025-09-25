@@ -57,32 +57,6 @@ h2 {
     height: 6.5rem;
 }
 
-#logo-btn {
-    font-family: 'Great Vibes', cursive;
-    background-color: #541212;
-    color: #fff;
-    border: none;
-    border-radius: 0.5rem;
-    box-shadow: 0.1rem 0.1rem 0.2rem #333,
-                0.3rem 0.4rem 0.5rem #333
-    ;
-    padding: 0.5rem;
-    font-weight: 600;
-    font-size: 1.5rem;
-    transition: 0.2s ease-in-out;
-}
-
-#logo-btn:hover {
-    box-shadow: 0.1rem 0.1rem 0.2rem #333,
-                0.2rem 0.2rem 0.5rem #333
-    ;
-    cursor: pointer;
-}
-
-#logo-btn:active {
-    box-shadow: 0.1rem 0.1rem 0.2rem #333;
-}
-
 .group-buttons {
     display: flex;
     flex-direction: row;
@@ -90,7 +64,7 @@ h2 {
     gap: 2rem;
 }
 
-.menu-btn {
+.nav-btn {
     background-color: #1B3C53;
     color: #fff;
     box-shadow: 0.2em 0.4em 0.5rem #333;
@@ -102,16 +76,46 @@ h2 {
     transition: 0.2s ease-in-out;
 }
 
-.menu-btn:hover {
+.nav-btn:hover {
     box-shadow: 0.1em 0.2em 0.5rem #333;
     cursor: pointer;
 }
 
-.menu-btn:active {
-    box-shadow: none;
+.nav-btn:active {
     rotate: 3deg;
 }
 
+.nav-btn:active, #menu-btn.active, #about-btn.active, #contact-btn.active {
+    background-color: #295a7c;
+    box-shadow: inset 0.3rem 0.3rem 0.5rem #333,
+                        0.1rem 0.1rem #333;
+}
+
+
+#logo-btn {
+    font-family: 'Great Vibes', cursive;
+    background-color: #541212;
+    color: #fff;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+    transition: 0.2s ease-in-out;
+}
+
+/* #logo-btn:hover {
+    box-shadow: 0.1rem 0.1rem 0.2rem #333,
+                0.2rem 0.2rem 0.5rem #333
+    ;
+    cursor: pointer;
+} */
+
+#logo-btn:active, #logo-btn.active {
+    rotate: none;
+    background-color: #6d1818;
+    box-shadow: inset 0.3rem 0.3rem 0.5rem #333,
+                        0.1rem 0.1rem #333;
+}
 
 .page {
     display: flex;
@@ -131,11 +135,16 @@ h2 {
         background-size: cover;
         background-position: center;
     color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 2rem;
 }
 
 .reservation-link {
     display: inline-block;
-    margin-top: 2rem;
     padding: 0.5rem 1rem;
     background-color: #D2C1B6;
     color: #541212;
