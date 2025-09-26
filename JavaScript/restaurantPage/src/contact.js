@@ -1,4 +1,4 @@
-import {clearContent, setActiveButton } from './utility.js';
+import {clearContent} from './utility.js';
 
 function loadContact() {
     // Clear existing content

@@ -1,4 +1,4 @@
-import {clearContent, setActiveButton } from './utility.js';
+import {clearContent} from './utility.js';
 // <img src="https://images.unsplash.com/photo-1554679665-f5537f187268" alt="Restaurant interior">
 // <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e" alt="Chef preparing food">
 function loadAbout() {

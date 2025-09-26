@@ -1,4 +1,4 @@
-import {clearContent, setActiveButton} from './utility.js';
+import {clearContent} from './utility.js';
 
 function loadHome() {
     // Clear existing content
