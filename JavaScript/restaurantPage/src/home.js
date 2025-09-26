@@ -4,7 +4,6 @@ function loadHome() {
     // Clear existing content
     clearContent();
 
-
     const content = document.getElementById('content');
     const homeHTML = `
         <div id="home-page" class="page">
