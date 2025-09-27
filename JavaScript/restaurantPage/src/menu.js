@@ -14,7 +14,6 @@ function resetCategories(categories) {
         const img = getCategoryImg(category);
         const items = category.querySelector('.menu-items');
 
-        category.classList.remove('show-image'); 
         if (img) {
             img.classList.remove('show-image');
         }
@@ -28,10 +27,16 @@ function resetCategories(categories) {
 // When you press on one of the menu sections
 // on smaller screens the relative image should appear
 function addMobileImageToggles() {
-    if (window.innerWidth > 600) return;
+    const mobileQuery = window.matchMedia('(max-width: 600px)');
+
+    // 2. Check if the current screen size matches the mobile query
+    if (!mobileQuery.matches) {
+        // If it's a desktop screen, exit immediately
+        return;
+    } 
 
     const categories = document.querySelectorAll('.menu-category');
-
+    resetCategories(categories); 
     categories.forEach(category => {
         const img = getCategoryImg(category);
         const items = category.querySelector('.menu-items');
@@ -41,10 +46,15 @@ function addMobileImageToggles() {
             if (e.target.classList.contains('menu-img')) return;
             if (!img || !items) return;
 
+            if (img.classList.contains('show-image')) {
+                img.classList.remove('show-image');
+                 items.classList.remove('hidden-mobile');
+                 return;
+            };
+
             resetCategories(categories);
 
             items.classList.add('hidden-mobile');
-            category.classList.add('show-image'); 
 
             setTimeout(() => {
                 img.classList.add('show-image');
@@ -54,7 +64,6 @@ function addMobileImageToggles() {
         // --- Image Click Listener (Shows Menu Category) ---
         if (img) {
             img.addEventListener("click", () => {
-                category.classList.remove('show-image');
                 img.classList.remove('show-image');
                 if (items) {
                     items.classList.remove('hidden-mobile');
@@ -140,7 +149,10 @@ function loadMenu() {
     `;
     content.innerHTML = menuHTML;
 
+
     addMobileImageToggles(); 
+    window.addEventListener('resize', addMobileImageToggles);
+
 }
 
 export default loadMenu;

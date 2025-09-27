@@ -260,7 +260,7 @@ h2 {
 
 @media screen and (max-width : 600px) {
     html {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     #navbar {
@@ -329,3 +329,5 @@ h2 {
         display: none;
     }
 } 
+
+
