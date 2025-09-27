@@ -273,12 +273,12 @@ h2 {
 figcaption {
     text-align: center;
     font-weight: 600;
-    font-size: 1rem; /* Use a relative unit */
+    font-size: 1rem;
     padding: 0.1rem 0;
 }
 
 .desktop-figure figcaption {
-    width: 50%;
+    width: auto;
     margin: auto;
     /* Overlay style */
     background-color: rgba(0, 0, 0, 0.75);
@@ -307,6 +307,10 @@ figcaption {
     transition: transform 0.3s ease-out;
 }
 
+.tap-hint {
+    display: none;
+}
+
 
 @media screen and (max-width : 600px) {
     html {
@@ -331,6 +335,9 @@ figcaption {
 
     .menu-category {
         max-width: 300px;
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+        box-shadow: 0.3rem 0.3rem 0.2rem var(--deep-blue);
     }
 
     #menu {
@@ -386,12 +393,11 @@ figcaption {
         display: none;
     }
 
-     .mobile-figure {
+    .mobile-figure {
         display: block; /* We use max-height/opacity to hide it for animation */
         position: relative; 
         max-width: 300px;
         width: 100%;
-        
         /* HIDDEN STATE (Base for the transition) */
         opacity: 0;
         max-height: 0; /* Keeps content hidden and allows for slide transition */
@@ -410,6 +416,16 @@ figcaption {
 
     .mobile-figure.hidden {
         display: none;
+    }
+
+    .mobile-figure figcaption {
+        font-size: 1.2rem;
+    }
+
+    .tap-hint {
+        display: block;
+        margin-top: 2rem;
+        text-align: center;
     }
 
 } 

@@ -106,6 +106,7 @@ function loadMenu() {
                             <div class="item-name">Mozzarella Sticks <span class="item-price">£8.99</span></div>
                             <div class="item-description">Breaded and fried mozzarella served with marinara sauce</div>
                         </div>
+                        <small class="tap-hint">Tap to view</small>
                     </div>
                 </div>
                 <figure class="desktop-figure">
@@ -135,6 +136,7 @@ function loadMenu() {
                             <div class="item-name">Beef burger <span class="item-price">£14.99</span></div>
                             <div class="item-description">8oz beef patty with lettuce, tomato, and Loop sauce</div>
                         </div>
+                        <small class="tap-hint">Tap to view</small>
                     </div>
                 </div>
 
@@ -157,6 +159,7 @@ function loadMenu() {
                             <div class="item-name">Cheesecake <span class="item-price">£7.99</span></div>
                             <div class="item-description">New York style cheesecake with berry compote</div>
                         </div>
+                        <small class="tap-hint">Tap to view</small>
                     </div>
                 </div>
                 <figure class="desktop-figure">
