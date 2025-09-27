@@ -216,9 +216,9 @@ h2 {
     align-items: center;
 }
 
-.mobile-img {
+/* .mobile-img {
     display: none;
-}
+} */
 
 .menu-category {
     background-color: #f0e9e4;
@@ -251,12 +251,62 @@ h2 {
 }
 
 .menu-img.desktop-img {
-    max-width: 450px;
-    border-radius: 1rem;
-    object-fit: cover;
     width: 100%;
     height: 100%;
+    border-radius: 1rem;
+    object-fit: cover;
 }
+
+/* Hide the mobile figure on desktop view */
+.mobile-figure {
+    display: none;
+}
+
+.desktop-figure {
+    display: block; 
+    max-width: 450px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+figcaption {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem; /* Use a relative unit */
+    padding: 0.1rem 0;
+}
+
+.desktop-figure figcaption {
+    width: 50%;
+    margin: auto;
+    /* Overlay style */
+    background-color: rgba(0, 0, 0, 0.75);
+    color: var(--white);
+    padding: 1rem 0;
+    
+    /* Initial state: Hidden below the figure */
+    transform: translateY(100%); 
+    opacity: 0;
+    
+    /* Animation transition */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    
+    z-index: 5; 
+}
+
+/* Hover state: Slide the caption up */
+.desktop-figure:hover figcaption {
+    transform: translateY(-300%); /* Move it back to the bottom edge */
+    opacity: 1;
+}
+
+/* Optional: Add a slight scale effect to the image on hover for visual feedback */
+.desktop-figure:hover .menu-img.desktop-img {
+    transform: scale(1.03);
+    transition: transform 0.3s ease-out;
+}
+
 
 @media screen and (max-width : 600px) {
     html {
@@ -296,12 +346,12 @@ h2 {
         display: none !important;
     }
 
-    .menu-img {
+    /* .menu-img { */
         /* This overrides the desktop 'display: block' */
-        display: block; 
+        /* display: block;  */
         
         /* Animation properties */
-        opacity: 0;
+        /* opacity: 0;
         max-height: 0;
         overflow: hidden;
         cursor: pointer; 
@@ -310,13 +360,15 @@ h2 {
         height: auto;
         object-fit: cover;
         border-radius: 0.5rem;
-    }
+    } */
 
-    .menu-img.show-image {
-        max-height: 500px; /* Needs to be larger than the max height of the image */
+    .menu-img {
+        max-height: 300px; /* Needs to be larger than the max height of the image */
         opacity: 1;
         margin-top: 1rem;
         margin-bottom: 1rem;
+        width: 100%;
+        height: auto;
     }
 
     .menu-img.active {
@@ -328,6 +380,38 @@ h2 {
     .menu-items.hidden {
         display: none;
     }
+
+    .desktop-figure {
+        width: 0;
+        display: none;
+    }
+
+     .mobile-figure {
+        display: block; /* We use max-height/opacity to hide it for animation */
+        position: relative; 
+        max-width: 300px;
+        width: 100%;
+        
+        /* HIDDEN STATE (Base for the transition) */
+        opacity: 0;
+        max-height: 0; /* Keeps content hidden and allows for slide transition */
+        overflow: hidden;
+        cursor: pointer; 
+        transition: max-height 0.4s ease-out, opacity 0.3s ease-in;
+    }
+
+
+    .mobile-figure.show {
+        max-height: 500px;
+        opacity: 1;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .mobile-figure.hidden {
+        display: none;
+    }
+
 } 
 
 

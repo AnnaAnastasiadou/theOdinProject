@@ -4,18 +4,19 @@ import mainsImg from './images/mains.jpg';
 import dessertsImg from './images/desserts.jpg';
 
 // Helper function to find the corresponding image by ID
-function getCategoryImg(categoryElement) {
-    return categoryElement.querySelector('.mobile-img');
+function getCategoryFigure(categoryElement) {
+    return categoryElement.querySelector('.mobile-figure');
 }
 
 // Helper function to hide all images and show all menu item lists
 function resetCategories(categories) {
     categories.forEach(category => {
-        const img = getCategoryImg(category);
+        const figure = getCategoryFigure(category);
+        const img = figure ? figure.querySelector('.menu-img') : null;
         const items = category.querySelector('.menu-items');
 
-        if (img) {
-            img.classList.remove('show-image');
+        if (figure) {
+            figure.classList.remove('show');
         }
 
         if (items) {
@@ -38,16 +39,17 @@ function addMobileImageToggles() {
     const categories = document.querySelectorAll('.menu-category');
     resetCategories(categories); 
     categories.forEach(category => {
-        const img = getCategoryImg(category);
+        const figure = getCategoryFigure(category);
+        const img = figure ? figure.querySelector('.menu-img') : null;
         const items = category.querySelector('.menu-items');
 
         // --- Category Click Listener (Shows Image) ---
         category.addEventListener("click", (e) => {
-            if (e.target.classList.contains('menu-img')) return;
-            if (!img || !items) return;
+            if (figure && figure.contains(e.target)) return; 
+            if (!figure || !items) return;
 
-            if (img.classList.contains('show-image')) {
-                img.classList.remove('show-image');
+            if (figure.classList.contains('show')) {
+                figure.classList.remove('show');
                  items.classList.remove('hidden-mobile');
                  return;
             };
@@ -57,14 +59,14 @@ function addMobileImageToggles() {
             items.classList.add('hidden-mobile');
 
             setTimeout(() => {
-                img.classList.add('show-image');
+                figure.classList.add('show');
             }, 10);
         });
 
         // --- Image Click Listener (Shows Menu Category) ---
-        if (img) {
-            img.addEventListener("click", () => {
-                img.classList.remove('show-image');
+        if (figure) {
+            figure.addEventListener("click", () => {
+                figure.classList.remove('show');
                 if (items) {
                     items.classList.remove('hidden-mobile');
                 }
@@ -87,7 +89,10 @@ function loadMenu() {
             <div id="menu">
                 <div class="menu-category" id="appetizers">
                     <h3 class="category-title">Appetizers</h3>
-                    <img class="menu-img mobile-img" src="${appetizersImg}" alt="bruschetta">
+                    <figure class="mobile-figure">
+                        <img class="menu-img mobile-img" src="${appetizersImg}" alt="bruschetta">
+                        <figcaption class="caption-overlay">Bruschetta</figcaption>
+                    </figure>                
                     <div class="menu-items">
                         <div class="menu-item">
                             <div class="item-name">Garlic Bread <span class="item-price">£7.99</span></div>
@@ -103,12 +108,20 @@ function loadMenu() {
                         </div>
                     </div>
                 </div>
-                <img class="menu-img desktop-img" src="${appetizersImg}" alt="bruschetta">
-            
-                <img class="menu-img desktop-img" src="${mainsImg}" alt="carbonara" height="500" width="500">
+                <figure class="desktop-figure">
+                    <img class="menu-img desktop-img" src="${appetizersImg}" alt="bruschetta">
+                    <figcaption>Bruschetta</figcaption>
+                </figure>
+                <figure class="desktop-figure">           
+                    <img class="menu-img desktop-img" src="${mainsImg}" alt="carbonara" height="500" width="500">
+                    <figcaption class="caption-overlay">Carbonara</figcaption>
+                </figure>
                 <div class="menu-category" id="mains">
                     <h3 class="category-title">Main Courses</h3>
-                    <img class="menu-img mobile-img" src="${mainsImg}" alt="carbonara">
+                    <figure class="mobile-figure">
+                        <img class="menu-img mobile-img" src="${mainsImg}" alt="carbonara">
+                        <figcaption class="caption-overlay">Carbonara</figcaption>
+                    </figure>
                     <div class="menu-items">
                         <div class="menu-item">
                             <div class="item-name">Spaghetti Carbonara <span class="item-price">£16.99</span></div>
@@ -127,7 +140,10 @@ function loadMenu() {
 
                 <div class="menu-category" id="desserts">
                     <h3 class="category-title">Desserts</h3>
-                    <img class="menu-img mobile-img" src="${dessertsImg}" alt="lava cake">
+                    <figure class="mobile-figure">
+                        <img class="menu-img mobile-img" src="${dessertsImg}" alt="lava cake">
+                        <figcaption class="caption-overlay">Lava Cake</figcaption>
+                    </figure>
                     <div class="menu-items">
                         <div class="menu-item">
                             <div class="item-name">Tiramisu <span class="item-price">£8.99</span></div>
@@ -143,7 +159,10 @@ function loadMenu() {
                         </div>
                     </div>
                 </div>
-                <img class="menu-img desktop-img" id="desserts-img" src="${dessertsImg}" alt="lava cake" height="500" width="500">
+                <figure class="desktop-figure">
+                    <img class="menu-img desktop-img" id="desserts-img" src="${dessertsImg}" alt="lava cake" height="500" width="500">
+                    <figcaption class="caption-overlay">Lava Cake</figcaption>
+                </figure>
             </div>
         </div>
     `;
