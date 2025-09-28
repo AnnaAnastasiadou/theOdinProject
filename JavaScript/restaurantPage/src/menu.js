@@ -82,29 +82,29 @@ function loadMenu() {
     const content = document.getElementById('content');
     const menuHTML = `
         <div id="menu-page" class="page">
-            <div id="menu-intro">
+            <div class="intro">
                 <h2>Our Menu</h2>
                 <p>All dishes are prepared with locally sourced ingredients and served with passion.</p>
             </div>
             <div id="menu">
-                <div class="menu-category" id="appetizers">
-                    <h3 class="category-title">Appetizers</h3>
+                <div class="menu-category card border" id="appetizers">
+                    <h3 class="title">Antipasti (Appetizers)</h3>
                     <figure class="mobile-figure">
                         <img class="menu-img mobile-img" src="${appetizersImg}" alt="bruschetta">
                         <figcaption class="caption-overlay">Bruschetta</figcaption>
                     </figure>                
                     <div class="menu-items">
                         <div class="menu-item">
-                            <div class="item-name">Garlic Bread <span class="item-price">£7.99</span></div>
-                            <div class="item-description">Freshly baked bread with garlic butter and herbs</div>
+                            <div class="item-name">Pane all’Aglio <span class="item-price">€7.99</span></div>
+                            <div class="item-description">Freshly baked bread brushed with garlic butter and aromatic herbs</div>
                         </div>
                         <div class="menu-item">
-                            <div class="item-name">Bruschetta <span class="item-price">£9.99</span></div>
-                            <div class="item-description">Toasted bread topped with tomatoes, garlic, and basil</div>
+                            <div class="item-name">Bruschetta al Pomodoro <span class="item-price">€9.99</span></div>
+                            <div class="item-description">Rustic toasted bread topped with vine-ripened tomatoes, garlic, basil, and a drizzle of extra virgin olive oil</div>
                         </div>
                         <div class="menu-item">
-                            <div class="item-name">Mozzarella Sticks <span class="item-price">£8.99</span></div>
-                            <div class="item-description">Breaded and fried mozzarella served with marinara sauce</div>
+                            <div class="item-name">Bastoncini di Mozzarella <span class="item-price">€8.99</span></div>
+                            <div class="item-description">Crispy golden breaded mozzarella served with a rich marinara sauce</div>
                         </div>
                         <small class="tap-hint">Tap to view</small>
                     </div>
@@ -117,47 +117,47 @@ function loadMenu() {
                     <img class="menu-img desktop-img" src="${mainsImg}" alt="carbonara" height="500" width="500">
                     <figcaption class="caption-overlay">Carbonara</figcaption>
                 </figure>
-                <div class="menu-category" id="mains">
-                    <h3 class="category-title">Main Courses</h3>
+                <div class="menu-category card border" id="mains">
+                    <h3 class="title">Secondi Piatti (Main Courses)</h3>
                     <figure class="mobile-figure">
                         <img class="menu-img mobile-img" src="${mainsImg}" alt="carbonara">
                         <figcaption class="caption-overlay">Carbonara</figcaption>
                     </figure>
                     <div class="menu-items">
                         <div class="menu-item">
-                            <div class="item-name">Spaghetti Carbonara <span class="item-price">£16.99</span></div>
-                            <div class="item-description">Classic pasta with bacon, eggs, and parmesan cheese</div>
+                            <div class="item-name">Spaghetti alla Carbonara <span class="item-price">€16.99</span></div>
+                            <div class="item-description">Classic Roman pasta with guanciale, eggs, and pecorino romano</div>
                         </div>
                         <div class="menu-item">
-                            <div class="item-name">Grilled Salmon <span class="item-price">£22.99</span></div>
-                            <div class="item-description">Fresh salmon fillet with lemon butter sauce and vegetables</div>
+                            <div class="item-name">Risotto ai Funghi Porcin <span class="item-price">€18.99</span></div>
+                            <div class="item-description">Creamy Arborio rice with porcini mushrooms and parmesan</div>
                         </div>
                         <div class="menu-item">
-                            <div class="item-name">Beef burger <span class="item-price">£14.99</span></div>
-                            <div class="item-description">8oz beef patty with lettuce, tomato, and Loop sauce</div>
+                            <div class="item-name">Lasagna alla Classica <span class="item-price">€14.99</span></div>
+                            <div class="item-description">Layers of fresh pasta, ragù, béchamel, and parmesan</div>
                         </div>
                         <small class="tap-hint">Tap to view</small>
                     </div>
                 </div>
 
-                <div class="menu-category" id="desserts">
-                    <h3 class="category-title">Desserts</h3>
+                <div class="menu-category card border" id="desserts">
+                    <h3 class="title">Dolci (Desserts)</h3>
                     <figure class="mobile-figure">
                         <img class="menu-img mobile-img" src="${dessertsImg}" alt="lava cake">
                         <figcaption class="caption-overlay">Lava Cake</figcaption>
                     </figure>
                     <div class="menu-items">
                         <div class="menu-item">
-                            <div class="item-name">Tiramisu <span class="item-price">£8.99</span></div>
-                            <div class="item-description">Classic Italian dessert with coffee-soaked ladyfingers</div>
+                            <div class="item-name">Tiramisù Classico <span class="item-price">€8.99</span></div>
+                            <div class="item-description">Traditional Italian dessert with espresso-soaked ladyfingers, mascarpone cream, and cocoa</div>
                         </div>
                         <div class="menu-item">
-                            <div class="item-name">Chocolate Lava Cake <span class="item-price">£9.99</span></div>
-                            <div class="item-description">Warm chocolate cake with a molten center, served with ice cream</div>
+                            <div class="item-name">Torta al Cioccolato Fondente <span class="item-price">€9.99</span></div>
+                            <div class="item-description">Warm dark chocolate cake with a molten center, served with vanilla gelato</div>
                         </div>
                         <div class="menu-item">
-                            <div class="item-name">Cheesecake <span class="item-price">£7.99</span></div>
-                            <div class="item-description">New York style cheesecake with berry compote</div>
+                            <div class="item-name">Panna Cotta alla Vaniglia <span class="item-price">€7.99</span></div>
+                            <div class="item-description">Silky vanilla cream pudding with a raspberry coulis</div>
                         </div>
                         <small class="tap-hint">Tap to view</small>
                     </div>
