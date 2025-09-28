@@ -337,7 +337,7 @@ figcaption {
 
 .about-content {
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
     flex-wrap: nowrap;
     width: 100%;
     justify-content: center;

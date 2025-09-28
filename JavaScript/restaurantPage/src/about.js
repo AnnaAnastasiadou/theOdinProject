@@ -36,45 +36,7 @@ function loadAbout() {
                     <img class="about-img" src=${familyEatingImg} alt="Family eating together">
                 </div>
             </div>
-        
-            <div class="timeline section">
-                <div class="timeline-item card">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2010</div>
-                        <p>Loop Restaurant opens its doors with just 8 tables and a simple menu of comfort classics.</p>
-                    </div>
-                </div>
-                <div class="timeline-item card">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2013</div>
-                        <p>We expand our space and add a full bar, allowing us to serve craft cocktails alongside our food.</p>
-                    </div>
-                </div>
-                <div class="timeline-item card">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2015</div>
-                        <p>Loop Restaurant receives the "Best Neighborhood Restaurant" award from City Magazine.</p>
-                    </div>
-                </div>
-                <div class="timeline-item card">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2018</div>
-                        <p>We launch our farm partnership program, sourcing over 70% of our ingredients locally.</p>
-                    </div>
-                </div>
-                <div class="timeline-item card">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2022</div>
-                        <p>We complete our most recent renovation, adding a private dining room and expanding our kitchen.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="quotes section">
-                <div class="quote">"Good food is all the sweeter when shared with good company."</div>
-                <div class="quote-author">- Maria Rodriguez, Founder</div>
-            </div>
-            
+
             <div class="values section">
                 <h3>Our Values</h3>
                 <div class="values-grid">
@@ -108,6 +70,45 @@ function loadAbout() {
                     </div>
                 </div>
             </div>
+            
+            <div class="quotes section">
+                <div class="quote">"Good food is all the sweeter when shared with good company."</div>
+                <div class="quote-author">- Maria Rodriguez, Founder</div>
+            </div>
+
+            <div class="timeline section">
+                <div class="timeline-item card">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2010</div>
+                        <p>Loop Restaurant opens its doors with just 8 tables and a simple menu of comfort classics.</p>
+                    </div>
+                </div>
+                <div class="timeline-item card">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2013</div>
+                        <p>We expand our space and add a full bar, allowing us to serve craft cocktails alongside our food.</p>
+                    </div>
+                </div>
+                <div class="timeline-item card">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2015</div>
+                        <p>Loop Restaurant receives the "Best Neighborhood Restaurant" award from City Magazine.</p>
+                    </div>
+                </div>
+                <div class="timeline-item card">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2018</div>
+                        <p>We launch our farm partnership program, sourcing over 70% of our ingredients locally.</p>
+                    </div>
+                </div>
+                <div class="timeline-item card">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2022</div>
+                        <p>We complete our most recent renovation, adding a private dining room and expanding our kitchen.</p>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     `;
     content.innerHTML = aboutHTML;
