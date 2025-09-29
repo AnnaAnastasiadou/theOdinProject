@@ -77,34 +77,36 @@ function loadAbout() {
             </div>
 
             <div class="timeline section">
-                <div class="timeline-item card">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2010</div>
-                        <p>Loop Restaurant opens its doors with just 8 tables and a simple menu of comfort classics.</p>
+                <div class="timeline-items">
+                    <div class="timeline-item card">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2010</div>
+                            <p>Loop Restaurant opens its doors with just 8 tables and a simple menu of comfort classics.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="timeline-item card">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2013</div>
-                        <p>We expand our space and add a full bar, allowing us to serve craft cocktails alongside our food.</p>
+                    <div class="timeline-item card">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2013</div>
+                            <p>We expand our space and add a full bar, allowing us to serve craft cocktails alongside our food.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="timeline-item card">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2015</div>
-                        <p>Loop Restaurant receives the "Best Neighborhood Restaurant" award from City Magazine.</p>
+                    <div class="timeline-item card">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2015</div>
+                            <p>Loop Restaurant receives the "Best Neighborhood Restaurant" award from City Magazine.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="timeline-item card">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2018</div>
-                        <p>We launch our farm partnership program, sourcing over 70% of our ingredients locally.</p>
+                    <div class="timeline-item card">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2018</div>
+                            <p>We launch our farm partnership program, sourcing over 70% of our ingredients locally.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="timeline-item card">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2022</div>
-                        <p>We complete our most recent renovation, adding a private dining room and expanding our kitchen.</p>
+                    <div class="timeline-item card">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2022</div>
+                            <p>We complete our most recent renovation, adding a private dining room and expanding our kitchen.</p>
+                        </div>
                     </div>
                 </div>
             </div>
