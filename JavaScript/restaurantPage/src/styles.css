@@ -578,22 +578,6 @@ figcaption {
         display: none !important;
     }
 
-    /* .menu-img { */
-        /* This overrides the desktop 'display: block' */
-        /* display: block;  */
-        
-        /* Animation properties */
-        /* opacity: 0;
-        max-height: 0;
-        overflow: hidden;
-        cursor: pointer; 
-        transition: max-height 0.4s ease-out, opacity 0.3s ease-in;
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-        border-radius: 0.5rem;
-    } */
-
     .menu-img {
         max-height: 300px; /* Needs to be larger than the max height of the image */
         opacity: 1;
@@ -684,6 +668,10 @@ figcaption {
     .timeline-item:nth-child(odd),
     .timeline-item:nth-child(even) {
         margin: 0 auto 2rem auto; /* Both centered */
+    }
+
+    .timeline-item:nth-child(odd):hover {
+        transform: translateX(1rem);
     }
 
     /* Position dots for left and right items */
