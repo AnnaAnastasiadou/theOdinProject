@@ -1,7 +1,7 @@
 import {clearContent} from './utility.js';
 
 function loadHome() {
-    // Clear existing content
+    // Clear existing content before loading the new page
     clearContent();
 
     const content = document.getElementById('content');

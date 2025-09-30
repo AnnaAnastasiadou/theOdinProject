@@ -3,61 +3,71 @@ import appetizersImg from './images/appetizers.jpg';
 import mainsImg from './images/mains.jpg';
 import dessertsImg from './images/desserts.jpg';
 
-// Helper function to find the corresponding image by ID
+// Helper function to find the corresponding image container (figure element))
 function getCategoryFigure(categoryElement) {
     return categoryElement.querySelector('.mobile-figure');
 }
 
-// Helper function to hide all images and show all menu item lists
+// Helper function to reset the state: hide all images and show all menu item lists
 function resetCategories(categories) {
     categories.forEach(category => {
         const figure = getCategoryFigure(category);
         const img = figure ? figure.querySelector('.menu-img') : null;
         const items = category.querySelector('.menu-items');
 
+        // Hide the mobile image figure
         if (figure) {
             figure.classList.remove('show');
         }
 
+        // Show the menu items list
         if (items) {
             items.classList.remove('hidden-mobile');
         }
     });
 }
 
-// When you press on one of the menu sections
-// on smaller screens the relative image should appear
+/*
+ * Adds click listeners to toggle between the category list and the corresponding image 
+ * on mobile screens only, ensuring only one view is active at a time.
+ */
 function addMobileImageToggles() {
+    // Determine if the current view size requires the mobile toggle behavior
     const mobileQuery = window.matchMedia('(max-width: 600px)');
 
-    // 2. Check if the current screen size matches the mobile query
+    // If it's a desktop screen, we rely on CSS for layout, so we exit.
     if (!mobileQuery.matches) {
-        // If it's a desktop screen, exit immediately
         return;
     } 
 
     const categories = document.querySelectorAll('.menu-category');
+    // Ensure the initial state is clean
     resetCategories(categories); 
+    
     categories.forEach(category => {
         const figure = getCategoryFigure(category);
-        const img = figure ? figure.querySelector('.menu-img') : null;
         const items = category.querySelector('.menu-items');
 
         // --- Category Click Listener (Shows Image) ---
         category.addEventListener("click", (e) => {
+            // If the click happened on the image/figure itself, let the image handler handle it
             if (figure && figure.contains(e.target)) return; 
             if (!figure || !items) return;
 
+            // Toggles state: If the figure is already showing, clicking the category hides it
             if (figure.classList.contains('show')) {
                 figure.classList.remove('show');
                  items.classList.remove('hidden-mobile');
                  return;
             };
 
+            // Reset all other categories to ensure only one is open
             resetCategories(categories);
 
+            // Hide the list of items for the current category
             items.classList.add('hidden-mobile');
 
+            // Show the figure image after a slight delay
             setTimeout(() => {
                 figure.classList.add('show');
             }, 10);
@@ -169,12 +179,12 @@ function loadMenu() {
             </div>
         </div>
     `;
+    // Inject the HTML into the main content container
     content.innerHTML = menuHTML;
 
-
+    // Attach mobile image toggles (will only apply listeners if the screen is small enough)
     addMobileImageToggles(); 
     window.addEventListener('resize', addMobileImageToggles);
-
 }
 
 export default loadMenu;
