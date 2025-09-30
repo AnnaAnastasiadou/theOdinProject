@@ -696,6 +696,12 @@ figcaption {
     
 }
 
+.error-input-border {
+    /* Override existing input styling with a clear error state */
+    border: 2px solid red !important; 
+    box-shadow: 0 0 5px red !important; 
+}
+
 /*
 --------------------------------------------------------------------------
   KEYFRAMES (Animations)
