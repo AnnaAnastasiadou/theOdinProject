@@ -90,7 +90,7 @@ function loadMenu() {
                 <div class="menu-category card border" id="appetizers">
                     <h3 class="title">Antipasti (Appetizers)</h3>
                     <figure class="mobile-figure">
-                        <img class="menu-img mobile-img" src="${appetizersImg}" alt="bruschetta">
+                        <img loading="lazy" class="menu-img mobile-img" src="${appetizersImg}" alt="bruschetta">
                         <figcaption class="caption-overlay">Bruschetta</figcaption>
                     </figure>                
                     <div class="menu-items">
@@ -110,17 +110,17 @@ function loadMenu() {
                     </div>
                 </div>
                 <figure class="desktop-figure">
-                    <img class="menu-img desktop-img" src="${appetizersImg}" alt="bruschetta">
+                    <img loading="lazy" class="menu-img desktop-img" src="${appetizersImg}" alt="bruschetta">
                     <figcaption>Bruschetta</figcaption>
                 </figure>
                 <figure class="desktop-figure">           
-                    <img class="menu-img desktop-img" src="${mainsImg}" alt="carbonara" height="500" width="500">
+                    <img loading="lazy" class="menu-img desktop-img" src="${mainsImg}" alt="carbonara" height="500" width="500">
                     <figcaption class="caption-overlay">Carbonara</figcaption>
                 </figure>
                 <div class="menu-category card border" id="mains">
                     <h3 class="title">Secondi Piatti (Main Courses)</h3>
                     <figure class="mobile-figure">
-                        <img class="menu-img mobile-img" src="${mainsImg}" alt="carbonara">
+                        <img loading="lazy" class="menu-img mobile-img" src="${mainsImg}" alt="carbonara">
                         <figcaption class="caption-overlay">Carbonara</figcaption>
                     </figure>
                     <div class="menu-items">
@@ -143,7 +143,7 @@ function loadMenu() {
                 <div class="menu-category card border" id="desserts">
                     <h3 class="title">Dolci (Desserts)</h3>
                     <figure class="mobile-figure">
-                        <img class="menu-img mobile-img" src="${dessertsImg}" alt="lava cake">
+                        <img loading="lazy" class="menu-img mobile-img" src="${dessertsImg}" alt="lava cake">
                         <figcaption class="caption-overlay">Lava Cake</figcaption>
                     </figure>
                     <div class="menu-items">
@@ -163,7 +163,7 @@ function loadMenu() {
                     </div>
                 </div>
                 <figure class="desktop-figure">
-                    <img class="menu-img desktop-img" id="desserts-img" src="${dessertsImg}" alt="lava cake" height="500" width="500">
+                    <img loading="lazy" class="menu-img desktop-img" id="desserts-img" src="${dessertsImg}" alt="lava cake" height="500" width="500">
                     <figcaption class="caption-overlay">Lava Cake</figcaption>
                 </figure>
             </div>

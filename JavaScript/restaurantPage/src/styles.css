@@ -1,18 +1,32 @@
+/*
+    --------------------------------------------------------------------------
+    IMPORTS & GLOBAL CUSTOM PROPERTIES (Variables)
+    --------------------------------------------------------------------------
+*/
 @import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:ital,wght@0,100..900;1,100..900&family=SUSE+Mono:ital,wght@0,100..800;1,100..800&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
 
 :root {
+    /* Color Palette */
     --wine-red: #541212;
-    --beige: #d4c6bd;
-    --lighter-beige: #f0e9e4;
+    --lighter-red: #6d1818;
     --deep-blue: #152f42;
     --lighter-blue: #204865;
-    --lighter-red: #6d1818;
+    --beige: #d4c6bd;
+    --lighter-beige: #f0e9e4;
+
+    /* Neutrals */
     --dark-grey: #333;
-    --white: #fff;
     --light-grey: #8d8d8d;
+    --white: #fff;
     --black: #000;
 }
+
+/*
+--------------------------------------------------------------------------
+  BASE STYLES
+--------------------------------------------------------------------------
+*/
 
 * {
     box-sizing: border-box;
@@ -21,7 +35,7 @@
 }
 
 html {
-    font-size: 18px;
+    font-size: 18px; /* Base for rem units on desktop */
 }
 
 body, html {
@@ -34,8 +48,13 @@ body {
     line-height: 1.6;
     color: var(--dark-grey);
     background-color: var(--beige);
-    font-size: 18px;
 }
+
+/*
+--------------------------------------------------------------------------
+  TYPOGRAPHY (Headings)
+--------------------------------------------------------------------------
+*/
 
 h1, h2 {
     font-family: 'Titillium Web', sans-serif;
@@ -60,10 +79,11 @@ h3 {
     margin-bottom: 0.8rem;
 }
 
-/* h3 {
-    font-weight: 500;
-    font-size: 1.5rem;
-} */
+/*
+--------------------------------------------------------------------------
+  NAVIGATION BAR (#navbar)
+--------------------------------------------------------------------------
+*/
 
 #navbar {
     display: flex;
@@ -73,7 +93,7 @@ h3 {
     padding: 2rem;
     border: none;
     box-shadow: 0 0 1rem var(--black);
-    background-color: var(--wine-red); /*lightgray*/
+    background-color: var(--wine-red); 
     height: 6.5rem;
 }
 
@@ -84,6 +104,7 @@ h3 {
     gap: 2rem;
 }
 
+/* Nav Link Buttons */
 .nav-btn {
     background-color: var(--deep-blue);
     color: var(--white);
@@ -113,7 +134,7 @@ h3 {
                         0.1rem 0.1rem 0.2rem black;
 }
 
-
+/* Logo Button */
 #logo-btn {
     font-family: 'Great Vibes', cursive;
     background-color: #531212;
@@ -124,13 +145,6 @@ h3 {
     transition: 0.2s ease-in-out;
 }
 
-/* #logo-btn:hover {
-    box-shadow: 0.1rem 0.1rem 0.2rem var(--dark-grey),
-                0.2rem 0.2rem 0.5rem var(--dark-grey)
-    ;
-    cursor: pointer;
-} */
-
 #logo-btn:active, #logo-btn.active {
     rotate: none;
     background-color: var(--lighter-red);
@@ -138,31 +152,20 @@ h3 {
                         0.1rem 0.1rem var(--black);
 }
 
+/*
+--------------------------------------------------------------------------
+  GLOBAL PAGE STRUCTURE AND COMPONENTS
+--------------------------------------------------------------------------
+*/
+
 .page {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     padding: 2rem;
-    min-height: calc(100vh - 6.5rem);
+    min-height: calc(100vh - 6.5rem); /* Full height minus navbar height */
     color: var(--deep-blue);
-}
-
-#home-page {
-    align-items: center;
-    background-image: 
-        linear-gradient(rgb(0,0,0,0.6), rgba(0,0,0,0.6)),
-        url("./images/restaurant.jpg");
-        background-size: cover;
-        background-position: center;
-    color: var(--white);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 2rem;
 }
 
 .reservation-link {
@@ -187,24 +190,6 @@ h3 {
     box-shadow: none;
 }
 
-#menu-page{
-    color: var(--deep-blue);
-    /* background-image: 
-        radial-gradient(
-             circle at 0% 30%,
-            rgba(109, 24, 24, 0.5) 0%,
-            var(--white) 20%,
-            transparent 100%
-        ),
-        radial-gradient(
-            circle at 100% 70%,
-            rgba(41, 90, 124, 0.5) 0%,
-            var(--white) 20%,
-            transparent 100%
-        ); */
-
-}
-
 .intro {
     text-align: center;
     line-height: 2rem;
@@ -215,19 +200,6 @@ h3 {
 .intro h2 {
     font-weight: 800;
 }
-
-#menu {
-    display: grid;
-    grid-template-columns: repeat(2, 2fr);
-    gap: 2rem;
-    grid-template-rows: auto;
-    justify-items: center;
-    align-items: center;
-}
-
-/* .mobile-img {
-    display: none;
-} */
 
 .card {
     background-color: var(--lighter-beige);
@@ -245,6 +217,47 @@ h3 {
     color: var(--wine-red);
     /* margin-bottom: 1rem; */
     font-weight: 800;
+}
+
+/*
+--------------------------------------------------------------------------
+ HOME PAGE (#home-page)
+--------------------------------------------------------------------------
+*/
+
+#home-page {
+    align-items: center;
+    background-image: 
+        linear-gradient(rgb(0,0,0,0.6), rgba(0,0,0,0.6)),
+        url("./images/restaurant.jpg");
+        background-size: cover;
+        background-position: center;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 2rem;
+}
+
+/*
+--------------------------------------------------------------------------
+  MENU PAGE (#home-page)
+--------------------------------------------------------------------------
+*/
+
+#menu-page{
+    color: var(--deep-blue);
+}
+
+#menu {
+    display: grid;
+    grid-template-columns: repeat(2, 2fr);
+    gap: 2rem;
+    grid-template-rows: auto;
+    justify-items: center;
+    align-items: center;
 }
 
 .menu-category {
@@ -279,17 +292,16 @@ h3 {
     object-fit: cover;
 }
 
-/* Hide the mobile figure on desktop view */
-.mobile-figure {
-    display: none;
-}
-
 .desktop-figure {
     display: block; 
     max-width: 450px;
     width: 100%;
     height: 100%;
     position: relative;
+}
+
+.mobile-figure {
+    display: none; /* Hide mobile figure on desktop */
 }
 
 figcaption {
@@ -302,7 +314,6 @@ figcaption {
 .desktop-figure figcaption {
     width: auto;
     margin: auto;
-    /* Overlay style */
     background-color: rgba(0, 0, 0, 0.75);
     color: var(--white);
     padding: 1rem 0;
@@ -311,7 +322,6 @@ figcaption {
     transform: translateY(100%); 
     opacity: 0;
     
-    /* Animation transition */
     transition: transform 0.3s ease-out, opacity 0.3s ease-out;
     
     z-index: 5; 
@@ -319,11 +329,10 @@ figcaption {
 
 /* Hover state: Slide the caption up */
 .desktop-figure:hover figcaption {
-    transform: translateY(-300%); /* Move it back to the bottom edge */
+    transform: translateY(-300%);
     opacity: 1;
 }
 
-/* Optional: Add a slight scale effect to the image on hover for visual feedback */
 .desktop-figure:hover .menu-img.desktop-img {
     transform: scale(1.03);
     transition: transform 0.3s ease-out;
@@ -333,22 +342,33 @@ figcaption {
     display: none;
 }
 
-#about-header {
-    text-align: center;
-}
+/*
+--------------------------------------------------------------------------
+  ABOUT PAGE (#about-page)
+--------------------------------------------------------------------------
+*/
 
 .section {
     margin-bottom: 3rem;
 }
 
+#about-header {
+    text-align: center;
+}
+
 .about-content {
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row-reverse; /* Text on left, images on right */
     flex-wrap: nowrap;
     width: 100%;
     justify-content: center;
     align-items: flex-start;
     gap: 2rem;
+}
+
+.about-text {
+    flex: 1;
+    max-width: 500px;
 }
 
 .about-text p {
@@ -363,17 +383,9 @@ figcaption {
     transform: scale(1.02);
 }
 
-.about-text {
-    flex: 1;
-    max-width: 500px;
-}
-
 .about-images {
-    flex: 1;
-    max-width: 500px;
-}
-
-.about-images {
+    /* flex: 1; */
+    max-width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -386,8 +398,66 @@ figcaption {
     width: 100%;
 }
 
-/* ---- TIMELINE STYLING ----*/
+/* Quotes */
+.quotes {
+    width: 100%;
+    background-color: var(--wine-red);
+    color: var(--lighter-beige);
+    padding: 0.5rem;
+    border-radius: 5px;
+    text-align: center;
+}
 
+.quote {
+    font-size: 1.5rem;
+    font-style: italic;
+    margin-bottom: 0.5rem;
+}
+
+.quote-author {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Values Grid */
+.values h3 {
+    text-align: center;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.2rem;
+}
+
+.value-card {
+    border-top: 10px solid var(--lighter-blue);
+    box-shadow: 0.1rem 0.1rem 0.3rem var(--black);
+    border-radius: 5px;;
+    width: 300px;
+    height: 300px;
+    padding: 2rem;
+    transition: 0.3s ease-in-out;
+} 
+
+.value-card:hover {
+    border-top: 10px solid var(--lighter-beige);
+}
+
+.values .title {
+    font-size: 1.2rem;
+}
+
+.value-icon img {
+    height: 1.5rem;
+    vertical-align: middle;
+}
+
+/* Timeline */
 .timeline {
     position: relative;
     width: 100%;
@@ -395,6 +465,7 @@ figcaption {
     margin: 3rem auto;
 }
 
+/* Central Line */
 .timeline-items::before {
     content: '';
     position: absolute;
@@ -414,8 +485,6 @@ figcaption {
     z-index: 2;
 }
 
-
-/* Individual timeline items */
 .timeline-item {
     padding: 1.5rem;
     position: relative;
@@ -483,63 +552,13 @@ figcaption {
     padding-bottom: 0.3rem;
 }
 
-/* -------------------------- */
-
-.quotes {
-    width: 100%;
-    background-color: var(--wine-red);
-    color: var(--lighter-beige);
-    padding: 0.5rem;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.quote {
-    font-size: 1.5rem;
-    font-style: italic;
-    margin-bottom: 0.5rem;
-}
-
-.quote-author {
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-.values h3 {
-    text-align: center;
-}
-
-.values-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-    padding: 0 0.2rem;
-}
-
-.value-card {
-    border-top: 10px solid var(--lighter-blue);
-    box-shadow: 0.1rem 0.1rem 0.3rem var(--black);
-    border-radius: 5px;;
-    width: 300px;
-    height: 300px;
-    padding: 2rem;
-    transition: 0.3s ease-in-out;
-} 
-
-.value-card:hover {
-    border-top: 10px solid var(--lighter-beige);
-}
-
-.values .title {
-    font-size: 1.2rem;
-}
-
-.value-icon img {
-    height: 1.5rem;
-    vertical-align: middle;
+/*
+--------------------------------------------------------------------------
+  CONTACT PAGE (#contact-page)
+--------------------------------------------------------------------------
+*/
+.contact.intro {
+    margin-bottom: 2rem;
 }
 
 .contact-content {
@@ -556,26 +575,35 @@ figcaption {
     height: 100%;
     padding: 2rem;
     background-color: transparent;
-    color: var(--lighter-blue);
-}
-
-.contact.intro {
-    margin-bottom: 2rem;
 }
 
 .contact-card {
     padding: 1rem;
 }
 
-.contact-card h3 {
-    color: var(--lighter-blue);
-}
-
 .hours-table td{
     padding-right: 1rem;
 }
 
+#contact-page .reservation-link {
+    background-color: var(--wine-red);
+    color: var(--lighter-beige);
+    margin-bottom: 1rem;
+    box-shadow: 0.2rem 0.2rem 0.3rem var(--black);
+}
 
+#contact-page .reservation-link:hover {
+    background-color: var(--beige);
+    color: var(--wine-red);
+    border: 2px solid var(--wine-red);
+    box-shadow: 0.3rem 0.3rem 0.3rem var(--black);
+}
+
+#contact-page .reservation-link:active {
+    box-shadow: none;
+}
+
+/* Contact Form */
 .form-container {
     background-color: var(--lighter-blue);
     color: var(--lighter-beige);
@@ -588,6 +616,8 @@ figcaption {
     align-items: center;
     text-align: center;
     gap: 1.5rem;
+    animation: fade 1s forwards, 
+                slideLeft 1s forwards;
 }
 
 .form {
@@ -612,8 +642,7 @@ figcaption {
 .form input, .form textarea {
     padding: 0.5rem 1rem;
     background-color: transparent;
-    color: var(--lighter-beige);
-    font-size: 1rem;
+    font-size: 0.9rem;
     border-radius: 0.2rem;
     outline: none;
     border: none;
@@ -622,6 +651,7 @@ figcaption {
 
 .form input {
     border-bottom: 1px solid var(--lighter-beige);
+    color: var(--lighter-beige);
 }
 
 .form input:focus {
@@ -632,6 +662,7 @@ figcaption {
 
 .form textarea {
     background-color: var(--lighter-beige);
+    color: var(--lighter-blue);
 }
 
 .form textarea:focus {
@@ -641,11 +672,6 @@ figcaption {
 
 .form-group {
     margin-bottom: 1rem;
-}
-
-.form-container {
-    animation: fade 1s forwards, 
-                slideLeft 1s forwards;
 }
 
 .form button[type="submit"] {
@@ -670,24 +696,11 @@ figcaption {
     
 }
 
-#contact-page .reservation-link {
-    background-color: var(--wine-red);
-    color: var(--lighter-beige);
-    margin-bottom: 1rem;
-    box-shadow: 0.2rem 0.2rem 0.3rem var(--black);
-}
-
-#contact-page .reservation-link:hover {
-    background-color: var(--beige);
-    color: var(--wine-red);
-    border: 2px solid var(--wine-red);
-    box-shadow: 0.3rem 0.3rem 0.3rem var(--black);
-}
-
-#contact-page .reservation-link:active {
-    box-shadow: none;
-}
-
+/*
+--------------------------------------------------------------------------
+  KEYFRAMES (Animations)
+--------------------------------------------------------------------------
+*/
 @keyframes fade {
     0% {
         opacity: 0;
@@ -709,22 +722,25 @@ figcaption {
     
 }
 
-/* @keyframes slideUp {
+@keyframes slideUp {
     0% {
-        opacity: 0;
         transform: translateY(100%);
-    }
 
+    }
     100% {
-        opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
     }
-} */
+    
+}
 
-/* ----- Mobile Design */
-@media screen and (max-width : 600px) {
+/*
+--------------------------------------------------------------------------
+  MOBILE DESIGN (Max-Width: 600px)
+--------------------------------------------------------------------------
+*/@media screen and (max-width : 600px) {
+    /* BASE ADJUSTMENTS */
     html {
-        font-size: 14px;
+        font-size: 14px; /* Smaller base font size for mobile */
     }
 
     #navbar {
@@ -733,7 +749,7 @@ figcaption {
     }
 
     .page {
-        min-height: calc(100vh - 5rem);
+        min-height: calc(100vh - 5rem); /* Adjust min-height based on new navbar height */
     }
 
     .group-buttons {
@@ -743,13 +759,7 @@ figcaption {
         gap: 1rem;
     }
 
-    .menu-category {
-        max-width: 300px;
-        cursor: pointer;
-        transition: 0.2s ease-in-out;
-        box-shadow: 0.3rem 0.3rem 0.2rem var(--deep-blue);
-    }
-
+    /* MENU PAGE MOBILE */
     #menu {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
@@ -757,29 +767,17 @@ figcaption {
         grid-template-rows: auto;
         justify-items: center;
     }
+    
+    .menu-category {
+        max-width: 300px;
+        cursor: pointer;
+        transition: 0.5s ease-in-out;
+        box-shadow: 0.3rem 0.3rem 0.2rem var(--deep-blue);
+    }
 
-    /* 1. Hide the menu items when the image is shown */
+    /* Toggle Logic for Menu Items/Images */
     .menu-category .menu-items.hidden-mobile {
         display: none !important;
-    }
-
-    .menu-img {
-        max-height: 300px; /* Needs to be larger than the max height of the image */
-        opacity: 1;
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        width: 100%;
-        height: auto;
-    }
-
-    .menu-img.active {
-        display: block;
-        max-width: 100%;
-        border-radius: 1rem;
-    }
-
-    .menu-items.hidden {
-        display: none;
     }
 
     .desktop-figure {
@@ -788,18 +786,17 @@ figcaption {
     }
 
     .mobile-figure {
-        display: block; /* We use max-height/opacity to hide it for animation */
+        display: block;
         position: relative; 
         max-width: 300px;
         width: 100%;
-        /* HIDDEN STATE (Base for the transition) */
+        /* HIDDEN STATE for animation */
         opacity: 0;
-        max-height: 0; /* Keeps content hidden and allows for slide transition */
+        max-height: 0;
         overflow: hidden;
         cursor: pointer; 
-        transition: max-height 0.4s ease-out, opacity 0.3s ease-in;
+        transition: max-height 1s ease-in-out, opacity 1s ease-in-out;
     }
-
 
     .mobile-figure.show {
         max-height: 500px;
@@ -822,6 +819,13 @@ figcaption {
         text-align: center;
     }
 
+    /* ABOUT PAGE MOBILE */
+    .about-content {
+        flex-direction: column; /* Stack vertically */
+        align-items: center;
+        gap: 2rem;
+    }
+
     .values-grid {
         display: flex;
         flex-direction: row;
@@ -831,13 +835,10 @@ figcaption {
         justify-content: center;
     }
 
-    .about-content {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        gap: 2rem;
+    /* TIMELINE MOBILE */
+    .timeline-items::before {  
+        left: 1rem;
+        transform: translateX(-1rem);
     }
 
     .timeline-item {
@@ -845,27 +846,54 @@ figcaption {
         max-width: 500px;
     }
 
-    .timeline-items::before {
-        left: 1rem;
-        transform: translateX(-1rem);
+    .menu-img {
+        max-height: 300px; 
+        opacity: 1;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        height: auto;
     }
 
+    .menu-img.active {
+        display: block;
+        max-width: 100%;
+        border-radius: 1rem;
+    }
+
+    .menu-items.hidden {
+        display: none;
+    }
+    
     .timeline-item:nth-child(odd),
     .timeline-item:nth-child(even) {
-        margin: 0 auto 2rem auto; /* Both centered */
-    }
-
-    .timeline-item:nth-child(odd):hover {
-        transform: translateX(1rem);
+        margin: 0 auto 2rem auto; /* Both centered relative to container*/
+        left: auto;
+        right: auto;
     }
 
     /* Position dots for left and right items */
+    .timeline-item:nth-child(odd)::after,
     .timeline-item:nth-child(odd)::after {
-        left: -0.75rem;
+        left: 0.1rem; /* Standard right-shift hover */
+        right: auto;
+        transform: translateX(-50%) translateY(-50%);
     }
 
+    .timeline-item:nth-child(odd):hover,
+    .timeline-item:nth-child(even):hover {
+        transform: translateX(1rem); /* Standard right-shift hover */
+    }
+
+    /* CONTACT PAGE MOBILE */
     .contact-content {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Single column layout */
+    }
+
+    .form-container {
+        /* Override desktop animation for mobile slide-up effect */
+        animation: fade 1s forwards, 
+                    slideUp 1s forwards;
     }
 
 } 

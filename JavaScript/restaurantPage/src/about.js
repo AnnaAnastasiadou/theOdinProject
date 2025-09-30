@@ -3,8 +3,6 @@ import bakingImg from './images/baking.jpg';
 import familyEatingImg from './images/family-eating.jpg';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-// <img src="https://images.unsplash.com/photo-1554679665-f5537f187268" alt="Restaurant interior">
-// <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e" alt="Chef preparing food">
 function loadAbout() {
     // Clear existing content
     clearContent();
@@ -32,8 +30,8 @@ function loadAbout() {
                 </div>
             
                 <div class="about-images section">
-                    <img class="about-img" src=${bakingImg} alt="Chef preparing food">
-                    <img class="about-img" src=${familyEatingImg} alt="Family eating together">
+                    <img loading="lazy" class="about-img" src=${bakingImg} alt="Chef preparing food">
+                    <img loading="lazy" class="about-img" src=${familyEatingImg} alt="Family eating together">
                 </div>
             </div>
 
@@ -42,28 +40,28 @@ function loadAbout() {
                 <div class="values-grid">
                     <div class="value-card">
                         <div class="value-icon">
-                            <img src="https://img.icons8.com/3d-fluency/94/ingredients.png" alt="Quality Ingredients Icon">
+                            <img loading="lazy" src="https://img.icons8.com/3d-fluency/94/ingredients.png" alt="Quality Ingredients Icon">
                         </div>
                         <div class="title">Quality Ingredients</div>
                         <p>We source the freshest, highest-quality ingredients from local farms and producers.</p>
                     </div>
                     <div class="value-card">
                         <div class="value-icon">
-                            <img src="https://img.icons8.com/emoji/48/folded-hands-emoji.png" alt="Quality Ingredients Icon">
+                            <img loading="lazy" src="https://img.icons8.com/emoji/48/folded-hands-emoji.png" alt="Quality Ingredients Icon">
                         </div>
                         <div class="title">Craftsmanship</div>
                         <p>Our chefs bring years of experience and passion to every dish they create.</p>
                     </div>
                     <div class="value-card">
                         <div class="value-icon">
-                            <img src="https://img.icons8.com/color/48/conference-call--v1.png" alt="Quality Ingredients Icon">
+                            <img loading="lazy" src="https://img.icons8.com/color/48/conference-call--v1.png" alt="Quality Ingredients Icon">
                         </div>
                         <div class="title">Community</div>                        
                         <p>We're proud to be part of the neighborhood and support local initiatives.</p>
                     </div>
                     <div class="value-card">  
                         <div class="value-icon">
-                            <img src="https://img.icons8.com/fluency/48/sustainability.png" alt="Quality Ingredients Icon">
+                            <img loading="lazy" src="https://img.icons8.com/fluency/48/sustainability.png" alt="Quality Ingredients Icon">
                         </div>                  
                         <div class="title">Sustainability</div>
                         <p>We're committed to environmentally responsible practices in our kitchen and operations.</p>

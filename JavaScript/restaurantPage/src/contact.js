@@ -1,5 +1,58 @@
 import {clearContent} from './utility.js';
 
+function validateForm() {
+    const nameInput = document.getElementById('name-input');
+    const emailInput = document.getElementById('email-input');
+    const messageInput = document.getElementById('message-input');
+    
+    nameInput.style.border = "";
+    emailInput.style.border = "";
+    messageInput.style.border = "";
+
+    if (nameInput.value.trim() === '') {
+        nameInput.style.border = "1px solid red";
+        alert("Please enter your name.");
+        return false;
+    }
+
+    if (emailInput.value.trim() === '') {
+        emailInput.style.border = "1px solid red";
+        alert("Please enter your email.");
+        return false;
+    }
+
+    if (messageInput.value.trim() === '') {
+        messageInput.style.border = "1px solid red";
+        alert("Please enter a message");
+        return false;
+    }
+
+    // Name validation
+    // Check that there are only letters and spaces/- and there is at least one space.
+    const namePattern = /^[a-zA-Z\-']+\s[a-zA-Z\s\-']+$/;
+    if (!namePattern.test(nameInput.value.trim())) {
+        nameInput.style.border = "1px solid red";
+        alert("Please enter a valid full name");
+        return false;
+    }
+    // Email validation
+    // Checks that there is an @ and a . at the right place. 
+    // The rest of the string shouldn't include a @ nor a space.
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^/s@]+$/;
+
+    if (!emailPattern.test(emailInput.value.trim())) {
+        emailInput.style.border = "1px solid red";
+        alert("Please enter a valid email address.")
+        return false;
+    }
+    
+    // If all checks pass the fields are cleared and submittion is allowed 
+    nameInput.value ="";
+    emailInput.value ="";
+    messageInput.value ="";
+    return true;
+}
+
 function loadContact() {
     // Clear existing content
     clearContent();
@@ -30,15 +83,11 @@ function loadContact() {
                         <table class="hours-table">
                             <tr>
                                 <td class="day">Monday - Thursday</td>
-                                <td>11:00 AM - 10:00 PM</td>
+                                <td>12:00 PM - 10:00 PM</td>
                             </tr>
                             <tr>
-                                <td class="day">Friday - Saturday</td>
-                                <td>11:00 AM - 11:00 PM</td>
-                            </tr>
-                            <tr>
-                                <td class="day">Sunday</td>
-                                <td>10:00 AM - 9:00 PM</td>
+                                <td class="day">Friday - Sunday</td>
+                                <td>12:00 AM - 11:00 PM</td>
                             </tr>
                         </table>
                     </div>
@@ -48,17 +97,17 @@ function loadContact() {
                     <form id="contact-form" class="form">
                         <div class="form-group">
                             <label for="name">Your Name *</label>
-                            <input type="text" id="name" required>
+                            <input type="text" id="name-input">
                         </div>
                         
                         <div class="form-group">
                             <label for="email">Your Email *</label>
-                            <input type="email" id="email" required>
+                            <input type="email" id="email-input">
                         </div>
                         
                         <div class="form-group">
                             <label for="message">Your Message *</label>
-                            <textarea id="message" rows="5" required></textarea>
+                            <textarea id="message-input" rows="5"></textarea>
                         </div>
                         
                         <button type="submit">Send Message</button>
@@ -70,6 +119,17 @@ function loadContact() {
         </div>
     `;
     content.innerHTML = contactHTML;
+
+    const contactForm = document.getElementById('contact-form');
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (validateForm()) {
+                alert("Thank you for your message! ");
+            }
+        });
+    }
 }
 
 export default loadContact;
