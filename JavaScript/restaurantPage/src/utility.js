@@ -3,7 +3,7 @@ function clearContent() {
     document.getElementById('content').innerHTML = '';
 }
 
-/**
+/*
  * Removes the 'active' class from all navigation buttons 
  * and adds it to the button corresponding to the given ID.
  * @param {string} activeID The ID of the button to mark as active.
@@ -18,7 +18,7 @@ function setActiveButton (activeID) {
     }
 }
 
-/**
+/*
  * Loads a new page and updates the navigation bar state.
  * @param {Function} loadfunction The function (e.g., loadHome) to execute to inject page content.
  * @param {string} buttonID The ID of the button being clicked/activated.

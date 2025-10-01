@@ -166,6 +166,7 @@ h3 {
     padding: 2rem;
     min-height: calc(100vh - 6.5rem); /* Full height minus navbar height */
     color: var(--deep-blue);
+    animation: pageFadeIn 0.8s ease-in-out 0.1s forwards;
 }
 
 .reservation-link {
@@ -239,6 +240,7 @@ h3 {
     justify-content: center;
     text-align: center;
     gap: 2rem;
+    animation: none;
 }
 
 /*
@@ -739,11 +741,23 @@ figcaption {
     
 }
 
+@keyframes pageFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /*
 --------------------------------------------------------------------------
   MOBILE DESIGN (Max-Width: 600px)
 --------------------------------------------------------------------------
-*/@media screen and (max-width : 600px) {
+*/
+@media screen and (max-width : 600px) {
     /* BASE ADJUSTMENTS */
     html {
         font-size: 14px; /* Smaller base font size for mobile */
