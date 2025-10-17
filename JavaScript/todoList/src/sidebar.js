@@ -11,8 +11,14 @@ export function setupSidebarToggle() {
     function toggleSidebar() {
         sidebar.classList.toggle('sidebar-hidden');
         button.classList.toggle('sidebar-hidden');
-    }   
+    }
 
+    function init() {
+        sidebar.classList.add('sidebar-hidden');
+        button.classList.add('sidebar-hidden');
+    }
+
+    init();
     button.addEventListener('click', toggleSidebar);
 }
 
