@@ -1,4 +1,4 @@
-export function initHamburgerMenu() {
+export function setupSidebarToggle() {
     const button = document.getElementById('hamburger-btn');
     const sidebar = document.querySelector('.sidebar');
 

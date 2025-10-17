@@ -5,8 +5,11 @@
 // Make sure that the app doesn't crash if the data that you want to retrieve are not there
 
 import './style.css';
-import { initHamburgerMenu } from './sidebar';
+import { App } from "./app.js"
+import { setupSidebarToggle } from "./sidebar.js";
 
 document.addEventListener('DOMContentLoaded', () => {
-    initHamburgerMenu();
+    setupSidebarToggle();
+    App();
 });
+
