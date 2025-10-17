@@ -203,8 +203,8 @@ header {
     border-right: 3px solid var(--primary-color);
 }
 
-/* Projects List */
-.projects-list {
+/* Groups List */
+.groups-list {
     margin-top: 0.5rem;
 }
 

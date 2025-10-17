@@ -5,11 +5,16 @@
 // Make sure that the app doesn't crash if the data that you want to retrieve are not there
 
 import './style.css';
-import { App } from "./app.js"
+import { App } from "./app.js";
+import { DOM } from "./dom.js";
 import { setupSidebarToggle } from "./sidebar.js";
 
 document.addEventListener('DOMContentLoaded', () => {
+    App.init();
     setupSidebarToggle();
-    App();
+    // --- Testing ---
+    App.addGroup("GEIA SAS");
+    // App.addTodo('Tasks', "Learn JavaScript", "Study modules", new Date(), "high");
+    DOM.renderGroups();
 });
 

@@ -1,11 +1,8 @@
 import { createGroup } from "./group.js"
 import { createTodo } from "./todo.js"
 
-const DEFAULT_GROUP_NAME = 'Tasks';
-
-export const App = () => {
+const App = () => {
     let groups = [];
-    let currentGroup = null;
 
     const addGroup = (name) => {
         if (!name || name.trim()===''){
@@ -52,40 +49,36 @@ export const App = () => {
         }
     };
 
-    const addTodo = (title, description, dueDate, priority, completed = false, project = null) => {
-        // Determine which group to add the todo to
-        let targetGroupId = null
-        if (!project) {
-            targetGroupId = getGroupIdByName(DEFAULT_GROUP_NAME);
-        }
-        else {
-            targetGroupId = getGroupIdByName(project);
-        }
-
+    const addTodo = (groupName, title, description, dueDate, priority, completed = false, project = null) => {
+        const groupId = getGroupIdByName(groupName);
+        
         const newTodo = createTodo(
             title,
             description, 
             dueDate, 
             priority,
             completed,
-            targetGroupId
+            groupId
         );
 
-        const targetGroup = getGroupById(targetGroupId);
+        const targetGroup = getGroupById(groupId);
         targetGroup.todos.push(newTodo);
-
         console.log("Todo added to", targetGroup.name, ":", newTodo);
         return newTodo;
+    }
+
+    const getGroups = () => {
+        return groups;
     }
 
     const init = () => {
         try {
             // Create default groups
-            addGroup('All Todos');
-            const tasks = addGroup(DEFAULT_GROUP_NAME);
-            
-            // Set default group
-            setCurrentGroup(tasks.id);
+            // these groups should be in the filtered groups not the projects
+            // addGroup('All Todos');
+            // addGroup('Tasks');
+            // addGroup('Today');
+            // addGroup('This Week');
 
             console.log('App initialized successfully');
         }
@@ -96,6 +89,16 @@ export const App = () => {
     }
 
     init();
-    addTodo("Work task", "Complete project", "2024-01-30", "high", false, "Tasks");
-    addTodo("Personal task", "Buy groceries", "2024-01-25", "medium", false, "All Todos");
+    return {
+        addGroup,
+        setCurrentGroup,
+        getGroupById,
+        getGroupIdByName,
+        addTodo,
+        getGroups,
+        init
+    };
 }
+
+const appInstance = App();
+export { appInstance as App };
