@@ -1,8 +1,41 @@
 import { createGroup } from "./group.js"
 import { createTodo } from "./todo.js"
+import { loadData, saveData } from "./storage.js";
 
 const App = () => {
     let groups = [];
+    let currentGroup = null;
+
+    // Load data from localStorage on initialization
+    const loadFromStorage = () => {
+        const savedGroups = loadData();
+        if (savedGroups && savedGroups.length > 0) {
+            groups = savedGroups;
+            console.log("Data loaded from localStorage");
+
+            // Set current group to first group after loading
+            if (groups.length > 0) {
+                setCurrentGroup(groups[0].id);
+            }
+        }
+        else {
+            createDefaultGroups();
+        }
+    }
+
+    const createDefaultGroups = () => {
+        try {
+            addGroup('Tasks');
+        }
+        catch (error) {
+            console.log('Default groups already exist');
+        }
+    }
+
+    // Save data after operations
+    const saveToStorage = () => {
+        saveData(groups);
+    };
 
     const addGroup = (name) => {
         if (!name || name.trim()===''){
@@ -16,6 +49,7 @@ const App = () => {
         else {
             const newGroup = createGroup(name.trim());
             groups.push(newGroup);
+            saveToStorage();
             console.log("New group created: ", newGroup);
             return newGroup;
         }
@@ -29,12 +63,12 @@ const App = () => {
         return group;
     };
 
-    const getGroupIdByName = (groupName) => {
+    const getGroupByName = (groupName) => {
         const group = groups.find(g => g.name.toLowerCase() === groupName.toLowerCase());
         if (!group) {
             throw new Error(`Group "${groupName}" not found`);
         }
-        return group.id;
+        return group;
     };
 
     const setCurrentGroup = (groupId) => {
@@ -49,8 +83,14 @@ const App = () => {
         }
     };
 
-    const addTodo = (groupName, title, description, dueDate, priority, completed = false, project = null) => {
-        const groupId = getGroupIdByName(groupName);
+    const addTodo = (title, description, dueDate, priority, completed = false) => {
+        if (!currentGroup) {
+            if (groups.length > 0) {
+                setCurrentGroup(groups[0].id);
+            } else {
+                throw new Error('No groups available');
+            }
+        }
         
         const newTodo = createTodo(
             title,
@@ -58,12 +98,30 @@ const App = () => {
             dueDate, 
             priority,
             completed,
-            groupId
+            currentGroup.id
         );
 
-        const targetGroup = getGroupById(groupId);
-        targetGroup.todos.push(newTodo);
-        console.log("Todo added to", targetGroup.name, ":", newTodo);
+        currentGroup.todos.push(newTodo);
+        saveToStorage();
+        console.log("Todo added to", currentGroup.name, ":", newTodo);
+        return newTodo;
+    }
+
+    const addTodoToGroup = (groupName, title, description, dueDate, priority, completed = false) => {
+        const group = getGroupByName(groupName)
+        
+        const newTodo = createTodo(
+            title,
+            description, 
+            dueDate, 
+            priority,
+            completed,
+            group.id
+        );
+
+        group.todos.push(newTodo);
+        saveToStorage();
+        console.log("Todo added to", currentGroup.name, ":", newTodo);
         return newTodo;
     }
 
@@ -71,15 +129,17 @@ const App = () => {
         return groups;
     }
 
+    const getCurrentGroup = () => {
+        return currentGroup;
+    }
+
+    const getCurrentTodos = () => {
+        return currentGroup ? currentGroup.todos : [];
+    }
+
     const init = () => {
         try {
-            // Create default groups
-            // these groups should be in the filtered groups not the projects
-            // addGroup('All Todos');
-            // addGroup('Tasks');
-            // addGroup('Today');
-            // addGroup('This Week');
-
+            loadFromStorage();
             console.log('App initialized successfully');
         }
         catch (error) {
@@ -93,9 +153,12 @@ const App = () => {
         addGroup,
         setCurrentGroup,
         getGroupById,
-        getGroupIdByName,
+        getGroupByName,
         addTodo,
+        addTodoToGroup,
         getGroups,
+        getCurrentGroup,
+        getCurrentTodos,
         init
     };
 }

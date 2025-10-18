@@ -19,6 +19,12 @@ const DOM = () => {
             groupElement.textContent = group.name;
             groupElement.dataset.groupId = group.id;
             elements.projectsList.appendChild(groupElement);
+
+            groupElement.addEventListener('click', () => {
+                App.setCurrentGroup(group.id);
+                const currentTodos = App.getCurrentTodos();
+                renderTodos(currentTodos);
+            })
         })
     }
 
