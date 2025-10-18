@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
     DOM.renderGroups();
     // --- Testing ---
     // App.addGroup("GEIA SAS");
-    App.addTodo('Test todo', 'This goes to default group', '2024-01-25', 'high');
+    // App.addTodo('Test todo', 'This goes to default group', '2024-01-25', 'high');
     
-    console.log('Current group:', App.getCurrentGroup().name);
-    App.addTodo('Test todo', 'This goes to default group', '2024-01-25', 'high');
+    // console.log('Current group:', App.getCurrentGroup().name);
+    // App.addTodo('Test todo', 'This goes to default group', '2024-01-25', 'high');
 });
 

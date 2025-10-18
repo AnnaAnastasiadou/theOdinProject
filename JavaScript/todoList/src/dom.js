@@ -4,7 +4,7 @@ const DOM = () => {
     // DOM elements
     const elements = {
         projectsList: document.querySelector('.groups-list'),
-        todosContainer: document.querySelector('.all-todos-container'),
+        todosContainer: document.querySelector('.todos-container'),
         sidebar: document.querySelector('.sidebar')
     };
 
@@ -24,9 +24,26 @@ const DOM = () => {
                 App.setCurrentGroup(group.id);
                 const currentTodos = App.getCurrentTodos();
                 renderTodos(currentTodos);
-            })
-        })
+            });
+        });
+    };
+
+    // Render the todos of each group
+    const renderTodos = (todos) => {
+        if (!elements.todosContainer) return;
+        
+        elements.todosContainer.innerHTML = '';
+
+        if (todos.length === 0) {
+            elements.todosContainer.innerHTML = `
+                <div class="empty-state">
+                    <h3>${"No Todos Yet"}</h3>
+                    <p>Click the add button to create your first todo!</p>
+                </div>
+            `;
+        }
     }
+
 
     return {renderGroups};
 }
