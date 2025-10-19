@@ -10,9 +10,16 @@ import { DOM } from "./dom.js";
 import { setupSidebarToggle } from "./sidebar.js";
 
 document.addEventListener('DOMContentLoaded', () => {
-    App.init();
+    // Create the App instance (this runs its internal init)
+    const appInstance = App();
+
+    // Create the DOM instance, *injecting* the App
+    const domInstance = DOM(appInstance);
+
+    // Initialize the UI
     setupSidebarToggle();
-    DOM.renderGroups();
+    domInstance.init();
+
     // --- Testing ---
     // App.addGroup("GEIA SAS");
     // App.addTodo('Test todo', 'This goes to default group', '2024-01-25', 'high');

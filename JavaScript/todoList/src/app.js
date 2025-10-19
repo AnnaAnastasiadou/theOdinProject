@@ -25,7 +25,7 @@ const App = () => {
 
     const createDefaultGroups = () => {
         try {
-            addGroup('Tasks');
+            addGroup('Default');
         }
         catch (error) {
             console.log('Default groups already exist');
@@ -168,5 +168,4 @@ const App = () => {
     };
 }
 
-const appInstance = App();
-export { appInstance as App };
+export { App };
