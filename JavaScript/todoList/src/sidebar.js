@@ -13,12 +13,12 @@ export function setupSidebarToggle() {
         button.classList.toggle('sidebar-hidden');
     }
 
-    function init() {
-        sidebar.classList.add('sidebar-hidden');
-        button.classList.add('sidebar-hidden');
-    }
+    // function init() {
+    //     sidebar.classList.add('sidebar-hidden');
+    //     button.classList.add('sidebar-hidden');
+    // }
 
-    init();
+    // init();
     button.addEventListener('click', toggleSidebar);
 }
 

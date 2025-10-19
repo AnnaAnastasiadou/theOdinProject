@@ -8,6 +8,9 @@ const DOM = () => {
         sidebar: document.querySelector('.sidebar')
     };
 
+    // Default page
+    const DEFAULT_PAGE = "Tasks";
+
     // Render groups in sidebar
     const renderGroups = () => {
         const groups = App.getGroups();
@@ -44,8 +47,15 @@ const DOM = () => {
         }
     }
 
+    const renderDefaultPage = () => {
+        const defaultGroup = App.getDefaultPage();
+        renderTodos(defaultGroup.todos);
+    }
 
-    return {renderGroups};
+    renderGroups();
+    renderDefaultPage();
+    
+    // return {renderGroups};
 }
 
 const domInstance = DOM();

@@ -137,6 +137,10 @@ const App = () => {
         return currentGroup ? currentGroup.todos : [];
     }
 
+    const getDefaultPage = () => {
+        return groups[0];
+    }
+
     const init = () => {
         try {
             loadFromStorage();
@@ -159,6 +163,7 @@ const App = () => {
         getGroups,
         getCurrentGroup,
         getCurrentTodos,
+        getDefaultPage,
         init
     };
 }

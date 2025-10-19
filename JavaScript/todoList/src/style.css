@@ -98,8 +98,9 @@ header {
 
 .sidebar.sidebar-hidden {
     transform: translateX(-100%);
-    overflow: hidden; 
     opacity: 0;
+    width: 0;
+    overflow: hidden; 
 }
 
 #hamburger-btn {
@@ -211,7 +212,7 @@ header {
 /* Main Content */
 .content {
     flex: 1;
-    padding: 32px;
+    padding: 4rem 2rem;
     background: var(--bg-primary);
     overflow-y: auto;
 }
