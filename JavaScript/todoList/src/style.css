@@ -309,7 +309,6 @@ header {
 .todo-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 0.3rem 0.8rem rgba(100, 116, 139, 0.3);
-    cursor: pointer;
 }
 
 .todo-card:hover .todo-title {
@@ -382,27 +381,41 @@ header {
     height: auto;
 }
 
-/* Completion Status */
-.completed-true {
+.status {
     display: inline-block;
     padding: 0.4rem 0.8rem;
     border-radius: 12px;
     font-size: 0.8rem;
     font-weight: 600;
-    background: var(--success-color);
     color: var(--btn-text);
     box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.status:hover {
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.status:active {
+    cursor: pointer;
+    box-shadow: var(--shadow-inset);
+    border-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Completion Status */
+.completed-true {
+    background: var(--success-color);
+    border-style: solid;
+    border-width: 1px;
+    border-color: #10b880 #11a373 #11a373 #10b880;
 }
 
 .completed-false {
-    display: inline-block;
-    padding: 0.4rem 0.8rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
     background: var(--warning-color);
-    color: var(--btn-text);
-    box-shadow: var(--shadow);
+    border-style: solid;
+    border-width: 2px;
+    border-color: #e39103 #c17b01 #c17b01 #e39103;
 }
 
 /* Responsive */

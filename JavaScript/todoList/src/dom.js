@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-const DOM = (appInstance) => {
+const DOM = () => {
     // DOM elements
     const elements = {
         projectsList: document.querySelector('.groups-list'),
@@ -8,9 +8,103 @@ const DOM = (appInstance) => {
         sidebar: document.querySelector('.sidebar')
     };
 
+    /*
+    *
+    * This is a simple Pub/Sub pattern implementation
+    * It allows parts of the application to communicate without
+    * knowing about eac other directly
+    * 
+    */
+
+    // Event registry - stores all event subscribers
+    const events = {
+        groupChange: [], // Array of callbacks for when a group is changed
+        todoStatusToggle: [], // Array of callbacks for when todo status is toggled
+        addTodo: [] // Array of callbacks for when a new todo is added
+    };
+
+    /*
+     * EMIT FUNCTION - Publishes an event to all subscribers
+     * 
+     * When something happens in the DOM, we emit an event
+     * to let any interested parties know about it.
+     * 
+     * @param {string} eventName - The name of the event to emit
+     * @param {any} data - The data to pass to all subscribers
+     * 
+     */
+
+    
+    const emit = (eventName, data) => {
+        if (events[eventName]) {
+            events[eventName].forEach(callback => callback(data));
+        }
+    };
+
+    /**
+     * ON FUNCTION - Subscribers to an event
+     * 
+     * Other parts of the application can use this to show
+     * interest to specific events
+     * 
+     * @param {string} eventName - The name of the event to listen for
+     * @param {function} callback - The function to call when the event occurs
+     * @returns {function} unsubscribe - A function that can be called to stop listening
+     */
+
+    const on = (eventName, callback) => {
+            if (events[eventName]) {
+                events[eventName].push(callback);
+            }
+            return () => { // Return unsubscribe function
+                events[eventName] = events[eventName].filter(cb => cb !== callback);
+            };
+        };
+
+    // const getCurrentGroup = () => {
+    //     const currentGroup = appInstance.getCurrentGroup();
+    //     return currentGroup ? currentGroup : null;
+    // };
+
+    // const refreshTodos = () => {
+    //     const currentGroup = getCurrentGroup();
+    //     if (currentGroup) {
+    //         renderTodos(currentGroup, currentGroup.todos);
+    //     }
+    // };
+
+    const handleStatusToggle  = (statusElement) => {
+        const todoCard = statusElement.closest('.todo-card');
+        const todoId = Number(todoCard?.dataset.todoId);
+        const groupId = Number(todoCard?.dataset.groupId);
+
+        if (todoId && groupId) {
+            emit('todoStatusToggle', {groupId, todoId})
+        }
+
+    };
+
+    /**
+     * INITIALIZE EVENT HANDLERS
+     * This sets up the click listeners that trigger our custom events
+     */
+    const initializeEventHandlers = () => {
+        document.addEventListener('click', (e) => {
+            const statusElement = e.target.closest('.status');
+            if (statusElement) {
+                e.preventDefault();
+                handleStatusToggle(statusElement);
+            }
+
+            const addTodoBtn = e.target.closest('.add-todo');
+            if (addTodoBtn) {
+                e.preventDefault();
+                emit('addTodo', {status: 'requested'});            }
+        });
+    };
+
     // Render groups in sidebar
-    const renderGroups = () => {
-        const groups = appInstance.getGroups();
+    const renderGroups = (groups) => {
         elements.projectsList.innerHTML = '';
 
         groups.forEach(group => {
@@ -21,13 +115,10 @@ const DOM = (appInstance) => {
             elements.projectsList.appendChild(groupElement);
 
             groupElement.addEventListener('click', () => {
-                if (appInstance.getCurrentGroup.id !== group.id) {
-                    appInstance.setCurrentGroup(group.id);
-                    const currentTodos = appInstance.getCurrentTodos();
-                    renderTodos(group, currentTodos);
-                }
-                
+                emit('groupChange', group.id);
             });
+
+            elements.projectsList.appendChild(groupElement);
         });
     };
 
@@ -61,6 +152,8 @@ const DOM = (appInstance) => {
         todos.forEach(item => {
             const todoElement = document.createElement('div');
             todoElement.className = `todo-card priority-${item.priority} ${item.completed ? 'completed' : ''}`;
+            todoElement.dataset.todoId = item.id;
+            todoElement.dataset.groupId = group.id;
             todoElement.innerHTML = `
                 <div class="todo-header">
                     <h3 class="todo-title">${item.title}</h3>
@@ -69,36 +162,44 @@ const DOM = (appInstance) => {
                 <p class="todo-description">${item.description}</p>
                 <div class="todo-footer">
                     <span class="due-date">
-                        <img width="48" height="48" src="https://img.icons8.com/fluency/48/calendar--v1.png" alt="calendar--v1"/> 
+                        <img src="https://img.icons8.com/fluency/48/calendar--v1.png" alt="calendar--v1"/> 
                         Due: ${format(item.dueDate, "dd/MM/yyyy")}
                     </span>
-                    <span class="status completed-${item.completed}">
-                        ${item.completed ? '<i class="fa-regular fa-circle-check"></i>Completed' 
-                            : '<i class="fa-solid fa-hourglass-start"></i>Pending'}
-                    </span>
+                    <button class="status completed-${item.completed}">
+                        ${item.completed ? '<i class="fa-regular fa-circle-check"></i>Completed' : 
+                                            '<i class="fa-solid fa-hourglass-start"></i>Pending'}
+                    </button>
                 </div>
             `;
             todosContainer.appendChild(todoElement);
         })
     }
 
-    const renderDefaultPage = () => {
-        const defaultGroup = appInstance.getDefaultPage();
-        renderTodos(defaultGroup, defaultGroup.todos);
-    }
+    // const renderDefaultPage = () => {
+    //     const defaultGroup = appInstance.getDefaultPage();
+    //     renderTodos(defaultGroup, defaultGroup.todos);
+    // }
 
     // This function will be called in index.js
-    const init = () => {
-        renderGroups();
-        renderDefaultPage();
-
+    const init = (initialGroups, defaultGroup) => {
+        renderGroups(initialGroups);
+        renderTodos(defaultGroup, defaultGroup.todos);
+        initializeEventHandlers();
         // appInstance.addTodo("hello", "This is test 1", "2026-08-03", "low", true);
         // appInstance.addTodo("hello2", "This is test 2", "2026-08-03", "medium", true);
         // appInstance.addTodo("hello3", "This is test 3", "2026-08-03", "high");
         // appInstance.addTodo("hello4", "This is test 4", "2026-08-03", "low");
     }
 
-    return { init }
+    return { 
+        init, 
+        renderGroups,
+        renderTodos,
+        // refreshTodos,
+        onGroupChange: (callback) => on('groupChange', callback),
+        onTodoStatusToggle: (callback) => on('todoStatusToggle', callback),
+        onAddTodo: (callback) => on('addTodo', callback)
+    };
 }
 
 export { DOM };

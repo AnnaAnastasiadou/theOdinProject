@@ -14,17 +14,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const appInstance = App();
 
     // Create the DOM instance, *injecting* the App
-    const domInstance = DOM(appInstance);
+    const domInstance = DOM();
 
-    // Initialize the UI
+
+    // Set up event subscriptions
+    domInstance.onGroupChange((groupId) => {
+        appInstance.setCurrentGroup(groupId);
+        const currentGroup = appInstance.getCurrentGroup();
+        domInstance.renderTodos(currentGroup, currentGroup.todos);
+    });
+
+    domInstance.onTodoStatusToggle(({groupId, todoId}) => {
+        const result = appInstance.toggleTodoStatus(groupId, todoId);
+        if (result.success) {
+            const currentGroup = appInstance.getCurrentGroup();
+            if (currentGroup && currentGroup.id === groupId) {
+                domInstance.renderTodos(currentGroup, currentGroup.todos);
+            }
+        }
+    });
+
+    domInstance.onAddTodo((todoData) => {
+        appInstance.addTodo(
+            todoData.title,
+            todoData.description,
+            todoData.dueDate,
+            todoData.priority,
+            todoData.completed
+        );
+        // open form
+        const currentGroup = appInstance.getCurrentGroup();
+        domInstance.renderTodos(currentGroup, currentGroup.todos);
+    });
+
+    // Initialize everything
+    const initialGroups = appInstance.getGroups();
+    const defaultGroup = appInstance.getDefaultPage();
     setupSidebarToggle();
-    domInstance.init();
-
-    // --- Testing ---
-    // App.addGroup("GEIA SAS");
-    // App.addTodo('Test todo', 'This goes to default group', '2024-01-25', 'high');
-    
-    // console.log('Current group:', App.getCurrentGroup().name);
-    // App.addTodo('Test todo', 'This goes to default group', '2024-01-25', 'high');
+    domInstance.init(initialGroups, defaultGroup);
 });
-

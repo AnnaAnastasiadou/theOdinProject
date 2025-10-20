@@ -37,6 +37,37 @@ const App = () => {
         saveData(groups);
     };
 
+    const toggleTodoStatus = (groupId, todoId) => {
+        try {
+            const group = getGroupById(groupId);
+            if (!group) {
+                throw new Error(`Group ${group.name} not found`);
+            }
+
+            const  todoIndex = group.todos.findIndex(todo => todo.id = todoId);
+            if (todoIndex === -1) {
+                throw new Error(`Todo ${todo.title} not found in group ${groupId}}`);
+            }
+
+            group.todos[todoIndex].completed = !group.todos[todoIndex].completed;
+
+            saveToStorage();
+            
+            return {
+                success: true,
+                todo: group.todos[todoIndex],
+                groupId: groupId
+            };
+        }
+        catch(error) {
+            console.error(`Error toggling todo status:` , error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+
     const addGroup = (name) => {
         if (!name || name.trim()===''){
             throw new Error("Group name cannot be empty");
@@ -158,6 +189,7 @@ const App = () => {
         setCurrentGroup,
         getGroupById,
         getGroupByName,
+        toggleTodoStatus,
         addTodo,
         addTodoToGroup,
         getGroups,
