@@ -61,22 +61,9 @@ const DOM = () => {
             };
         };
 
-    // const getCurrentGroup = () => {
-    //     const currentGroup = appInstance.getCurrentGroup();
-    //     return currentGroup ? currentGroup : null;
-    // };
-
-    // const refreshTodos = () => {
-    //     const currentGroup = getCurrentGroup();
-    //     if (currentGroup) {
-    //         renderTodos(currentGroup, currentGroup.todos);
-    //     }
-    // };
-
     const handleStatusToggle  = (statusElement) => {
-        const todoCard = statusElement.closest('.todo-card');
-        const todoId = Number(todoCard?.dataset.todoId);
-        const groupId = Number(todoCard?.dataset.groupId);
+        const todoId = Number(statusElement.dataset.todoId);
+        const groupId = Number(statusElement.dataset.groupId);
 
         if (todoId && groupId) {
             emit('todoStatusToggle', {groupId, todoId})
@@ -90,7 +77,9 @@ const DOM = () => {
      */
     const initializeEventHandlers = () => {
         document.addEventListener('click', (e) => {
-            const statusElement = e.target.closest('.status');
+            // Check if the element or one of its parents have the class "status"
+            // console.log(e);
+            const statusElement = e.target.closest('.status'); 
             if (statusElement) {
                 e.preventDefault();
                 handleStatusToggle(statusElement);
@@ -99,7 +88,8 @@ const DOM = () => {
             const addTodoBtn = e.target.closest('.add-todo');
             if (addTodoBtn) {
                 e.preventDefault();
-                emit('addTodo', {status: 'requested'});            }
+                emit('addTodo', {status: 'requested'}); 
+            }
         });
     };
 
@@ -165,7 +155,7 @@ const DOM = () => {
                         <img src="https://img.icons8.com/fluency/48/calendar--v1.png" alt="calendar--v1"/> 
                         Due: ${format(item.dueDate, "dd/MM/yyyy")}
                     </span>
-                    <button class="status completed-${item.completed}">
+                    <button class="status completed-${item.completed}" data-todo-id="${item.id}" data-group-id="${group.id}">
                         ${item.completed ? '<i class="fa-regular fa-circle-check"></i>Completed' : 
                                             '<i class="fa-solid fa-hourglass-start"></i>Pending'}
                     </button>
@@ -175,27 +165,18 @@ const DOM = () => {
         })
     }
 
-    // const renderDefaultPage = () => {
-    //     const defaultGroup = appInstance.getDefaultPage();
-    //     renderTodos(defaultGroup, defaultGroup.todos);
-    // }
 
     // This function will be called in index.js
     const init = (initialGroups, defaultGroup) => {
         renderGroups(initialGroups);
         renderTodos(defaultGroup, defaultGroup.todos);
         initializeEventHandlers();
-        // appInstance.addTodo("hello", "This is test 1", "2026-08-03", "low", true);
-        // appInstance.addTodo("hello2", "This is test 2", "2026-08-03", "medium", true);
-        // appInstance.addTodo("hello3", "This is test 3", "2026-08-03", "high");
-        // appInstance.addTodo("hello4", "This is test 4", "2026-08-03", "low");
     }
 
     return { 
         init, 
         renderGroups,
         renderTodos,
-        // refreshTodos,
         onGroupChange: (callback) => on('groupChange', callback),
         onTodoStatusToggle: (callback) => on('todoStatusToggle', callback),
         onAddTodo: (callback) => on('addTodo', callback)

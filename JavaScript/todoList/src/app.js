@@ -39,16 +39,19 @@ const App = () => {
 
     const toggleTodoStatus = (groupId, todoId) => {
         try {
+            console.log('Toggling todo status:', { groupId, todoId });
+
             const group = getGroupById(groupId);
             if (!group) {
                 throw new Error(`Group ${group.name} not found`);
             }
 
-            const  todoIndex = group.todos.findIndex(todo => todo.id = todoId);
+            const  todoIndex = group.todos.findIndex(todo => todo.id === todoId);
             if (todoIndex === -1) {
-                throw new Error(`Todo ${todo.title} not found in group ${groupId}}`);
+                throw new Error(`Todo with id ${todoId} not found in group ${group.name}}`);
             }
 
+            // Toggle the completion status
             group.todos[todoIndex].completed = !group.todos[todoIndex].completed;
 
             saveToStorage();
@@ -87,6 +90,10 @@ const App = () => {
     };
 
     const getGroupById = (groupId) => {
+        if (!groupId) {
+            throw new Error('Group ID is required');
+        }
+
         const group = groups.find(g => g.id === groupId);
         if (!group) {
             throw new Error(`Group with ID "${groupId}" not found`);

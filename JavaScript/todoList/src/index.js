@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create the DOM instance, *injecting* the App
     const domInstance = DOM();
 
-
     // Set up event subscriptions
     domInstance.onGroupChange((groupId) => {
         appInstance.setCurrentGroup(groupId);
@@ -28,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = appInstance.toggleTodoStatus(groupId, todoId);
         if (result.success) {
             const currentGroup = appInstance.getCurrentGroup();
-            if (currentGroup && currentGroup.id === groupId) {
+            if (currentGroup) {
                 domInstance.renderTodos(currentGroup, currentGroup.todos);
             }
         }
@@ -52,4 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const defaultGroup = appInstance.getDefaultPage();
     setupSidebarToggle();
     domInstance.init(initialGroups, defaultGroup);
+
+    // Testing
+    // appInstance.addTodo("hello", "This is test 1", "2026-08-03", "low", true);
+    // appInstance.addTodo("hello2", "This is test 2", "2026-08-03", "medium", true);
+    // appInstance.addTodo("hello3", "This is test 3", "2026-08-03", "high");
+    // appInstance.addTodo("hello4", "This is test 4", "2026-08-03", "low");
+
 });
