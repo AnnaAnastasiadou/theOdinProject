@@ -1,8 +1,9 @@
-import { format } from "date-fns";
+import { format, isToday, isTomorrow, isThisWeek, parseISO } from "date-fns";
 
 const DOM = () => {
     // DOM elements
     const elements = {
+        filtersList: document.querySelector('.filters-list'),
         projectsList: document.querySelector('.groups-list'),
         todosPage: document.querySelector('.todos-page'),
         sidebar: document.querySelector('.sidebar')
@@ -18,9 +19,10 @@ const DOM = () => {
 
     // Event registry - stores all event subscribers
     const events = {
-        groupChange: [], // Array of callbacks for when a group is changed
-        todoStatusToggle: [], // Array of callbacks for when todo status is toggled
-        addTodo: [] // Array of callbacks for when a new todo is added
+        filterChange: [],
+        groupChange: [], 
+        todoStatusToggle: [], 
+        addTodo: [] 
     };
 
     /*
@@ -93,6 +95,92 @@ const DOM = () => {
         });
     };
 
+    // Define standard filter groups
+    const availableFilters = [
+        { id: 'all', name: 'All Todos', icon: 'fa-list' },
+        { id: 'today', name: 'Today', icon: 'fa-calendar-day' },
+        { id: 'tomorrow', name: 'Tomorrow', icon: 'fa-forward' },
+        { id: 'week', name: 'This Week', icon: 'fa-calendar-week' }
+    ];
+
+    // Render filter in sidebar
+    const renderFilters = () => {
+        if (!elements.filtersList) return;
+
+        elements.filtersList.innerHTML = '';
+
+        availableFilters.forEach(filter => {
+            const filterElement = document.createElement('h3');
+            filterElement.className = 'filter-item';
+            filterElement.innerHTML = `
+                <i class="fas ${filter.icon}"></i>
+                ${filter.name}
+            `;
+            filterElement.dataset.filterId = filter.id;
+
+            filterElement.addEventListener('click', () => {
+                emit('filterChange', filter.id);
+            });
+
+            elements.filtersList.appendChild(filterElement);
+        });
+
+    }
+
+    // Apply global filter to all todos from all groups
+    const applyGlobalFilter = (allGroups, filterValue) => {
+        // Flatten all todos from all groups and add group info
+        const allTodos = allGroups.flatMap(group => 
+            group.todos.map(todo => ({ 
+                ...todo, 
+                groupName: group.name,
+                groupId: group.id 
+            }))
+        );
+
+        if (filterValue === 'all') {
+            return { 
+                title: 'All Todos', 
+                todos: allTodos
+            };
+        }
+
+        // Apply date filter
+        const filteredTodos = allTodos.filter(todo => {
+            if (!todo.dueDate) return false;
+            
+            const dueDate = parseISO(todo.dueDate);
+            switch (filterValue) {
+                case 'today':
+                    return isToday(dueDate);
+                case 'tomorrow':
+                    return isTomorrow(dueDate);
+                case 'week':
+                    return isThisWeek(dueDate);
+                default:
+                    return true;
+            }
+        });
+
+        const filterTitles = {
+            'today': 'Tasks Due Today',
+            'tomorrow': 'Tasks Due Tomorrow', 
+            'week': 'Tasks Due This Week'
+        };
+
+        return { 
+            title: filterTitles[filterValue] || 'Filtered Tasks',
+            todos: filteredTodos
+        };
+    };
+
+    const renderFilteredTodos = (filterResult) => {
+        renderTodos({ 
+            name: filterResult.title,
+            id: 'filter-view'
+        }, filterResult.todos); 
+    };
+
     // Render groups in sidebar
     const renderGroups = (groups) => {
         elements.projectsList.innerHTML = '';
@@ -143,7 +231,9 @@ const DOM = () => {
             const todoElement = document.createElement('div');
             todoElement.className = `todo-card priority-${item.priority} ${item.completed ? 'completed' : ''}`;
             todoElement.dataset.todoId = item.id;
-            todoElement.dataset.groupId = group.id;
+            const itemGroupId = item.groupId || group.id; 
+            todoElement.dataset.groupId = itemGroupId;
+            // todoElement.dataset.groupId = group.id;
             todoElement.innerHTML = `
                 <div class="todo-header">
                     <h3 class="todo-title">${item.title}</h3>
@@ -155,7 +245,7 @@ const DOM = () => {
                         <img src="https://img.icons8.com/fluency/48/calendar--v1.png" alt="calendar--v1"/> 
                         Due: ${format(item.dueDate, "dd/MM/yyyy")}
                     </span>
-                    <button class="status completed-${item.completed}" data-todo-id="${item.id}" data-group-id="${group.id}">
+                    <button class="status completed-${item.completed}" data-todo-id="${item.id}" data-group-id="${itemGroupId}">
                         ${item.completed ? '<i class="fa-regular fa-circle-check"></i>Completed' : 
                                             '<i class="fa-solid fa-hourglass-start"></i>Pending'}
                     </button>
@@ -168,6 +258,7 @@ const DOM = () => {
 
     // This function will be called in index.js
     const init = (initialGroups, defaultGroup) => {
+        renderFilters();
         renderGroups(initialGroups);
         renderTodos(defaultGroup, defaultGroup.todos);
         initializeEventHandlers();
@@ -175,8 +266,11 @@ const DOM = () => {
 
     return { 
         init, 
+        renderFilteredTodos,
+        applyGlobalFilter,
         renderGroups,
         renderTodos,
+        onFilterChange: (callback) => on('filterChange', callback),
         onGroupChange: (callback) => on('groupChange', callback),
         onTodoStatusToggle: (callback) => on('todoStatusToggle', callback),
         onAddTodo: (callback) => on('addTodo', callback)

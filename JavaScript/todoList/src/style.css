@@ -209,7 +209,8 @@ header {
 .sidebar h2.active {
     background: var(--bg-primary);
     color: var(--primary-color);
-    border-right: 3px solid var(--primary-color);
+    box-shadow: 0.1rem 0.1rem 0.2rem var(--secondary-color);
+    cursor: pointer;
 }
 
 /* Groups List */

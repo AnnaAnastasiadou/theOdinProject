@@ -17,6 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const domInstance = DOM();
 
     // Set up event subscriptions
+    domInstance.onFilterChange(filterValue => {
+        const allGroups = appInstance.getGroups();
+        const filterResult = domInstance.applyGlobalFilter(allGroups, filterValue);
+        domInstance.renderFilteredTodos(filterResult, filterValue);
+    });
+
     domInstance.onGroupChange((groupId) => {
         appInstance.setCurrentGroup(groupId);
         const currentGroup = appInstance.getCurrentGroup();
@@ -53,9 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
     domInstance.init(initialGroups, defaultGroup);
 
     // Testing
-    // appInstance.addTodo("hello", "This is test 1", "2026-08-03", "low", true);
-    // appInstance.addTodo("hello2", "This is test 2", "2026-08-03", "medium", true);
-    // appInstance.addTodo("hello3", "This is test 3", "2026-08-03", "high");
+    // appInstance.addTodo("hello", "This is test 1", "2025-10-20", "low", true);
+    // appInstance.addTodo("hello2", "This is test 2", "2025-10-21", "medium", true);
+    // appInstance.addTodo("hello3", "This is test 3", "2025-10-25", "high");
     // appInstance.addTodo("hello4", "This is test 4", "2026-08-03", "low");
 
 });
