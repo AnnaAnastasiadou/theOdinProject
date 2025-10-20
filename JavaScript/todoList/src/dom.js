@@ -4,7 +4,7 @@ const DOM = (appInstance) => {
     // DOM elements
     const elements = {
         projectsList: document.querySelector('.groups-list'),
-        todosContainer: document.querySelector('.todos-container'),
+        todosPage: document.querySelector('.todos-page'),
         sidebar: document.querySelector('.sidebar')
     };
 
@@ -24,7 +24,7 @@ const DOM = (appInstance) => {
                 if (appInstance.getCurrentGroup.id !== group.id) {
                     appInstance.setCurrentGroup(group.id);
                     const currentTodos = appInstance.getCurrentTodos();
-                    renderTodos(currentTodos);
+                    renderTodos(group, currentTodos);
                 }
                 
             });
@@ -32,22 +32,32 @@ const DOM = (appInstance) => {
     };
 
     // Render the todos of each group
-    const renderTodos = (todos) => {
-        if (!elements.todosContainer) return;
+    const renderTodos = (group, todos) => {
+        if (!elements.todosPage) return;
         
-        elements.todosContainer.innerHTML = '';
+        // Clear the page and add the header
+        elements.todosPage.innerHTML = `
+            <h2 class="group-header">${group.name}</h2>
+        `;
 
         if (todos.length === 0) {
-            elements.todosContainer.innerHTML = `
-                <div class="empty-state">
-                    <i class="fa-solid fa-clipboard-list"></i>
-                    <h3>"No Tasks Found"</h3>
-                    <p>Add a new task to get started</p>
-                    <button class="add-todo">Add Task</button>
-                </div>
+            const emptyHtml = document.createElement('div');
+            emptyHtml.className = "empty-state";
+            emptyHtml.innerHTML = `
+                <i class="fa-solid fa-clipboard-list"></i>
+                <h3>"No Tasks Found"</h3>
+                <p>Add a new task to get started</p>
+                <button class="add-todo">Add Task</button>
             `;
+            elements.todosPage.appendChild(emptyHtml); 
             return;
         }
+
+        // Create the main todos container
+        const todosContainer = document.createElement('div');
+        todosContainer.className = "todos-container";
+        elements.todosPage.appendChild(todosContainer);
+
         todos.forEach(item => {
             const todoElement = document.createElement('div');
             todoElement.className = `todo-card priority-${item.priority} ${item.completed ? 'completed' : ''}`;
@@ -68,20 +78,24 @@ const DOM = (appInstance) => {
                     </span>
                 </div>
             `;
-            elements.todosContainer.appendChild(todoElement);
+            todosContainer.appendChild(todoElement);
         })
     }
 
     const renderDefaultPage = () => {
         const defaultGroup = appInstance.getDefaultPage();
-        renderTodos(defaultGroup.todos);
+        renderTodos(defaultGroup, defaultGroup.todos);
     }
 
     // This function will be called in index.js
     const init = () => {
         renderGroups();
         renderDefaultPage();
-        // appInstance.addTodo("hello4", "This is test 4", "2026-08-03", "low", true);
+
+        // appInstance.addTodo("hello", "This is test 1", "2026-08-03", "low", true);
+        // appInstance.addTodo("hello2", "This is test 2", "2026-08-03", "medium", true);
+        // appInstance.addTodo("hello3", "This is test 3", "2026-08-03", "high");
+        // appInstance.addTodo("hello4", "This is test 4", "2026-08-03", "low");
     }
 
     return { init }
