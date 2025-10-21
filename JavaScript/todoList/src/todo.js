@@ -1,4 +1,4 @@
-const createTodo = function(title, description, dueDate, priority, completed, projectId) {
+const createTodo = function(title, description, dueDate, priority, completed, projectId, notes = "", checklist =[]) {
     return {
         id: Date.now() + Math.random(),
         createdDate: new Date(),
@@ -8,8 +8,8 @@ const createTodo = function(title, description, dueDate, priority, completed, pr
         priority: priority,
         completed: completed,
         projectId: projectId,
-        notes: [],
-        checklist: []
+        notes: notes,
+        checklist: checklist
     };
 }
 

@@ -38,6 +38,66 @@
                 <div class="todos-page"></div>
             </div>
         </div>
+        <!-- Add Todo Modal -->
+        <div id="addTodoModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add New Task</h2>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <form id="addTodoForm" class="modal-form">
+                    <div class="form-group">
+                        <label for="todoTitle">Title *</label>
+                        <input type="text" id="todoTitle" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="todoDescription">Description *</label>
+                        <textarea id="todoDescription" name="description" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="todoDueDate">Due Date *</label>
+                            <input type="date" id="todoDueDate" name="dueDate" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="todoPriority">Priority *</label>
+                            <select id="todoPriority" name="priority" required>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="todoNotes">Notes</label>
+                        <textarea id="todoNotes" name="notes" rows="3" placeholder="Add any additional notes..."></textarea>
+                    </div>
+
+                    <div class="form-group checklist-section">
+                        <label>Checklist</label>
+                        <ul id="checklistItems" class="checklist-items"></ul>
+                        <div class="checklist-controls">
+                            <input type="text" id="newChecklistItem" placeholder="Enter checklist item..." />
+                            <button type="button" id="add-checklist-btn" class="add-btn">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                        <ul class="checklist-items" id="checklistItems">
+                            <!-- Checklist items will be added here dynamically -->
+                        </ul>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn">Cancel</button>
+                        <button type="button" id="submit-new-todo-btn" class="submit-btn">Add Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -40,17 +40,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     domInstance.onAddTodo((todoData) => {
-        appInstance.addTodo(
-            todoData.title,
-            todoData.description,
-            todoData.dueDate,
-            todoData.priority,
-            todoData.completed
-        );
-        // open form
-        const currentGroup = appInstance.getCurrentGroup();
-        domInstance.renderTodos(currentGroup, currentGroup.todos);
+        try {
+            appInstance.addTodo(
+                todoData.title,
+                todoData.description,
+                todoData.dueDate,
+                todoData.priority,
+                todoData.completed,
+                todoData.notes,
+                todoData.checklist
+            );
+            const currentGroup = appInstance.getCurrentGroup();
+            domInstance.renderTodos(currentGroup, currentGroup.todos);
+        }
+        catch (error) {
+            console.error('Error adding todo', error);
+            alert('Error adding task: ' + error.message);
+        }
     });
+
+    // domInstance.onEditTodo(({ groupId, todoId }) => {
+    //     // Open an edit form pre-filled with todo data
+    //     const group = appInstance.getGroupById(groupId);
+    //     const todo = group.todos.find(t => t.id === todoId);
+    //     console.log("Edit Todo requested:", todo);
+    // });
 
     // Initialize everything
     const initialGroups = appInstance.getGroups();

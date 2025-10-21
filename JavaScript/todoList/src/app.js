@@ -121,7 +121,7 @@ const App = () => {
         }
     };
 
-    const addTodo = (title, description, dueDate, priority, completed = false) => {
+    const addTodo = (title, description, dueDate, priority, completed = false, notes = "", checklist = []) => {
         if (!currentGroup) {
             if (groups.length > 0) {
                 setCurrentGroup(groups[0].id);
@@ -136,7 +136,9 @@ const App = () => {
             dueDate, 
             priority,
             completed,
-            currentGroup.id
+            currentGroup.id,
+            notes,
+            checklist
         );
 
         currentGroup.todos.push(newTodo);
@@ -145,7 +147,7 @@ const App = () => {
         return newTodo;
     }
 
-    const addTodoToGroup = (groupName, title, description, dueDate, priority, completed = false) => {
+    const addTodoToGroup = (groupName, title, description, dueDate, priority, completed = false, notes = "", checklist =[]) => {
         const group = getGroupByName(groupName)
         
         const newTodo = createTodo(
@@ -154,7 +156,9 @@ const App = () => {
             dueDate, 
             priority,
             completed,
-            group.id
+            group.id,
+            notes,
+            checklist
         );
 
         group.todos.push(newTodo);
