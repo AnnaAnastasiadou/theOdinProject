@@ -61,7 +61,27 @@ const DOM = () => {
             return () => { // Return unsubscribe function
                 events[eventName] = events[eventName].filter(cb => cb !== callback);
             };
-        };
+    };
+
+    // Highlight the active filter or group
+    const highlightActiveItem = (type, id) => {
+        const activeClass = 'active';
+
+        // Remove 'active' from all filters and groups
+        document.querySelectorAll('.filter-item, .group-item').forEach(el => {
+            el.classList.remove(activeClass);
+        });
+        
+        // Add 'active' state to the clicked element
+        const activeElement = document.querySelector(`[data-${type}-id="${id}"]`);
+        if (activeElement) {
+            activeElement.classList.add(activeClass);
+        }
+        else {
+        console.warn(`No element found for type "${type}" and id "${id}"`);
+        }
+
+    };
 
     const handleStatusToggle  = (statusElement) => {
         const todoId = Number(statusElement.dataset.todoId);
@@ -119,6 +139,7 @@ const DOM = () => {
             filterElement.dataset.filterId = filter.id;
 
             filterElement.addEventListener('click', () => {
+                highlightActiveItem('filter', filter.id);
                 emit('filterChange', filter.id);
             });
 
@@ -193,6 +214,7 @@ const DOM = () => {
             elements.projectsList.appendChild(groupElement);
 
             groupElement.addEventListener('click', () => {
+                highlightActiveItem('group', group.id);
                 emit('groupChange', group.id);
             });
 

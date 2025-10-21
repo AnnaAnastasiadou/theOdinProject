@@ -206,11 +206,12 @@ header {
     transform: scale(1.05);
 }
 
-.sidebar h2.active {
+.filter-item.active,
+.group-item.active {
     background: var(--bg-primary);
     color: var(--primary-color);
-    box-shadow: 0.1rem 0.1rem 0.2rem var(--secondary-color);
-    cursor: pointer;
+    box-shadow: var(--shadow);
+    cursor: default;
 }
 
 /* Groups List */
