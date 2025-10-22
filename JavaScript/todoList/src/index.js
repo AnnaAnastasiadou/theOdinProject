@@ -53,7 +53,24 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(`Error deleting project: ${error.message}`);
             console.error("Group Deletion Error:", error);
         }
-    })
+    });
+
+    domInstance.onEditGroupName( (data)  => {
+        const { id: groupId, newName } = data;
+        try {
+            console.log(newName);
+            console.log("calling onEditGroupName");
+            appInstance.editGroupName(groupId, newName);
+            console.log("app function called");
+            const updatedGroups = appInstance.getGroups();
+            domInstance.renderGroups(updatedGroups);
+            domInstance.highlightActiveItem('group', groupId);
+        }
+        catch(error) {
+            alert(`Error editing project: ${error.message}`);
+            console.error("Group Edit Error:", error);
+        }
+    });
 
     domInstance.onTodoStatusToggle(({groupId, todoId}) => {
         const result = appInstance.toggleTodoStatus(groupId, todoId);

@@ -15,7 +15,6 @@ const DOM = () => {
         newChecklistItem: document.getElementById('newChecklistItem'),
         addChecklistBtn: document.getElementById('add-checklist-btn'),
         checklistItems: document.getElementById('checklistItems'),
-        deletedGroupButton: document.querySelectorAll('.delete-group')
     };
 
     /*
@@ -32,7 +31,8 @@ const DOM = () => {
         groupChange: [], 
         todoStatusToggle: [], 
         addTodo: [],
-        deleteGroup: []
+        deleteGroup: [],
+        editGroupName: []
     };
 
     /*
@@ -226,7 +226,7 @@ const DOM = () => {
             groupElement.className = 'group-item';
             groupElement.dataset.groupId = group.id;
             groupElement.innerHTML = `
-                ${group.name} 
+                <span class="group-name">${group.name}</span>
                 <span class="group-actions">
                     <i class="fa-solid fa-trash delete-group"></i>
                     <i class="fa-solid fa-pen-to-square edit-group"></i>
@@ -236,8 +236,8 @@ const DOM = () => {
             elements.projectsList.appendChild(groupElement);
 
             groupElement.addEventListener('click', () => {
-                highlightActiveItem('group', group.id);
                 emit('groupChange', group.id);
+                highlightActiveItem('group', group.id);
             });
 
             const deleteButton = groupElement.querySelector('.delete-group');
@@ -247,6 +247,68 @@ const DOM = () => {
                     if (confirm(`Are you sure you want to delete the group "${group.name}" and all its tasks?`)) {
                         emit('deleteGroup', group.id);
                     }
+                })
+            }
+
+            const editGroupNameButton = groupElement.querySelector('.edit-group');
+            const nameSpan = groupElement.querySelector('.group-name');
+
+            if (editGroupNameButton && nameSpan) {
+                editGroupNameButton.addEventListener('click', e => {
+                    e.stopPropagation();
+                    
+                    // Prevent multiple edit inputs
+                    if (groupElement.querySelector('input')) return;
+
+                    // Create an input element pre-filled with the current name
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = group.name;
+                    input.className = 'edit-group-input';
+                    groupElement.classList.add('editing');
+
+                    // Replace the name span with the input
+                    nameSpan.replaceWith(input);
+                    input.focus();
+
+                    // Save on Enter key
+                    input.addEventListener('keydown', ev => {
+                        if (ev.key === 'Enter') {
+                            if (group.name !== input.value) {
+                                saveEdit();
+                            }
+                            else {
+                                cancelEdit();
+                            }
+                        } else if (ev.key === 'Escape') {
+                            cancelEdit();
+                        }
+                    });
+
+                    const saveEdit = () => {
+                        const newName = input.value.trim();
+                        if (!newName) {
+                            alert('Group name cannot be empty.');
+                            cancelEdit();
+                            return;
+                        }
+                        if (newName && newName !== group.name) {
+                            console.log("calling emit");
+                            emit('editGroupName', {id: group.id, newName: newName});
+                            // nameSpan.textContent = newName;
+                            input.replaceWith(nameSpan);
+                            groupElement.classList.remove('editing');
+                        }
+                        else {
+                            cancelEdit();
+                        }
+                        
+                    };
+
+                    const cancelEdit = () => {
+                        input.replaceWith(nameSpan);
+                        groupElement.classList.remove('editing');
+                    }; 
                 })
             }
         });
@@ -493,7 +555,8 @@ const DOM = () => {
         onGroupChange: (callback) => on('groupChange', callback),
         onTodoStatusToggle: (callback) => on('todoStatusToggle', callback),
         onAddTodo: (callback) => on('addTodo', callback),
-        onDeleteGroup: (callback) => on('deleteGroup', callback)
+        onDeleteGroup: (callback) => on('deleteGroup', callback),
+        onEditGroupName: (callback) => on('editGroupName', callback)
     };
 }
 

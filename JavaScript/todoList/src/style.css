@@ -237,9 +237,22 @@ header {
     color: var(--error-color);
 }
 
+.edit-group-input {
+    font: inherit;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 4px;
+    padding: 2px 6px;
+
+}
+
 .edit-group:hover {
     color: var(--primary-color);
 }
+
+.group-item.editing .group-actions {
+    display: none;
+}
+
 
 .filter-item.active,
 .group-item.active {

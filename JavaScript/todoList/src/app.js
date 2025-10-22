@@ -113,6 +113,20 @@ const App = () => {
         saveToStorage();
     }
 
+    const editGroupName = (groupId, newGroupName) => {
+        console.log("In app");
+        const group = getGroupById(groupId);
+        
+        if (group) {
+            group.name = newGroupName;
+        }
+        else {
+            throw new Error(`The group with id ${groupId} was not found.`)
+        }
+
+        saveToStorage();
+    }
+
     const getGroupById = (groupId) => {
         if (!groupId) {
             throw new Error('Group ID is required');
@@ -222,6 +236,7 @@ const App = () => {
     return {
         addGroup,
         deleteGroup,
+        editGroupName,
         setCurrentGroup,
         getGroupById,
         getGroupByName,
