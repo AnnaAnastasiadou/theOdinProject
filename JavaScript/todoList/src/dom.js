@@ -14,7 +14,8 @@ const DOM = () => {
         submitNewTodoBtn: document.getElementById('submit-new-todo-btn'),
         newChecklistItem: document.getElementById('newChecklistItem'),
         addChecklistBtn: document.getElementById('add-checklist-btn'),
-        checklistItems: document.getElementById('checklistItems')
+        checklistItems: document.getElementById('checklistItems'),
+        deletedGroupButton: document.querySelectorAll('.delete-group')
     };
 
     /*
@@ -30,7 +31,8 @@ const DOM = () => {
         filterChange: [],
         groupChange: [], 
         todoStatusToggle: [], 
-        addTodo: [] 
+        addTodo: [],
+        deleteGroup: []
     };
 
     /*
@@ -222,8 +224,15 @@ const DOM = () => {
         groups.forEach(group => {
             const groupElement = document.createElement('h3');
             groupElement.className = 'group-item';
-            groupElement.textContent = group.name;
             groupElement.dataset.groupId = group.id;
+            groupElement.innerHTML = `
+                ${group.name} 
+                <span class="group-actions">
+                    <i class="fa-solid fa-trash delete-group"></i>
+                    <i class="fa-solid fa-pen-to-square edit-group"></i>
+                </span>
+                `;
+    
             elements.projectsList.appendChild(groupElement);
 
             groupElement.addEventListener('click', () => {
@@ -231,7 +240,15 @@ const DOM = () => {
                 emit('groupChange', group.id);
             });
 
-            elements.projectsList.appendChild(groupElement);
+            const deleteButton = groupElement.querySelector('.delete-group');
+            if (deleteButton) {
+                deleteButton.addEventListener('click', e => {
+                    e.stopPropagation();
+                    if (confirm(`Are you sure you want to delete the group "${group.name}" and all its tasks?`)) {
+                        emit('deleteGroup', group.id);
+                    }
+                })
+            }
         });
     };
 
@@ -254,13 +271,6 @@ const DOM = () => {
                 <h3>"No Tasks Found"</h3>
             `;
             elements.todosPage.appendChild(emptyHtml);
-            if (type === "group") {
-                const addSection = `
-                    <p>Add a new task</p>
-                    <button class="add-btn">Add Task</button>
-                `
-                emptyHtml.appendChild(addSection);
-            } 
             return;
         }
 
@@ -452,7 +462,6 @@ const DOM = () => {
 
         // Handle form submission
         if (elements.submitNewTodoBtn) {
-            console.log("Added......")
             elements.submitNewTodoBtn.addEventListener('click', handleAddTodoSubmit);
         }
 
@@ -470,11 +479,12 @@ const DOM = () => {
         renderGroups(initialGroups);
         renderTodos(defaultGroup, defaultGroup.todos);
         initializeEventHandlers();
-        // initializeModalHandlers();
+        highlightActiveItem("group", defaultGroup.id);
     }
 
     return { 
-        init, 
+        init,
+        highlightActiveItem, 
         renderFilteredTodos,
         applyGlobalFilter,
         renderGroups,
@@ -482,7 +492,8 @@ const DOM = () => {
         onFilterChange: (callback) => on('filterChange', callback),
         onGroupChange: (callback) => on('groupChange', callback),
         onTodoStatusToggle: (callback) => on('todoStatusToggle', callback),
-        onAddTodo: (callback) => on('addTodo', callback)
+        onAddTodo: (callback) => on('addTodo', callback),
+        onDeleteGroup: (callback) => on('deleteGroup', callback)
     };
 }
 

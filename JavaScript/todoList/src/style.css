@@ -174,12 +174,12 @@ header {
     margin-bottom: 0.5rem;
 }
 
-
 .sidebar h3 {
     font-size: 1rem;
     font-weight: 500;
     color: var(--text-secondary);
     padding-left: 2rem;
+    transition: var(--transition);
     cursor:pointer
 }
 
@@ -197,6 +197,10 @@ header {
 .sidebar h3:hover {
     background-color: var(--bg-primary);
 }
+ 
+.sidebar h3:hover i, .sidebar h3.active i {
+    display: inline;
+}
 
 .sidebar h2 i:hover {
     background-color: var(--bg-sidebar);
@@ -209,17 +213,40 @@ header {
     transform: scale(1.05);
 }
 
+/* Groups List */
+.groups-list {
+    margin-top: 0.5rem;
+}
+
+.group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.group-item i {
+    display: none;
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    margin-right: 0.3rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.delete-group:hover {
+    color: var(--error-color);
+}
+
+.edit-group:hover {
+    color: var(--primary-color);
+}
+
 .filter-item.active,
 .group-item.active {
     background: var(--bg-primary);
     color: var(--primary-color);
     box-shadow: var(--shadow);
     cursor: default;
-}
-
-/* Groups List */
-.groups-list {
-    margin-top: 0.5rem;
 }
 
 /* Main Content */
@@ -292,7 +319,6 @@ header {
     transition: var(--transition);
     position: relative;
 }
-
 
 .todo-card:hover {
     transform: translateY(-2px);

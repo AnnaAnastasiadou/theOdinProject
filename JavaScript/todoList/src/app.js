@@ -89,6 +89,30 @@ const App = () => {
         }
     };
 
+    const deleteGroup = (groupId) => {
+        if(!groupId) {
+            throw new Error('Group ID not found');
+            return;
+        }
+
+        const groupIndex = groups.findIndex(g => g.id ===groupId);
+
+        if (groupIndex === -1) {
+            throw new Error(`Group with ID ${groupId} not found for deletion`);
+            return;
+        }
+
+        if (groups.length === 1) {
+            alert('Cannot delete the last remaining project.');
+            return;
+        }
+
+        const deletedGroup = groups.splice(groupIndex, 1);
+        console.log(`Group deleted: ${deletedGroup}`);
+
+        saveToStorage();
+    }
+
     const getGroupById = (groupId) => {
         if (!groupId) {
             throw new Error('Group ID is required');
@@ -197,6 +221,7 @@ const App = () => {
     init();
     return {
         addGroup,
+        deleteGroup,
         setCurrentGroup,
         getGroupById,
         getGroupByName,

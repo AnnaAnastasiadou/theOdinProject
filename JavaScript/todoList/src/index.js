@@ -29,6 +29,32 @@ document.addEventListener('DOMContentLoaded', () => {
         domInstance.renderTodos(currentGroup, currentGroup.todos);
     });
 
+    domInstance.onDeleteGroup( groupId => {
+        try {
+            appInstance.deleteGroup(groupId);
+            console.log('deleted');
+            const updatedGroups = appInstance.getGroups();
+            console.log('updated');
+            domInstance.renderGroups(updatedGroups);
+            console.log('rendered');
+            const currentGroup = appInstance.getDefaultPage();
+            if (currentGroup) {
+                console.log("......");
+                domInstance.renderTodos(currentGroup, currentGroup.todos);
+                
+                // Re-highlight the new active item
+                domInstance.highlightActiveItem('group', currentGroup.id);
+            }
+            else {
+                console.log("currentGroup doesn't exist");
+            }
+        }
+        catch(error) {
+            alert(`Error deleting project: ${error.message}`);
+            console.error("Group Deletion Error:", error);
+        }
+    })
+
     domInstance.onTodoStatusToggle(({groupId, todoId}) => {
         const result = appInstance.toggleTodoStatus(groupId, todoId);
         if (result.success) {
@@ -71,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const defaultGroup = appInstance.getDefaultPage();
     setupSidebarToggle();
     domInstance.init(initialGroups, defaultGroup);
-
+    // appInstance.addGroup("Geia sas");
     // Testing
     // appInstance.addTodo("hello", "This is test 1", "2025-10-20", "low", true);
     // appInstance.addTodo("hello2", "This is test 2", "2025-10-21", "medium", true);
