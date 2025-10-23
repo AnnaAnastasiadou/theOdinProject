@@ -15,6 +15,7 @@ const DOM = () => {
         newChecklistItem: document.getElementById('newChecklistItem'),
         addChecklistBtn: document.getElementById('add-checklist-btn'),
         checklistItems: document.getElementById('checklistItems'),
+        addGroupBtn: document.getElementById('add-group-btn'),       
     };
 
     /*
@@ -32,7 +33,8 @@ const DOM = () => {
         todoStatusToggle: [], 
         addTodo: [],
         deleteGroup: [],
-        editGroupName: []
+        editGroupName: [],
+        addGroup: []
     };
 
     /*
@@ -103,6 +105,28 @@ const DOM = () => {
 
     };
 
+    const handleAddGroup = () => {
+        const groupNameInput = document.createElement('input');
+        groupNameInput.type = "text";
+        groupNameInput.id = "new-group-name";
+        groupNameInput.placeholder = "New Project Name";
+        groupNameInput.className = "add-group-input";
+        elements.projectsList.insertAdjacentElement("afterbegin", groupNameInput);
+        groupNameInput.focus();
+
+        groupNameInput.addEventListener('keydown', e => {
+            if(e.key === 'Enter') {
+                const groupName = groupNameInput.value.trim();
+                if (!groupName) {
+                    alert('Group name cannot be empty');
+                    return;
+                }
+                emit('addGroup', groupName);
+                groupNameInput.remove();
+            }
+        })
+    }
+
     /**
      * INITIALIZE EVENT HANDLERS
      * This sets up the click listeners that trigger our custom events
@@ -124,6 +148,12 @@ const DOM = () => {
                 openAddTodoModal(); 
             }
         });
+
+        if(elements.addGroupBtn) {
+            elements.addGroupBtn.addEventListener('click', e => {
+                handleAddGroup();
+            })
+        }
         
         // Initialize modal handlers
         initializeModalHandlers();
@@ -325,17 +355,6 @@ const DOM = () => {
         header.innerHTML = `<h2 class="group-header">${group.name}</h2>`;
         elements.todosPage.appendChild(header);
         
-        if (todos.length === 0) {
-            const emptyHtml = document.createElement('div');
-            emptyHtml.className = "empty-state";
-            emptyHtml.innerHTML = `
-                <i class="fa-solid fa-clipboard-list"></i>
-                <h3>"No Tasks Found"</h3>
-            `;
-            elements.todosPage.appendChild(emptyHtml);
-            return;
-        }
-
         if (type === "group") {
             // Add button only for group containers
             const addButton = document.createElement('div');
@@ -346,6 +365,17 @@ const DOM = () => {
                 </button>
             `
             header.appendChild(addButton);
+        }
+        
+        if (todos.length === 0) {
+            const emptyHtml = document.createElement('div');
+            emptyHtml.className = "empty-state";
+            emptyHtml.innerHTML = `
+                <i class="fa-solid fa-clipboard-list"></i>
+                <h3>"No Tasks Found"</h3>
+            `;
+            elements.todosPage.appendChild(emptyHtml);
+            return;
         }
 
         // Create the main todos container
@@ -556,7 +586,8 @@ const DOM = () => {
         onTodoStatusToggle: (callback) => on('todoStatusToggle', callback),
         onAddTodo: (callback) => on('addTodo', callback),
         onDeleteGroup: (callback) => on('deleteGroup', callback),
-        onEditGroupName: (callback) => on('editGroupName', callback)
+        onEditGroupName: (callback) => on('editGroupName', callback),
+        onAddGroup: (callback) => on('addGroup', callback)
     };
 }
 

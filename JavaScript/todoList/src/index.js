@@ -72,6 +72,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    domInstance.onAddGroup((groupName) => {
+        try{
+            console.log("finished");
+            const newGroup = appInstance.addGroup(groupName);
+            const updatedGroups = appInstance.getGroups();
+            domInstance.renderGroups(updatedGroups);
+            domInstance.renderTodos(newGroup, newGroup.todos);
+            domInstance.highlightActiveItem('group', newGroup.id);
+            console.log("finished");
+        }
+        catch(error) {
+            alert(error.message);
+            console.error("Group Addition Error:", error);
+        }
+    })
+
     domInstance.onTodoStatusToggle(({groupId, todoId}) => {
         const result = appInstance.toggleTodoStatus(groupId, todoId);
         if (result.success) {
