@@ -124,7 +124,10 @@ const DOM = () => {
                 emit('addGroup', groupName);
                 groupNameInput.remove();
             }
-        })
+            else if (e.key === 'Escape') {
+                groupNameInput.remove();
+            }
+        });
     }
 
     /**
