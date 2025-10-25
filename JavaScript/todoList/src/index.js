@@ -32,14 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
     domInstance.onDeleteGroup( groupId => {
         try {
             appInstance.deleteGroup(groupId);
-            console.log('deleted');
             const updatedGroups = appInstance.getGroups();
-            console.log('updated');
             domInstance.renderGroups(updatedGroups);
-            console.log('rendered');
             const currentGroup = appInstance.getDefaultPage();
             if (currentGroup) {
-                console.log("......");
                 domInstance.renderTodos(currentGroup, currentGroup.todos);
                 
                 // Re-highlight the new active item
@@ -115,6 +111,29 @@ document.addEventListener('DOMContentLoaded', () => {
         catch (error) {
             console.error('Error adding todo', error);
             alert('Error adding task: ' + error.message);
+        }
+    });
+
+    domInstance.onViewEditTodo(({ groupId, todoId }) => {
+        const group = appInstance.getGroupById(groupId);
+        const todo = group?.todos.find(t => t.id === todoId);
+
+        if (todo) {
+            domInstance.openViewEditTodoModal(todo);
+        } else {
+            console.error(`Todo with ID ${todoId} not found in group ${groupId}`);
+        }
+    });
+
+    domInstance.onSaveTodoEdit((updatedTodo) => {
+        try {
+            const currentGroup = appInstance.getCurrentGroup();
+            appInstance.updateTodo(currentGroup.id, updatedTodo.id, updatedTodo);
+            // const groups = appInstance.getGroups();
+            domInstance.renderTodos(currentGroup, currentGroup.todos);
+        } catch (error) {
+            console.error("Error updating todo:", error);
+            alert("Failed to update todo. Check console for details.");
         }
     });
 

@@ -98,6 +98,39 @@
                 </form>
             </div>
         </div>
+        <!-- View/Edit Todo Modal -->
+        <div id="viewEditTodoModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal close-view-edit">&times;</span>
+                <h2>View / Edit Todo</h2>
+
+                <form id="viewEditTodoForm">
+                <label for="viewEditTitle">Title:</label>
+                <input type="text" id="viewEditTitle" name="title">
+
+                <label for="viewEditDescription">Description:</label>
+                <textarea id="viewEditDescription" name="description"></textarea>
+
+                <label for="viewEditDueDate">Due Date:</label>
+                <input type="date" id="viewEditDueDate" name="dueDate">
+
+                <label for="viewEditPriority">Priority:</label>
+                <select id="viewEditPriority" name="priority">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+
+                <label for="viewEditNotes">Notes:</label>
+                <textarea id="viewEditNotes" name="notes"></textarea>
+
+                <div class="modal-actions">
+                    <button type="button" id="saveViewEditTodoBtn" class="save-btn">Save</button>
+                    <button type="button" class="cancel-btn">Cancel</button>
+                </div>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 </html>

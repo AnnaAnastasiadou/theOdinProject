@@ -15,7 +15,11 @@ const DOM = () => {
         newChecklistItem: document.getElementById('newChecklistItem'),
         addChecklistBtn: document.getElementById('add-checklist-btn'),
         checklistItems: document.getElementById('checklistItems'),
-        addGroupBtn: document.getElementById('add-group-btn'),       
+        addGroupBtn: document.getElementById('add-group-btn'),  
+        viewEditTodoModal: document.getElementById('viewEditTodoModal'),
+        viewEditTodoForm: document.getElementById('viewEditTodoForm'),
+        closeViewEditModal: document.querySelector('.close-view-edit'),
+        saveViewEditTodoBtn: document.getElementById('saveViewEditTodoBtn')     
     };
 
     /*
@@ -34,7 +38,9 @@ const DOM = () => {
         addTodo: [],
         deleteGroup: [],
         editGroupName: [],
-        addGroup: []
+        addGroup: [],
+        viewEditTodo: [],
+        saveTodoEdit: []
     };
 
     /*
@@ -150,6 +156,36 @@ const DOM = () => {
                 e.preventDefault();
                 openAddTodoModal(); 
             }
+            const viewEditBtn = e.target.closest('.view-edit-todo-btn');
+            if(viewEditBtn === e.target) {
+                e.preventDefault();
+                const todoId = Number(viewEditBtn.dataset.todoId);
+                const groupId = Number(viewEditBtn.dataset.groupId);
+                
+                emit('viewEditTodo', { groupId, todoId });
+            }
+
+            if (elements.saveViewEditTodoBtn) {
+                elements.saveViewEditTodoBtn.addEventListener('click', () => {
+                    const formData = new FormData(elements.viewEditTodoForm);
+                    const updatedTodo = {
+                        id: Number(elements.viewEditTodoModal.dataset.todoId),
+                        title: formData.get('title'),
+                        description: formData.get('description'),
+                        dueDate: formData.get('dueDate'),
+                        priority: formData.get('priority'),
+                        notes: formData.get('notes')
+                    };
+                    emit('saveTodoEdit', updatedTodo);
+                    closeViewEditTodoModal();
+                });
+            }
+
+            if (elements.closeViewEditModal) {
+                elements.closeViewEditModal.addEventListener('click', closeViewEditTodoModal);
+            }
+
+            document.querySelector('#viewEditTodoModal .cancel-btn')?.addEventListener('click', closeViewEditTodoModal);
         });
 
         if(elements.addGroupBtn) {
@@ -408,14 +444,50 @@ const DOM = () => {
                             ${item.completed ? '<i class="fa-regular fa-circle-check"></i>Completed' : 
                                                 '<i class="fa-solid fa-hourglass-start"></i>Pending'}
                         </button>
-                        <button class="edit-todo-btn" data-todo-id="${item.id}" data-group-id="${itemGroupId}">
-                            <i class="fa-solid fa-pen"></i> Edit
+                        <button class="view-edit-todo-btn" data-todo-id="${item.id}" data-group-id="${itemGroupId}">
+                            <i class="fa-solid fa-pen"></i> View/Edit
                         </button>
                     </span>
                 </div>
             `;
             todosContainer.appendChild(todoElement);
         })
+    }
+
+    const handleViewEditToggle = (todoElement, todoData) => {
+        const isExpanded = todoElement.classList.contains('expanded');
+        
+        todoElement.classList.add('expanded');
+
+        const expandedSection = document.createElement('div');
+        expandedSection.className = 'expanded-content';
+
+        expandedSection.innerHTML = `
+            <div class="todo-expanded-details">
+                <label>Description:</label>
+                <textarea class="todo-description-input">${todoData.description || ''}</textarea>
+
+                <label>Notes:</label>
+                <textarea class="todo-notes-input">${todoData.notes || ''}</textarea>
+
+                <label>Checklist:</label>
+                <ul class="todo-checklist">
+                    ${(todoData.checklist || []).map(item => `
+                        <li>
+                            <input type="checkbox" ${item.completed ? 'checked' : ''}>
+                            <input type="text" value="${item.text}">
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+
+            <div class="todo-edit-actions">
+                <button class="save-edit-btn">Save</button>
+                <button class="cancel-edit-btn">Cancel</button>
+            </div>
+        `;
+
+        todoElement.appendChild(expandedSection);
     }
 
     const openAddTodoModal = () => {
@@ -436,6 +508,27 @@ const DOM = () => {
     const closeAddTodoModal = () => {
         if (elements.addTodoModal) {
             elements.addTodoModal.style.display = 'none';
+        }
+    };
+
+    const openViewEditTodoModal = (todoData) => {
+        const modal = elements.viewEditTodoModal;
+        if (!modal) return;
+
+        modal.style.display = 'block';
+        document.getElementById('viewEditTitle').value = todoData.title || '';
+        document.getElementById('viewEditDescription').value = todoData.description || '';
+        document.getElementById('viewEditDueDate').value = todoData.dueDate || '';
+        document.getElementById('viewEditPriority').value = todoData.priority || 'low';
+        document.getElementById('viewEditNotes').value = todoData.notes || '';
+
+        modal.dataset.todoId = todoData.id;
+        modal.dataset.groupId = todoData.groupId;
+    };
+
+    const closeViewEditTodoModal = () => {
+        if (elements.viewEditTodoModal) {
+            elements.viewEditTodoModal.style.display = 'none';
         }
     };
 
@@ -584,13 +677,16 @@ const DOM = () => {
         applyGlobalFilter,
         renderGroups,
         renderTodos,
+        openViewEditTodoModal,
         onFilterChange: (callback) => on('filterChange', callback),
         onGroupChange: (callback) => on('groupChange', callback),
         onTodoStatusToggle: (callback) => on('todoStatusToggle', callback),
         onAddTodo: (callback) => on('addTodo', callback),
         onDeleteGroup: (callback) => on('deleteGroup', callback),
         onEditGroupName: (callback) => on('editGroupName', callback),
-        onAddGroup: (callback) => on('addGroup', callback)
+        onAddGroup: (callback) => on('addGroup', callback),
+        onViewEditTodo: (callback) => on('viewEditTodo', callback),
+        onSaveTodoEdit: (callback) => on('saveTodoEdit', callback),
     };
 }
 

@@ -429,13 +429,13 @@ header {
 
 .add-btn,
 .submit-btn,
-.edit-todo-btn {
+.view-edit-todo-btn {
     background-color: var(--primary-dark);
 }
 
 .add-btn,
 .submit-btn,
-.edit-todo-btn,
+.view-edit-todo-btn,
 .status,
 .cancel-btn {
     display: inline-block;
@@ -454,13 +454,13 @@ header {
 
 .add-btn:hover,
 .submit-btn:hover,
-.edit-todo-btn:hover {
+.view-edit-todo-btn:hover {
     background-color: var(--primary-color);
 }
 
 .add-btn:active,
 .submit-btn:active,
-.edit-todo-btn:active {
+.view-edit-todo-btn:active {
     box-shadow: var(--shadow-inset);
 }
 
@@ -487,6 +487,11 @@ header {
 
 .cancel-btn:hover {
     background-color: var(--error-hover-color);
+}
+
+.todo-action {
+    display: flex;
+    gap: 0.5rem;
 }
 
 .modal {
