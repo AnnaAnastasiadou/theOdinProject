@@ -9,8 +9,8 @@ const DOM = () => {
         sidebar: document.querySelector('.sidebar'),
         addTodoModal: document.getElementById('addTodoModal'),
         addTodoForm: document.getElementById('addTodoForm'),
-        closeModal: document.querySelector('.close-modal'),
-        cancelBtn: document.querySelector('.cancel-btn'),
+        closeAddTodoBtn: document.querySelector('#addTodoModal .close-modal'), 
+        cancelAddTodoBtn: document.querySelector('#addTodoModal .cancel-btn'),
         submitNewTodoBtn: document.getElementById('submit-new-todo-btn'),
         newChecklistItem: document.getElementById('newChecklistItem'),
         addChecklistBtn: document.getElementById('add-checklist-btn'),
@@ -19,7 +19,11 @@ const DOM = () => {
         viewEditTodoModal: document.getElementById('viewEditTodoModal'),
         viewEditTodoForm: document.getElementById('viewEditTodoForm'),
         closeViewEditModal: document.querySelector('.close-view-edit'),
-        saveViewEditTodoBtn: document.getElementById('saveViewEditTodoBtn')     
+        saveViewEditTodoBtn: document.getElementById('saveViewEditTodoBtn'),
+        viewEditTodoModal: document.getElementById('viewEditTodoModal'),
+        viewEditTodoForm: document.getElementById('viewEditTodoForm'),
+        closeViewEditBtn: document.querySelector('#viewEditTodoModal .close-modal'),
+        cancelViewEditBtn: document.querySelector('#viewEditTodoModal .cancel-btn'), 
     };
 
     /*
@@ -638,14 +642,14 @@ const DOM = () => {
     };
 
     const initializeModalHandlers = () => {
-        // Close modal when clicking on X
-        if (elements.closeModal) {
-            elements.closeModal.addEventListener('click', closeAddTodoModal);
-        }
+        // --- ADD TODO MODAL HANDLERS ---
 
-        // Close modal when clicking cancel button
-        if (elements.cancelBtn) {
-            elements.cancelBtn.addEventListener('click', closeAddTodoModal);
+        // Close Add Todo modal with cancel and x buttons
+        if (elements.closeAddTodoBtn) {
+            elements.closeAddTodoBtn.addEventListener('click', closeAddTodoModal);
+        }
+        if (elements.cancelAddTodoBtn) {
+            elements.cancelAddTodoBtn.addEventListener('click', closeAddTodoModal);
         }
 
         // Handle form submission
@@ -653,12 +657,51 @@ const DOM = () => {
             elements.submitNewTodoBtn.addEventListener('click', handleAddTodoSubmit);
         }
 
+        // Checklist button
         if (elements.addChecklistBtn) {
             elements.addChecklistBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 addChecklistItem();
             });
         }
+
+        // --- VIEW/EDIT TODO MODAL HANDLERS ---
+
+        // Close modal
+        if (elements.closeViewEditBtn) { // Renamed from elements.closeViewEditModal
+            elements.closeViewEditBtn.addEventListener('click', closeViewEditTodoModal);
+        }
+        if (elements.cancelViewEditBtn) {
+            elements.cancelViewEditBtn.addEventListener('click', closeViewEditTodoModal);
+        }
+
+        // Close modal when clicking on X
+        // if (elements.closeModal) {
+        //     elements.closeModal.forEach(closeBtn => {
+        //         if (elements.addTodoModal.style.display === 'block') {
+        //             closeBtn.addEventListener('click', closeAddTodoModal);
+        //         } else if (elements.viewEditTodoModal.style.display ==="block") {
+        //             closeViewEditTodoModal();
+        //         }
+        //     })
+        // }
+
+        // Close modal when clicking cancel button
+        // if (elements.cancelBtn) {
+        //     elements.cancelBtn.addEventListener('click', closeAddTodoModal);
+        // }
+
+        // Handle form submission
+        // if (elements.submitNewTodoBtn) {
+        //     elements.submitNewTodoBtn.addEventListener('click', handleAddTodoSubmit);
+        // }
+
+        // if (elements.addChecklistBtn) {
+        //     elements.addChecklistBtn.addEventListener('click', (e) => {
+        //         e.preventDefault();
+        //         addChecklistItem();
+        //     });
+        // }
     };
 
     // This function will be called in index.js
