@@ -26,10 +26,6 @@
             <div class="sidebar">
                     <h2>To-dos</h3>
                     <div class="filters-list"></div>
-                    <!-- <h3>All Todos</h3>
-                    <h3>Today</h3>
-                    <h3>Tomorrow</h3>
-                    <h3>This Week</h3> -->
                     <h2>My Groups <i class="fas fa-plus" id="add-group-btn"></i></h3>
                     <div class="groups-list"></div>
             </div>
@@ -38,33 +34,36 @@
                 <div class="todos-page"></div>
             </div>
         </div>
-        <!-- Add Todo Modal -->
-        <div id="addTodoModal" class="modal">
+        <!-- Todo Modal -->
+        <div id="todoModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>Add New Task</h2>
+                    <h2 id="todoModalTitle">Add New Task</h2>
                     <span class="close-modal">×</span>
                 </div>
-                <form id="addTodoForm" class="modal-form">
+                <form id="todoForm" class="modal-form">
+                    <input type="hidden" id="todoId" name="id">
+                    <input type="hidden" id="todoGroupId" name="groupId">
+                    
                     <div class="form-group">
                         <label for="todoTitle">Title *</label>
-                        <input type="text" id="todoTitle" name="title" required>
+                        <input type="text" id="todoTitle" name="title" >
                     </div>
                     
                     <div class="form-group">
                         <label for="todoDescription">Description *</label>
-                        <textarea id="todoDescription" name="description" rows="3" required></textarea>
+                        <textarea id="todoDescription" name="description" rows="3"></textarea>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="todoDueDate">Due Date *</label>
-                            <input type="date" id="todoDueDate" name="dueDate" required>
+                            <input type="date" id="todoDueDate" name="dueDate">
                         </div>
                         
                         <div class="form-group">
                             <label for="todoPriority">Priority *</label>
-                            <select id="todoPriority" name="priority" required>
+                            <select id="todoPriority" name="priority">
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>
                                 <option value="high">High</option>
@@ -79,11 +78,10 @@
 
                     <div class="form-group checklist-section">
                         <label>Checklist</label>
-                        <ul id="checklistItems" class="checklist-items"></ul>
                         <div class="checklist-controls">
                             <input type="text" id="newChecklistItem" placeholder="Enter checklist item..." />
                             <button type="button" id="add-checklist-btn" class="add-btn">
-                                <i class="fa-solid fa-plus"></i>
+                                <i class="fa-solid fa-plus"></i> Add Item
                             </button>
                         </div>
                         <ul class="checklist-items" id="checklistItems">
@@ -93,51 +91,7 @@
                     
                     <div class="form-actions">
                         <button type="button" class="cancel-btn">Cancel</button>
-                        <button type="button" id="submit-new-todo-btn" class="submit-btn">Add Task</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- View/Edit Todo Modal -->
-        <div id="viewEditTodoModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>View / Edit Todo</h2>
-                    <span class="close-modal">×</span>
-                </div>
-                <form id="viewEditTodoForm" class="modal-form">
-                    <div class="form-group">
-                        <label for="viewEditTitle">Title:</label>
-                        <input type="text" id="viewEditTitle" name="title">
-                    </div>
-                  
-                    <div class="form-group">
-                        <label for="viewEditDescription">Description:</label>
-                        <textarea id="viewEditDescription" name="description"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="viewEditDueDate">Due Date:</label>
-                        <input type="date" id="viewEditDueDate" name="dueDate">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="viewEditPriority">Priority:</label>
-                        <select id="viewEditPriority" name="priority">
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="viewEditNotes">Notes:</label>
-                        <textarea id="viewEditNotes" name="notes"></textarea>
-                    </div>
-                   
-                    <div class="form-actions">
-                        <button type="button" id="saveViewEditTodoBtn" class="submit-btn">Save</button>
-                        <button type="button" class="cancel-btn">Cancel</button>
+                        <button type="submit" id="submitTodoBtn" class="submit-btn">Add Task</button>
                     </div>
                 </form>
             </div>

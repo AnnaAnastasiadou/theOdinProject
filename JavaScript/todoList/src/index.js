@@ -1,13 +1,7 @@
-// Separate application logic (creating new todos, setting todos as complete, changing todo priority)
-// from the DOM-related stuff - keep in separate modules
-// use webpack / also use data-fns library
-// Use localStorage to save data (JSON format)
-// Make sure that the app doesn't crash if the data that you want to retrieve are not there
-
 import './style.css';
-import { App } from "./app.js";
-import { DOM } from "./dom.js";
-import { setupSidebarToggle } from "./sidebar.js";
+import { App } from './app.js';
+import { DOM } from './dom.js';
+import { setupSidebarToggle } from './sidebar.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Create the App instance (this runs its internal init)
@@ -17,9 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const domInstance = DOM();
 
     // Set up event subscriptions
-    domInstance.onFilterChange(filterValue => {
+    domInstance.onFilterChange((filterValue) => {
         const allGroups = appInstance.getGroups();
-        const filterResult = domInstance.applyGlobalFilter(allGroups, filterValue);
+        const filterResult = domInstance.applyGlobalFilter(
+            allGroups,
+            filterValue
+        );
         domInstance.renderFilteredTodos(filterResult, filterValue);
     });
 
@@ -29,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         domInstance.renderTodos(currentGroup, currentGroup.todos);
     });
 
-    domInstance.onDeleteGroup( groupId => {
+    domInstance.onDeleteGroup((groupId) => {
         try {
             appInstance.deleteGroup(groupId);
             const updatedGroups = appInstance.getGroups();
@@ -37,54 +34,51 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentGroup = appInstance.getDefaultPage();
             if (currentGroup) {
                 domInstance.renderTodos(currentGroup, currentGroup.todos);
-                
+
                 // Re-highlight the new active item
                 domInstance.highlightActiveItem('group', currentGroup.id);
-            }
-            else {
+            } else {
                 console.log("currentGroup doesn't exist");
             }
-        }
-        catch(error) {
+        } catch (error) {
             alert(`Error deleting project: ${error.message}`);
-            console.error("Group Deletion Error:", error);
+            console.error('Group Deletion Error:', error);
         }
     });
 
-    domInstance.onEditGroupName( (data)  => {
+    domInstance.onEditGroupName((data) => {
         const { id: groupId, newName } = data;
         try {
             console.log(newName);
-            console.log("calling onEditGroupName");
+            console.log('calling onEditGroupName');
             appInstance.editGroupName(groupId, newName);
-            console.log("app function called");
+            console.log('app function called');
             const updatedGroups = appInstance.getGroups();
             domInstance.renderGroups(updatedGroups);
             domInstance.highlightActiveItem('group', groupId);
-        }
-        catch(error) {
+        } catch (error) {
             alert(`Error editing project: ${error.message}`);
-            console.error("Group Edit Error:", error);
+            console.error('Group Edit Error:', error);
         }
     });
 
     domInstance.onAddGroup((groupName) => {
-        try{
-            console.log("finished");
+        try {
+            console.log('finished');
             const newGroup = appInstance.addGroup(groupName);
+            appInstance.setCurrentGroup(newGroup.id);
             const updatedGroups = appInstance.getGroups();
             domInstance.renderGroups(updatedGroups);
             domInstance.renderTodos(newGroup, newGroup.todos);
             domInstance.highlightActiveItem('group', newGroup.id);
-            console.log("finished");
-        }
-        catch(error) {
+            console.log('finished');
+        } catch (error) {
             alert(error.message);
-            console.error("Group Addition Error:", error);
+            console.error('Group Addition Error:', error);
         }
-    })
+    });
 
-    domInstance.onTodoStatusToggle(({groupId, todoId}) => {
+    domInstance.onTodoStatusToggle(({ groupId, todoId }) => {
         const result = appInstance.toggleTodoStatus(groupId, todoId);
         if (result.success) {
             const currentGroup = appInstance.getCurrentGroup();
@@ -107,8 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             );
             const currentGroup = appInstance.getCurrentGroup();
             domInstance.renderTodos(currentGroup, currentGroup.todos);
-        }
-        catch (error) {
+        } catch (error) {
             console.error('Error adding todo', error);
             alert('Error adding task: ' + error.message);
         }
@@ -116,24 +109,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     domInstance.onViewEditTodo(({ groupId, todoId }) => {
         const group = appInstance.getGroupById(groupId);
-        const todo = group?.todos.find(t => t.id === todoId);
+        const todo = group?.todos.find((t) => t.id === todoId);
 
         if (todo) {
-            domInstance.openViewEditTodoModal(todo);
+            domInstance.openTodoModal('edit', todo);
         } else {
-            console.error(`Todo with ID ${todoId} not found in group ${groupId}`);
+            console.error(
+                `Todo with ID ${todoId} not found in group ${groupId}`
+            );
         }
     });
 
     domInstance.onSaveTodoEdit((updatedTodo) => {
         try {
             const currentGroup = appInstance.getCurrentGroup();
-            appInstance.updateTodo(currentGroup.id, updatedTodo.id, updatedTodo);
+            appInstance.updateTodo(
+                currentGroup.id,
+                updatedTodo.id,
+                updatedTodo
+            );
             // const groups = appInstance.getGroups();
             domInstance.renderTodos(currentGroup, currentGroup.todos);
         } catch (error) {
-            console.error("Error updating todo:", error);
-            alert("Failed to update todo. Check console for details.");
+            console.error('Error updating todo:', error);
+            alert('Failed to update todo: ' + error.message);
         }
     });
 
@@ -149,11 +148,4 @@ document.addEventListener('DOMContentLoaded', () => {
     const defaultGroup = appInstance.getDefaultPage();
     setupSidebarToggle();
     domInstance.init(initialGroups, defaultGroup);
-    // appInstance.addGroup("Geia sas");
-    // Testing
-    // appInstance.addTodo("hello", "This is test 1", "2025-10-20", "low", true);
-    // appInstance.addTodo("hello2", "This is test 2", "2025-10-21", "medium", true);
-    // appInstance.addTodo("hello3", "This is test 3", "2025-10-25", "high");
-    // appInstance.addTodo("hello4", "This is test 4", "2026-08-03", "low");
-
 });

@@ -14,27 +14,26 @@ const DOM = () => {
         todosPage: document.querySelector('.todos-page'),
         addGroupBtn: document.getElementById('add-group-btn'),
 
-        // Add Todo Modal (Distinguished selectors for clarity)
-        addTodoModal: document.getElementById('addTodoModal'),
-        addTodoForm: document.getElementById('addTodoForm'),
-        closeAddTodoBtn: document.querySelector('#addTodoModal .close-modal'), // Explicitly target 'X'
-        cancelAddTodoBtn: document.querySelector('#addTodoModal .cancel-btn'), // Explicitly target Cancel
-        submitNewTodoBtn: document.getElementById('submit-new-todo-btn'),
+        // Todo Modal Elements
+        todoModal: document.getElementById('todoModal'),
+        todoForm: document.getElementById('todoForm'),
+        todoModalTitle: document.getElementById('todoModalTitle'),
+        closeModalBtn: document.querySelector('#todoModal .close-modal'),
+        cancelBtn: document.querySelector('#todoModal .cancel-btn'),
+        submitTodoBtn: document.getElementById('submitTodoBtn'),
+
+        // ADD THESE MISSING FORM ELEMENTS:
+        todoId: document.getElementById('todoId'),
+        todoGroupId: document.getElementById('todoGroupId'),
+        todoTitle: document.getElementById('todoTitle'),
+        todoDescription: document.getElementById('todoDescription'),
+        todoDueDate: document.getElementById('todoDueDate'),
+        todoPriority: document.getElementById('todoPriority'),
+        todoNotes: document.getElementById('todoNotes'),
+
         newChecklistItem: document.getElementById('newChecklistItem'),
         addChecklistBtn: document.getElementById('add-checklist-btn'),
         checklistItems: document.getElementById('checklistItems'),
-
-        // View/Edit Modal (Distinguished selectors for clarity)
-        viewEditTodoModal: document.getElementById('viewEditTodoModal'),
-        viewEditTodoForm: document.getElementById('viewEditTodoForm'),
-        closeViewEditBtn: document.querySelector(
-            '#viewEditTodoModal .close-modal'
-        ),
-        // Using .close-modal in HTML
-        cancelViewEditBtn: document.querySelector(
-            '#viewEditTodoModal .cancel-btn'
-        ),
-        saveViewEditTodoBtn: document.getElementById('saveViewEditTodoBtn'),
     };
 
     //  PUB/SUB EVENT SYSTEM
@@ -306,7 +305,7 @@ const DOM = () => {
                     <button class="view-edit-todo-btn" data-todo-id="${
                         t.id
                     }" data-group-id="${gId}">
-                        <i class="fa-solid fa-pen"></i> View/Edit
+                        <i class="fa-solid fa-pen-to-square"></i> View/Edit
                     </button>
                     </span>
                 </div>
@@ -353,86 +352,107 @@ const DOM = () => {
 
     const clearChecklist = () => (elements.checklistItems.innerHTML = '');
 
-    //  MODALS (ADD + VIEW/EDIT)
-    const openAddTodoModal = () => {
-        elements.addTodoModal.style.display = 'block';
-        elements.addTodoForm.reset();
+    // MODAL MANAGEMENT
+    const openTodoModal = (mode = 'add', todoData = null) => {
+        // Reset form and clear checklist
+        elements.todoForm.reset();
         clearChecklist();
 
-        // Set min date to today for proper validation
-        document.getElementById('todoDueDate').min = format(
-            new Date(),
-            'yyyy-MM-dd'
-        );
+        // Set modal title and button text based on mode
+        if (mode === 'edit') {
+            elements.todoModalTitle.textContent = 'Edit Task';
+            elements.submitTodoBtn.textContent = 'Save Changes';
 
-        document.getElementById('todoTitle').focus();
+            // Populate form with existing data
+            if (todoData) {
+                elements.todoId.value = todoData.id;
+                elements.todoGroupId.value = todoData.groupId;
+                elements.todoTitle.value = todoData.title || '';
+                elements.todoDescription.value = todoData.description || '';
+                elements.todoDueDate.value = todoData.dueDate || '';
+                elements.todoPriority.value = todoData.priority || 'low';
+                elements.todoNotes.value = todoData.notes || '';
+
+                // Populate checklist
+                if (todoData.checklist && todoData.checklist.length > 0) {
+                    todoData.checklist.forEach((item) =>
+                        addChecklistItem(item.text, item.completed)
+                    );
+                }
+            }
+        } else {
+            elements.todoModalTitle.textContent = 'Add New Task';
+            elements.submitTodoBtn.textContent = 'Add Task';
+
+            // Set min date to today for new tasks
+            elements.todoDueDate.min = format(new Date(), 'yyyy-MM-dd');
+        }
+
+        elements.todoModal.style.display = 'block';
+        // elements.todoTitle.focus();
     };
-    const closeAddTodoModal = () =>
-        (elements.addTodoModal.style.display = 'none');
 
-    const openViewEditTodoModal = (todo) => {
-        const m = elements.viewEditTodoModal;
-        m.style.display = 'block';
-
-        // Store the IDs directly on the modal element for easy access by save handler
-        m.dataset.todoId = todo.id;
-        m.dataset.groupId = todo.groupId;
-
-        // Populate form fields
-        document.getElementById('viewEditTitle').value = todo.title || '';
-        document.getElementById('viewEditDescription').value =
-            todo.description || '';
-        document.getElementById('viewEditDueDate').value = todo.dueDate || '';
-        document.getElementById('viewEditPriority').value =
-            todo.priority || 'low';
-        document.getElementById('viewEditNotes').value = todo.notes || '';
+    const closeTodoModal = () => {
+        elements.todoModal.style.display = 'none';
     };
-    const closeViewEditTodoModal = () =>
-        (elements.viewEditTodoModal.style.display = 'none');
 
-    const handleAddTodoSubmit = (e) => {
+    const handleTodoSubmit = (e) => {
         e.preventDefault();
-        const f = new FormData(elements.addTodoForm);
-        const data = {
-            title: f.get('title').trim(),
-            description: f.get('description').trim(),
-            dueDate: f.get('dueDate'),
-            priority: f.get('priority'),
-            notes: f.get('notes'),
+
+        // Clear previous invalid highlighting
+        elements.todoForm.querySelectorAll('.invalid-field').forEach((el) => {
+            el.classList.remove('invalid-field');
+        });
+
+        const formData = new FormData(elements.todoForm);
+        const todoData = {
+            title: formData.get('title').trim(),
+            description: formData.get('description').trim(),
+            dueDate: formData.get('dueDate'),
+            priority: formData.get('priority'),
+            notes: formData.get('notes'),
             checklist: getChecklistData(),
             completed: false,
         };
 
-        if (!data.title || !data.description || !data.dueDate) {
-            return alert('Please fill out all required fields.');
+        let isValid = true;
+
+        if (!todoData.title) {
+            elements.todoTitle.classList.add('invalid-field');
+            isValid = false;
+        }
+        if (!todoData.description) {
+            elements.todoDescription.classList.add('invalid-field');
+            isValid = false;
+        }
+        if (!todoData.dueDate) {
+            elements.todoDueDate.classList.add('invalid-field');
+            isValid = false;
         }
 
-        emit('addTodo', data);
-        closeAddTodoModal();
-    };
+        if (!isValid) {
+            alert('Please fill out all required fields.');
+            elements.todoForm.querySelector('.invalid-field')?.focus();
+            return;
+        }
 
-    const handleSaveViewEdit = () => {
-        const f = new FormData(elements.viewEditTodoForm);
-        const modal = elements.viewEditTodoModal;
+        // Determine if we're adding or editing
+        const todoId = elements.todoId.value;
+        if (todoId) {
+            // Editing existing todo
+            todoData.id = Number(todoId);
+            todoData.groupId = Number(elements.todoGroupId.value);
+            emit('saveTodoEdit', todoData);
+        } else {
+            // Adding new todo
+            emit('addTodo', todoData);
+        }
 
-        const data = {
-            // Retrieve IDs from the modal's dataset
-            id: Number(modal.dataset.todoId),
-            groupId: Number(modal.dataset.groupId),
-            title: f.get('title'),
-            description: f.get('description'),
-            dueDate: f.get('dueDate'),
-            priority: f.get('priority'),
-            notes: f.get('notes'),
-            // Checklist functionality would need to be added here if View/Edit supports it
-        };
-        emit('saveTodoEdit', data);
-        closeViewEditTodoModal();
+        closeTodoModal();
     };
 
     //  EVENT INITIALIZERS
-
-    const initializeGlobalEventHandlers = () => {
+    const initializeEventHandlers = () => {
         document.addEventListener('click', (e) => {
             // Handle Todo Status Toggle
             const status = e.target.closest('.status');
@@ -446,62 +466,42 @@ const DOM = () => {
 
             // Handle Open Add Todo Modal Button
             const addTodoBtn = e.target.closest('.add-btn');
-            if (addTodoBtn) openAddTodoModal();
+            if (addTodoBtn && !addTodoBtn.id) {
+                e.preventDefault();
+                openTodoModal('add');
+            }
 
-            // Handle Open View/Edit Todo Modal Button
-            const viewBtn = e.target.closest('.view-edit-todo-btn');
-            if (viewBtn) {
+            const viewEditBtn = e.target.closest('.view-edit-todo-btn');
+            if (viewEditBtn) {
+                e.preventDefault();
                 emit('viewEditTodo', {
-                    todoId: Number(viewBtn.dataset.todoId),
-                    groupId: Number(viewBtn.dataset.groupId),
+                    todoId: Number(viewEditBtn.dataset.todoId),
+                    groupId: Number(viewEditBtn.dataset.groupId),
                 });
             }
         });
 
-        // Add Group button listener
-        elements.addGroupBtn.addEventListener('click', handleAddGroup);
-    };
+        // Modal handlers
+        elements.closeModalBtn.addEventListener('click', closeTodoModal);
+        elements.cancelBtn.addEventListener('click', closeTodoModal);
+        elements.todoForm.addEventListener('submit', handleTodoSubmit);
 
-    // Modal handlers
-    const initializeModalHandlers = () => {
-        //  Add Todo Modal Listeners
-        if (elements.closeAddTodoBtn)
-            elements.closeAddTodoBtn.addEventListener(
-                'click',
-                closeAddTodoModal
-            );
-        if (elements.cancelAddTodoBtn)
-            elements.cancelAddTodoBtn.addEventListener(
-                'click',
-                closeAddTodoModal
-            );
-
-        elements.submitNewTodoBtn.addEventListener(
-            'click',
-            handleAddTodoSubmit
-        );
-
+        // Checklist - add item on button click
         elements.addChecklistBtn.addEventListener('click', (e) => {
             e.preventDefault();
             addChecklistItem();
         });
 
-        //  View/Edit Modal Listeners
-        if (elements.closeViewEditBtn)
-            elements.closeViewEditBtn.addEventListener(
-                'click',
-                closeViewEditTodoModal
-            );
-        if (elements.cancelViewEditBtn)
-            elements.cancelViewEditBtn.addEventListener(
-                'click',
-                closeViewEditTodoModal
-            );
+        // Checklist - add item on Enter key
+        elements.newChecklistItem.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addChecklistItem();
+            }
+        });
 
-        elements.saveViewEditTodoBtn.addEventListener(
-            'click',
-            handleSaveViewEdit
-        );
+        // Add Group button listener
+        elements.addGroupBtn.addEventListener('click', handleAddGroup);
     };
 
     //  MAIN INITIALIZATION
@@ -510,8 +510,7 @@ const DOM = () => {
         renderGroups(initialGroups);
         renderTodos(defaultGroup, defaultGroup.todos);
 
-        initializeGlobalEventHandlers();
-        initializeModalHandlers();
+        initializeEventHandlers();
 
         highlightActiveItem('group', defaultGroup.id);
     };
@@ -523,8 +522,8 @@ const DOM = () => {
         renderFilteredTodos: ({ title, todos }) =>
             renderTodos({ name: title, id: 'filter-view' }, todos, 'filter'),
         applyGlobalFilter,
-        openViewEditTodoModal,
         highlightActiveItem,
+        openTodoModal,
 
         // Event subscriptions
         onFilterChange: (cb) => on('filterChange', cb),
