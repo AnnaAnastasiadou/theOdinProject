@@ -4,30 +4,36 @@ import { format, isToday, isTomorrow, isThisWeek, parseISO } from 'date-fns';
 /**
  * DOM MODULE
  * Handles all UI interactions, rendering, and event communication.
- * Uses Pub/Sub pattern for clean decoupling from app logic.
+ * Implements a Pub/Sub pattern to cleanly decouple the UI from core application logic.
  */
 const DOM = () => {
-    //  DOM ELEMENTS
+    // Centralized access to all necessary HTML elements.
     const elements = {
         filtersList: document.querySelector('.filters-list'),
         groupsList: document.querySelector('.groups-list'),
         todosPage: document.querySelector('.todos-page'),
         addGroupBtn: document.getElementById('add-group-btn'),
 
-        // Add Todo Modal
+        // Add Todo Modal (Distinguished selectors for clarity)
         addTodoModal: document.getElementById('addTodoModal'),
         addTodoForm: document.getElementById('addTodoForm'),
-        closeModal: document.querySelector('.close-modal'),
-        cancelBtn: document.querySelector('.cancel-btn'),
+        closeAddTodoBtn: document.querySelector('#addTodoModal .close-modal'), // Explicitly target 'X'
+        cancelAddTodoBtn: document.querySelector('#addTodoModal .cancel-btn'), // Explicitly target Cancel
         submitNewTodoBtn: document.getElementById('submit-new-todo-btn'),
         newChecklistItem: document.getElementById('newChecklistItem'),
         addChecklistBtn: document.getElementById('add-checklist-btn'),
         checklistItems: document.getElementById('checklistItems'),
 
-        // View/Edit Modal
+        // View/Edit Modal (Distinguished selectors for clarity)
         viewEditTodoModal: document.getElementById('viewEditTodoModal'),
         viewEditTodoForm: document.getElementById('viewEditTodoForm'),
-        closeViewEditModal: document.querySelector('.close-view-edit'),
+        closeViewEditBtn: document.querySelector(
+            '#viewEditTodoModal .close-modal'
+        ),
+        // Using .close-modal in HTML
+        cancelViewEditBtn: document.querySelector(
+            '#viewEditTodoModal .cancel-btn'
+        ),
         saveViewEditTodoBtn: document.getElementById('saveViewEditTodoBtn'),
     };
 
@@ -44,41 +50,54 @@ const DOM = () => {
         saveTodoEdit: [],
     };
 
-    const emit = (name, data) => events[name].forEach((cb) => cb(data));
+    /* Publishes an event to all subscribers. */
+    const emit = (name, data) => events[name]?.forEach((cb) => cb(data));
+
+    /* Subscribes a callback to an event, returning an unsubscribe function. */
     const on = (name, cb) => {
-        if (events[name]) events[name].push(cb);
+        if (!events[name]) return;
+
+        events[name].push(cb);
         return () => (events[name] = events[name].filter((fn) => fn !== cb));
     };
 
-    //  HIGHLIGHT ACTIVE ITEM
+    //  UTILITIES & HIGHLIGHTING
     const highlightActiveItem = (type, id) => {
+        // Remove 'active' from all potentially active elements
         document
             .querySelectorAll('.filter-item, .group-item')
             .forEach((el) => el.classList.remove('active'));
 
+        // Find and highlight the new active element
         const activeElement = document.querySelector(
             `[data-${type}-id="${id}"]`
         );
         if (activeElement) activeElement.classList.add('active');
     };
 
-    //  GROUPS
+    //  GROUP RENDERING & ACTIONS
     const handleAddGroup = () => {
         const input = document.createElement('input');
         input.type = 'text';
         input.placeholder = 'New Group Name';
         input.className = 'add-group-input';
+
+        // Add input before any existing content
         elements.groupsList.insertAdjacentElement('afterbegin', input);
         input.focus();
+
+        const finishEdit = (name) => {
+            if (name) emit('addGroup', name);
+            input.remove();
+        };
 
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 const name = input.value.trim();
                 if (!name) return alert('Group name cannot be empty');
-                emit('addGroup', name);
-                input.remove();
+                finishEdit(name);
             } else if (e.key === 'Escape') {
-                input.remove();
+                finishEdit(null);
             }
         });
     };
@@ -91,70 +110,77 @@ const DOM = () => {
             groupElement.className = 'group-item';
             groupElement.dataset.groupId = group.id;
             groupElement.innerHTML = `
-        <span class="group-name">${group.name}</span>
-        <span class="group-actions">
-            <i class="fa-solid fa-trash delete-group"></i>
-            <i class="fa-solid fa-pen-to-square edit-group"></i>
-        </span>
-        `;
+                <span class="group-name">${group.name}</span>
+                <span class="group-actions">
+                    <i class="fa-solid fa-trash delete-group"></i>
+                    <i class="fa-solid fa-pen-to-square edit-group"></i>
+                </span>
+            `;
             elements.groupsList.appendChild(groupElement);
 
+            const nameSpan = groupElement.querySelector('.group-name');
+            const editBtn = groupElement.querySelector('.edit-group');
+            const deleteBtn = groupElement.querySelector('.delete-group');
+
+            // View Group Todos on click
             groupElement.addEventListener('click', () => {
                 emit('groupChange', group.id);
                 highlightActiveItem('group', group.id);
             });
 
-            // Delete
-            groupElement
-                .querySelector('.delete-group')
-                .addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    if (
-                        confirm(
-                            `Delete group "${group.name}" and all its tasks?`
-                        )
-                    ) {
-                        emit('deleteGroup', group.id);
-                    }
-                });
+            // Delete Handler
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (
+                    confirm(`Delete group "${group.name}" and all its tasks?`)
+                ) {
+                    emit('deleteGroup', group.id);
+                }
+            });
 
-            // Edit
-            const editBtn = groupElement.querySelector('.edit-group');
-            const nameSpan = groupElement.querySelector('.group-name');
+            // Edit Handler
+            const saveEdit = (input) => {
+                const newName = input.value.trim();
+                if (!newName) return cancelEdit();
+                emit('editGroupName', { id: group.id, newName });
+                input.replaceWith(nameSpan);
+                groupElement.classList.remove('editing');
+            };
+
+            const cancelEdit = () => {
+                const currentInput =
+                    groupElement.querySelector('.edit-group-input');
+                if (currentInput) {
+                    currentInput.replaceWith(nameSpan);
+                    groupElement.classList.remove('editing');
+                }
+            };
+
             editBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (groupElement.querySelector('input')) return;
+                if (groupElement.querySelector('input')) return; // Already editing
 
                 const input = document.createElement('input');
                 input.value = group.name;
                 input.className = 'edit-group-input';
+
                 nameSpan.replaceWith(input);
                 groupElement.classList.add('editing');
                 input.focus();
 
                 input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') saveEdit();
+                    if (e.key === 'Enter') saveEdit(input);
                     else if (e.key === 'Escape') cancelEdit();
                 });
 
-                const saveEdit = () => {
-                    const newName = input.value.trim();
-                    if (!newName) return cancelEdit();
-                    emit('editGroupName', { id: group.id, newName });
-                    input.replaceWith(nameSpan);
-                    groupElement.classList.remove('editing');
-                };
-                const cancelEdit = () => {
-                    input.replaceWith(nameSpan);
-                    groupElement.classList.remove('editing');
-                };
-
+                // Click-outside-to-cancel logic
                 document.addEventListener(
                     'click',
                     (e) => {
+                        // Check if the click target is NOT within the group element itself
                         if (!groupElement.contains(e.target)) cancelEdit();
                     },
-                    { once: true }
+                    { once: true } // Automatically removes listener after the first click
                 );
             });
         });
@@ -175,6 +201,7 @@ const DOM = () => {
             el.className = 'filter-item';
             el.dataset.filterId = f.id;
             el.innerHTML = `<i class="fas ${f.icon}"></i>${f.name}`;
+
             el.addEventListener('click', () => {
                 emit('filterChange', f.id);
                 highlightActiveItem('filter', f.id);
@@ -184,6 +211,7 @@ const DOM = () => {
     };
 
     const applyGlobalFilter = (groups, filter) => {
+        // Flatten all todos from all groups into a single array, adding group context
         const allTodos = groups.flatMap((g) =>
             g.todos.map((t) => ({ ...t, groupName: g.name, groupId: g.id }))
         );
@@ -193,13 +221,17 @@ const DOM = () => {
         const filtered = allTodos.filter((t) => {
             if (!t.dueDate) return false;
             const d = parseISO(t.dueDate);
-            return filter === 'today'
-                ? isToday(d)
-                : filter === 'tomorrow'
-                ? isTomorrow(d)
-                : filter === 'week'
-                ? isThisWeek(d)
-                : true;
+
+            switch (filter) {
+                case 'today':
+                    return isToday(d);
+                case 'tomorrow':
+                    return isTomorrow(d);
+                case 'week':
+                    return isThisWeek(d);
+                default:
+                    return true;
+            }
         });
 
         const titles = {
@@ -211,7 +243,7 @@ const DOM = () => {
         return { title: titles[filter] || 'Filtered Tasks', todos: filtered };
     };
 
-    //  TODOS
+    //  TODOS RENDERING
     const renderTodos = (group, todos, type = 'group') => {
         elements.todosPage.innerHTML = '';
         const header = document.createElement('div');
@@ -222,18 +254,16 @@ const DOM = () => {
         if (type === 'group') {
             header.insertAdjacentHTML(
                 'beforeend',
-                `
-        <button class="add-btn"><i class="fa-solid fa-plus"></i> Add Todo</button>
-        `
+                `<button class="add-btn"><i class="fa-solid fa-plus"></i> Add Todo</button>`
             );
         }
 
         if (!todos.length) {
             elements.todosPage.innerHTML += `
-        <div class="empty-state">
-            <i class="fa-solid fa-clipboard-list"></i>
-            <h3>No Tasks Found</h3>
-        </div>`;
+                <div class="empty-state">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <h3>No Tasks Found</h3>
+                </div>`;
             return;
         }
 
@@ -251,36 +281,36 @@ const DOM = () => {
             el.dataset.groupId = gId;
 
             el.innerHTML = `
-            <div class="todo-header">
-                <h3 class="todo-title">${t.title}</h3>
-                <span class="creation-date">${format(
-                    t.createdDate,
-                    'dd/MM/yyyy'
-                )}</span>
-            </div>
-            <p class="todo-description">${t.description}</p>
-            <div class="todo-footer">
-                <span class="due-date">
-                <img src="https://img.icons8.com/fluency/48/calendar--v1.png"/> 
-                Due: ${format(t.dueDate, 'dd/MM/yyyy')}
-                </span>
-                <span class="todo-action">
-                <button class="status completed-${t.completed}" 
-                    data-todo-id="${t.id}" data-group-id="${gId}">
-                    ${
-                        t.completed
-                            ? '<i class="fa-regular fa-circle-check"></i>Completed'
-                            : '<i class="fa-solid fa-hourglass-start"></i>Pending'
-                    }
-                </button>
-                <button class="view-edit-todo-btn" data-todo-id="${
-                    t.id
-                }" data-group-id="${gId}">
-                    <i class="fa-solid fa-pen"></i> View/Edit
-                </button>
-                </span>
-            </div>
-        `;
+                <div class="todo-header">
+                    <h3 class="todo-title">${t.title}</h3>
+                    <span class="creation-date">Created: ${format(
+                        t.createdDate,
+                        'dd/MM/yyyy'
+                    )}</span>
+                </div>
+                <p class="todo-description">${t.description}</p>
+                <div class="todo-footer">
+                    <span class="due-date">
+                    <i class="fa-solid fa-calendar-alt"></i> 
+                    Due: ${format(t.dueDate, 'dd/MM/yyyy')}
+                    </span>
+                    <span class="todo-action">
+                    <button class="status completed-${t.completed}" 
+                        data-todo-id="${t.id}" data-group-id="${gId}">
+                        ${
+                            t.completed
+                                ? '<i class="fa-regular fa-circle-check"></i>Completed'
+                                : '<i class="fa-solid fa-hourglass-start"></i>Pending'
+                        }
+                    </button>
+                    <button class="view-edit-todo-btn" data-todo-id="${
+                        t.id
+                    }" data-group-id="${gId}">
+                        <i class="fa-solid fa-pen"></i> View/Edit
+                    </button>
+                    </span>
+                </div>
+            `;
             container.appendChild(el);
         });
     };
@@ -317,7 +347,7 @@ const DOM = () => {
                 completed:
                     li.querySelector('.checklist-item-checkbox').checked ||
                     false,
-                id: Date.now() + Math.random(),
+                id: Date.now() + Math.random(), // Simple unique ID for the item
             })
         );
 
@@ -328,9 +358,13 @@ const DOM = () => {
         elements.addTodoModal.style.display = 'block';
         elements.addTodoForm.reset();
         clearChecklist();
-        document.getElementById('todoDueDate').min = new Date()
-            .toISOString()
-            .split('T')[0];
+
+        // Set min date to today for proper validation
+        document.getElementById('todoDueDate').min = format(
+            new Date(),
+            'yyyy-MM-dd'
+        );
+
         document.getElementById('todoTitle').focus();
     };
     const closeAddTodoModal = () =>
@@ -339,8 +373,12 @@ const DOM = () => {
     const openViewEditTodoModal = (todo) => {
         const m = elements.viewEditTodoModal;
         m.style.display = 'block';
+
+        // Store the IDs directly on the modal element for easy access by save handler
         m.dataset.todoId = todo.id;
         m.dataset.groupId = todo.groupId;
+
+        // Populate form fields
         document.getElementById('viewEditTitle').value = todo.title || '';
         document.getElementById('viewEditDescription').value =
             todo.description || '';
@@ -375,22 +413,28 @@ const DOM = () => {
 
     const handleSaveViewEdit = () => {
         const f = new FormData(elements.viewEditTodoForm);
+        const modal = elements.viewEditTodoModal;
+
         const data = {
-            id: Number(elements.viewEditTodoModal.dataset.todoId),
-            groupId: Number(elements.viewEditTodoModal.dataset.groupId),
+            // Retrieve IDs from the modal's dataset
+            id: Number(modal.dataset.todoId),
+            groupId: Number(modal.dataset.groupId),
             title: f.get('title'),
             description: f.get('description'),
             dueDate: f.get('dueDate'),
             priority: f.get('priority'),
             notes: f.get('notes'),
+            // Checklist functionality would need to be added here if View/Edit supports it
         };
         emit('saveTodoEdit', data);
         closeViewEditTodoModal();
     };
 
     //  EVENT INITIALIZERS
-    const initializeEventHandlers = () => {
+
+    const initializeGlobalEventHandlers = () => {
         document.addEventListener('click', (e) => {
+            // Handle Todo Status Toggle
             const status = e.target.closest('.status');
             if (status) {
                 e.preventDefault();
@@ -400,9 +444,11 @@ const DOM = () => {
                 });
             }
 
+            // Handle Open Add Todo Modal Button
             const addTodoBtn = e.target.closest('.add-btn');
             if (addTodoBtn) openAddTodoModal();
 
+            // Handle Open View/Edit Todo Modal Button
             const viewBtn = e.target.closest('.view-edit-todo-btn');
             if (viewBtn) {
                 emit('viewEditTodo', {
@@ -412,47 +458,64 @@ const DOM = () => {
             }
         });
 
+        // Add Group button listener
         elements.addGroupBtn.addEventListener('click', handleAddGroup);
-        initializeModalHandlers();
     };
 
+    // Modal handlers
     const initializeModalHandlers = () => {
-        // Add Todo Modal
-        elements.closeModal.addEventListener('click', closeAddTodoModal);
-        elements.cancelBtn.addEventListener('click', closeAddTodoModal);
+        //  Add Todo Modal Listeners
+        if (elements.closeAddTodoBtn)
+            elements.closeAddTodoBtn.addEventListener(
+                'click',
+                closeAddTodoModal
+            );
+        if (elements.cancelAddTodoBtn)
+            elements.cancelAddTodoBtn.addEventListener(
+                'click',
+                closeAddTodoModal
+            );
+
         elements.submitNewTodoBtn.addEventListener(
             'click',
             handleAddTodoSubmit
         );
+
         elements.addChecklistBtn.addEventListener('click', (e) => {
             e.preventDefault();
             addChecklistItem();
         });
 
-        // View/Edit Modal
+        //  View/Edit Modal Listeners
+        if (elements.closeViewEditBtn)
+            elements.closeViewEditBtn.addEventListener(
+                'click',
+                closeViewEditTodoModal
+            );
+        if (elements.cancelViewEditBtn)
+            elements.cancelViewEditBtn.addEventListener(
+                'click',
+                closeViewEditTodoModal
+            );
+
         elements.saveViewEditTodoBtn.addEventListener(
             'click',
             handleSaveViewEdit
         );
-        elements.closeViewEditModal.addEventListener(
-            'click',
-            closeViewEditTodoModal
-        );
-        document
-            .querySelector('#viewEditTodoModal .cancel-btn')
-            .addEventListener('click', closeViewEditTodoModal);
     };
 
-    //  INITIALIZATION
+    //  MAIN INITIALIZATION
     const init = (initialGroups, defaultGroup) => {
         renderFilters();
         renderGroups(initialGroups);
         renderTodos(defaultGroup, defaultGroup.todos);
-        initializeEventHandlers();
+
+        initializeGlobalEventHandlers();
+        initializeModalHandlers();
+
         highlightActiveItem('group', defaultGroup.id);
     };
 
-    //  PUBLIC INTERFACE
     return {
         init,
         renderGroups,
