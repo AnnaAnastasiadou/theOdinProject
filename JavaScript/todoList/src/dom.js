@@ -361,6 +361,9 @@ const DOM = () => {
     const openTodoModal = (mode = 'add', todoData = null) => {
         // Reset form and clear checklist
         elements.todoForm.reset();
+        elements.todoModal.querySelectorAll('.invalid-field').forEach((el) => {
+            el.classList.remove('invalid-field');
+        });
         clearChecklist();
 
         // Set modal title and button text based on mode
