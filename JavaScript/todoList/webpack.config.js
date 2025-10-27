@@ -1,30 +1,46 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
     mode: 'development',
     entry: './src/index.js',
     output: {
         filename: 'main.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, '../../docs/todoList'),
         clean: true,
-        publicPath: '/theOdinProject/JavaScript/todoList/dist/',
+        publicPath: isProduction ? '/theOdinProject/todoList/' : '/',
     },
     plugins: [
         new HtmlWebpackPlugin({
             title: 'TaskFlow Todo App',
             template: './index.html',
         }),
+        new MiniCssExtractPlugin({
+            filename: 'style.css',
+        }),
     ],
     devtool: 'inline-source-map',
     devServer: {
-        static: './dist',
+        port: 8081,
+
+        static: {
+            directory: path.resolve(__dirname, './'),
+            publicPath: '/',
+        },
+
+        devMiddleware: {
+            publicPath: '/',
+        },
+        open: true,
     },
     module: {
         rules: [
             {
                 test: /\.css$/i,
-                use: ['style-loader', 'css-loader'],
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
