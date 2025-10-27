@@ -120,6 +120,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    domInstance.onDeleteTodo(({ todoId, groupId }) => {
+        appInstance.deleteTodoFromGroup(groupId, todoId);
+        domInstance.renderTodos(
+            appInstance.getGroupById(groupId),
+            appInstance.getGroupById(groupId).todos
+        );
+    });
+
     domInstance.onSaveTodoEdit((updatedTodo) => {
         try {
             const currentGroup = appInstance.getCurrentGroup();

@@ -47,6 +47,7 @@ const DOM = () => {
         addGroup: [],
         viewEditTodo: [],
         saveTodoEdit: [],
+        deleteTodo: [],
     };
 
     /* Publishes an event to all subscribers. */
@@ -290,23 +291,27 @@ const DOM = () => {
                 <p class="todo-description">${t.description}</p>
                 <div class="todo-footer">
                     <span class="due-date">
-                    <i class="fa-solid fa-calendar-alt"></i> 
-                    Due: ${format(t.dueDate, 'dd/MM/yyyy')}
+                        <i class="fa-solid fa-calendar-alt"></i> 
+                        Due: ${format(t.dueDate, 'dd/MM/yyyy')}
                     </span>
                     <span class="todo-action">
-                    <button class="status completed-${t.completed}" 
-                        data-todo-id="${t.id}" data-group-id="${gId}">
-                        ${
-                            t.completed
-                                ? '<i class="fa-regular fa-circle-check"></i>Completed'
-                                : '<i class="fa-solid fa-hourglass-start"></i>Pending'
-                        }
-                    </button>
-                    <button class="view-edit-todo-btn" data-todo-id="${
-                        t.id
-                    }" data-group-id="${gId}">
-                        <i class="fa-solid fa-pen-to-square"></i> View/Edit
-                    </button>
+                        <button class="status completed-${t.completed}" 
+                            data-todo-id="${t.id}" data-group-id="${gId}">
+                            ${
+                                t.completed
+                                    ? '<i class="fa-regular fa-circle-check"></i>Completed'
+                                    : '<i class="fa-solid fa-hourglass-start"></i>Pending'
+                            }
+                        </button>
+                        <button class="view-edit-todo-btn" data-todo-id="${
+                            t.id
+                        }" data-group-id="${gId}">
+                            <i class="fa-solid fa-pen-to-square"></i> View/Edit
+                        </button>
+                        <button class="delete-todo-btn"
+                            data-todo-id="${t.id}" data-group-id="${gId}">
+                            <i class="fa-solid fa-trash"></i> Delete
+                        </button>
                     </span>
                 </div>
             `;
@@ -479,6 +484,17 @@ const DOM = () => {
                     groupId: Number(viewEditBtn.dataset.groupId),
                 });
             }
+
+            const deleteTodoBtn = e.target.closest('.delete-todo-btn');
+            if (deleteTodoBtn) {
+                e.preventDefault();
+                const todoId = Number(deleteTodoBtn.dataset.todoId);
+                const groupId = Number(deleteTodoBtn.dataset.groupId);
+
+                if (confirm('Are you sure you want to delete this task?')) {
+                    emit('deleteTodo', { todoId, groupId });
+                }
+            }
         });
 
         // Modal handlers
@@ -535,6 +551,7 @@ const DOM = () => {
         onAddGroup: (cb) => on('addGroup', cb),
         onViewEditTodo: (cb) => on('viewEditTodo', cb),
         onSaveTodoEdit: (cb) => on('saveTodoEdit', cb),
+        onDeleteTodo: (cb) => on('deleteTodo', cb),
     };
 };
 
