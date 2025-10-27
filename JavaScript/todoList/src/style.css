@@ -68,6 +68,10 @@ body {
 
 /* ---Header--- */
 header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     padding: 1rem 2rem;
     background: var(--bg-primary);
     border-bottom: 1px solid var(--border-color-primary);
@@ -700,8 +704,8 @@ header {
         font-size: 14px;
     }
 
-    .logo {
-        justify-self: flex-end;
+    header {
+        justify-content: flex-end;
     }
 
     #hamburger-btn {
