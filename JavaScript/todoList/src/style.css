@@ -223,6 +223,12 @@ header {
 }
 
 /* ---Groups--- */
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .groups-list {
     margin-top: 0.5rem;
 }

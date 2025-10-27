@@ -77,17 +77,24 @@ const DOM = () => {
 
     //  GROUP RENDERING & ACTIONS
     const handleAddGroup = () => {
+        const form = document.createElement('form');
+        form.style.cssText =
+            'display: inline; margin: 0; padding: 0; border: none;';
+
         const input = document.createElement('input');
         input.type = 'text';
         input.placeholder = 'New Group Name';
         input.className = 'add-group-input';
 
+        form.appendChild(input);
         // Add input before any existing content
         elements.groupsList.insertAdjacentElement('afterbegin', input);
         input.focus();
 
         const finishEdit = (name) => {
-            if (name) emit('addGroup', name);
+            if (name) {
+                emit('addGroup', name);
+            }
             input.remove();
         };
 
@@ -200,7 +207,7 @@ const DOM = () => {
             const el = document.createElement('h3');
             el.className = 'filter-item';
             el.dataset.filterId = f.id;
-            el.innerHTML = `<i class="fas ${f.icon}"></i>${f.name}`;
+            el.innerHTML = `<i class="fas ${f.icon}"></i> ${f.name}`;
 
             el.addEventListener('click', () => {
                 emit('filterChange', f.id);
