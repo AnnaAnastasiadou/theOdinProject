@@ -77,25 +77,28 @@ const DOM = () => {
 
     //  GROUP RENDERING & ACTIONS
     const handleAddGroup = () => {
-        const form = document.createElement('form');
-        form.style.cssText =
-            'display: inline; margin: 0; padding: 0; border: none;';
-
         const input = document.createElement('input');
         input.type = 'text';
         input.placeholder = 'New Group Name';
         input.className = 'add-group-input';
 
-        form.appendChild(input);
         // Add input before any existing content
         elements.groupsList.insertAdjacentElement('afterbegin', input);
         input.focus();
 
         const finishEdit = (name) => {
+            if (!elements.groupsList.contains(input)) return;
+            input.remove();
+            document.removeEventListener('click', clickOutsideHandler);
             if (name) {
                 emit('addGroup', name);
             }
-            input.remove();
+        };
+
+        const clickOutsideHandler = (e) => {
+            if (e.target !== input) {
+                finishEdit(null);
+            }
         };
 
         input.addEventListener('keydown', (e) => {
@@ -107,6 +110,10 @@ const DOM = () => {
                 finishEdit(null);
             }
         });
+
+        setTimeout(() => {
+            document.addEventListener('click', clickOutsideHandler);
+        }, 0);
     };
 
     const renderGroups = (groups) => {
