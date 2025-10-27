@@ -3,8 +3,9 @@ export function setupSidebarToggle() {
     const sidebar = document.querySelector('.sidebar');
 
     if (!button || !sidebar) {
-        if (!button) console.error('Hamburger button (#hamburger-btn) not found');
-        if (!sidebar) console.error("Sidebar element (.sidebar) not found");
+        if (!button)
+            console.error('Hamburger button (#hamburger-btn) not found');
+        if (!sidebar) console.error('Sidebar element (.sidebar) not found');
         return;
     }
 
@@ -13,13 +14,15 @@ export function setupSidebarToggle() {
         button.classList.toggle('sidebar-hidden');
     }
 
-    // function init() {
-    //     sidebar.classList.add('sidebar-hidden');
-    //     button.classList.add('sidebar-hidden');
-    // }
+    function init() {
+        if (window.innerWidth <= 768) {
+            // Adjust breakpoint as needed
+            sidebar.classList.add('sidebar-hidden');
+            button.classList.add('sidebar-hidden');
+        }
+    }
 
-    // init();
+    init();
+
     button.addEventListener('click', toggleSidebar);
 }
-
-
