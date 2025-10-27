@@ -320,15 +320,18 @@ const DOM = () => {
     };
 
     //  CHECKLIST HELPERS
-    const addChecklistItem = (text = '') => {
+    const addChecklistItem = (text = '', completed = false) => {
         const val = text || elements.newChecklistItem.value.trim();
         if (!val) return;
 
         const li = document.createElement('li');
         li.className = 'checklist-item';
+
         li.innerHTML = `
             <div class="checklist-item-content">
-            <input type="checkbox" class="checklist-item-checkbox">
+            <input type="checkbox" class="checklist-item-checkbox" ${
+                completed ? 'checked' : ''
+            }>
             <span class="checklist-item-text">${val}</span>
             </div>
             <button type="button" class="remove-checklist-item">
