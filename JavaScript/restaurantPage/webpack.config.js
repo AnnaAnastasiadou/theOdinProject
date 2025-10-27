@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const PROJECT_NAME = path.basename(__dirname);
+const PROJECT_FOLDER_NAME = 'restaurantPage';
 const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
@@ -10,12 +10,15 @@ module.exports = {
     entry: './src/index.js',
     output: {
         filename: 'main.js',
-        path: path.resolve(__dirname, `../../docs/${PROJECT_NAME}`),
-        publicPath: isProduction ? `/theOdinProject/${PROJECT_NAME}/` : '/',
+        path: path.resolve(__dirname, `../../docs/${PROJECT_FOLDER_NAME}`),
+        publicPath: isProduction
+            ? `/theOdinProject/${PROJECT_FOLDER_NAME}/`
+            : '/',
         clean: true,
     },
     plugins: [
         new HtmlWebpackPlugin({
+            title: 'The Loop Restaurant',
             template: './src/template.html',
         }),
         new MiniCssExtractPlugin({
