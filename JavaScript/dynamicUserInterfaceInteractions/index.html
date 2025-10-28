@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        />
+        <title>Dynamic UI interactions Testing</title>
+    </head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+        }
+        .dropdown-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            width: fit-content;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .dropdown-button,
+        .dropdown-list {
+            background-color: rgb(64, 64, 64);
+            box-shadow: 0.2rem 0.2rem 0.2rem black;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .dropdown-button {
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .dropdown-button:hover {
+            transform: scale(1.05);
+        }
+
+        .dropdown-button i {
+            color: white;
+            margin-left: 0.5rem;
+        }
+
+        .dropdown-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .dropdown-list.visible {
+            /* display: block; */
+            opacity: 1;
+            transform: translateY(0px);
+        }
+
+        .dropdown-option {
+            list-style: none;
+            padding: 0.5rem 1rem;
+            width: 100%;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .dropdown-option:hover {
+            background-color: rgb(203, 203, 203);
+            color: rgb(64, 64, 64);
+        }
+    </style>
+    <script>
+        const toggleMenu = () => {
+            const dropdownList = document.querySelector('.dropdown-list');
+            if (dropdownList) {
+                dropdownList.classList.toggle('visible');
+            } else {
+                console.error(
+                    "Error: Element with class '.dropdown-list' not found!"
+                );
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropdownButton = document.querySelector('.dropdown-button');
+
+            if (dropdownButton) {
+                dropdownButton.addEventListener('click', () => {
+                    toggleMenu();
+                });
+            } else {
+                console.error(
+                    "Error: Element with class '.dropdown-button' not found!"
+                );
+            }
+        });
+    </script>
+    <body>
+        <div class="dropdown-menu">
+            <button class="dropdown-button">
+                Dropdown Menu
+                <i class="fa-solid fa-caret-down"></i>
+            </button>
+            <ul class="dropdown-list">
+                <li class="dropdown-option">Option 1</li>
+                <li class="dropdown-option">Option 2</li>
+                <li class="dropdown-option">Option 3</li>
+            </ul>
+        </div>
+        <div class="image-carousel"></div>
+    </body>
+</html>
