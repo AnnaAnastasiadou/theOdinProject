@@ -202,7 +202,7 @@ const DOM = () => {
 
     //  FILTERS
     const availableFilters = [
-        { id: 'all', name: 'All Todos', icon: 'fa-list' },
+        { id: 'all', name: 'All To-dos', icon: 'fa-list' },
         { id: 'today', name: 'Today', icon: 'fa-calendar-day' },
         { id: 'tomorrow', name: 'Tomorrow', icon: 'fa-forward' },
         { id: 'week', name: 'This Week', icon: 'fa-calendar-week' },
@@ -230,7 +230,7 @@ const DOM = () => {
             g.todos.map((t) => ({ ...t, groupName: g.name, groupId: g.id }))
         );
 
-        if (filter === 'all') return { title: 'All Todos', todos: allTodos };
+        if (filter === 'all') return { title: 'All To-dos', todos: allTodos };
 
         const filtered = allTodos.filter((t) => {
             if (!t.dueDate) return false;
@@ -249,12 +249,12 @@ const DOM = () => {
         });
 
         const titles = {
-            today: 'Tasks Due Today',
-            tomorrow: 'Tasks Due Tomorrow',
-            week: 'Tasks Due This Week',
+            today: 'To-dos Due Today',
+            tomorrow: 'To-dos Due Tomorrow',
+            week: 'To-dos Due This Week',
         };
 
-        return { title: titles[filter] || 'Filtered Tasks', todos: filtered };
+        return { title: titles[filter] || 'Filtered To-dos', todos: filtered };
     };
 
     //  TODOS RENDERING
@@ -268,7 +268,7 @@ const DOM = () => {
         if (type === 'group') {
             header.insertAdjacentHTML(
                 'beforeend',
-                `<button class="add-btn"><i class="fa-solid fa-plus"></i> Add Todo</button>`
+                `<button class="add-btn"><i class="fa-solid fa-plus"></i> Add To-do</button>`
             );
         }
 
@@ -276,7 +276,7 @@ const DOM = () => {
             elements.todosPage.innerHTML += `
                 <div class="empty-state">
                     <i class="fa-solid fa-clipboard-list"></i>
-                    <h3>No Tasks Found</h3>
+                    <h3>No To-dos Found</h3>
                 </div>`;
             return;
         }
@@ -385,7 +385,7 @@ const DOM = () => {
 
         // Set modal title and button text based on mode
         if (mode === 'edit') {
-            elements.todoModalTitle.textContent = 'Edit Task';
+            elements.todoModalTitle.textContent = 'Edit To-do';
             elements.submitTodoBtn.textContent = 'Save Changes';
 
             // Populate form with existing data
@@ -406,10 +406,10 @@ const DOM = () => {
                 }
             }
         } else {
-            elements.todoModalTitle.textContent = 'Add New Task';
-            elements.submitTodoBtn.textContent = 'Add Task';
+            elements.todoModalTitle.textContent = 'Add New To-do';
+            elements.submitTodoBtn.textContent = 'Add To-do';
 
-            // Set min date to today for new tasks
+            // Set min date to today for new to-do
             elements.todoDueDate.min = format(new Date(), 'yyyy-MM-dd');
         }
 
@@ -511,7 +511,7 @@ const DOM = () => {
                 const todoId = Number(deleteTodoBtn.dataset.todoId);
                 const groupId = Number(deleteTodoBtn.dataset.groupId);
 
-                if (confirm('Are you sure you want to delete this task?')) {
+                if (confirm('Are you sure you want to delete this to-do?')) {
                     emit('deleteTodo', { todoId, groupId });
                 }
             }
