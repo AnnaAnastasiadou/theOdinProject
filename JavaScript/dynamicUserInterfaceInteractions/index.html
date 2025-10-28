@@ -90,12 +90,27 @@
     <script>
         const toggleMenu = () => {
             const dropdownList = document.querySelector('.dropdown-list');
+            let isMenuVisible = false;
             if (dropdownList) {
                 dropdownList.classList.toggle('visible');
             } else {
                 console.error(
                     "Error: Element with class '.dropdown-list' not found!"
                 );
+                return;
+            }
+            if (dropdownList.classList.contains('visible')) {
+                isMenuVisible = true;
+            }
+            const icon = document.querySelector('.dropdown-icon');
+            if (icon && isMenuVisible) {
+                icon.classList.remove('fa-caret-down');
+                icon.classList.add('fa-caret-up');
+            } else if (icon && !isMenuVisible) {
+                icon.classList.remove('fa-caret-up');
+                icon.classList.add('fa-caret-down');
+            } else {
+                console.error('Icon in the dropdown button not found!');
             }
         };
 
@@ -117,7 +132,7 @@
         <div class="dropdown-menu">
             <button class="dropdown-button">
                 Dropdown Menu
-                <i class="fa-solid fa-caret-down"></i>
+                <i class="dropdown-icon fa-solid fa-caret-down"></i>
             </button>
             <ul class="dropdown-list">
                 <li class="dropdown-option">Option 1</li>
