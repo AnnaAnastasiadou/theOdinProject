@@ -118,7 +118,7 @@ body {
     font-weight: 500;
 }
 
-.feels-like {
+.all-temp {
     font-size: 1.1rem;
     color: var(--text-secondary);
 }
@@ -134,6 +134,8 @@ body {
 }
 
 .detail-card {
+    display: flex;
+    flex-direction: column;
     background: var(--glass);
     padding: 25px 20px;
     border-radius: 16px;

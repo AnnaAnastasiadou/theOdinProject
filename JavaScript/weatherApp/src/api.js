@@ -4,7 +4,7 @@ export const getWeatherData = async (location) => {
     if (!location) {
         return;
     }
-    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=${WEATHER_API_KEY}`;
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&key=${WEATHER_API_KEY}`;
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -13,7 +13,7 @@ export const getWeatherData = async (location) => {
         const weatherData = await response.json();
         const current = weatherData.currentConditions;
         const days = weatherData.days || [];
-
+        console.log(current);
         // Current conditions
         const currentData = {
             location: weatherData.resolvedAddress,
@@ -22,6 +22,8 @@ export const getWeatherData = async (location) => {
             temp: current.temp,
             feelsLike: current.feelslike,
             conditions: current.conditions,
+            tempMax: days[0].tempmax,
+            tempMin: days[0].tempmin,
 
             // Secondary details
             humidity: current.humidity,
@@ -33,13 +35,6 @@ export const getWeatherData = async (location) => {
             cloudcover: current.cloudcover,
             sunrise: current.sunrise,
             sunset: current.sunset,
-
-            // Snow and precipitation details
-            snow: current.snow,
-            snowdepth: current.snowdepth,
-            precip: current.precip,
-            preciptype: current.preciptype,
-            precipprob: current.precipprob,
         };
 
         // Weekly Forecast
