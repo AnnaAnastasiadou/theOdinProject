@@ -55,10 +55,10 @@ export const initializeDom = (handleWeatherRequest) => {
                         <div class="details-value" id="precipitation"></div> 
                     </div>
                 </div>
-                <div class="forecast-section">
-                    <h2 class="forecast-title">7-Day Forecast</h2>
-                    <div id="forecast-container" class="forecast-days"></div>
-                </div>
+            </div>
+            <div class="forecast-section">
+                <h2 class="forecast-title">7-Day Forecast</h2>
+                <div id="forecast-container" class="forecast-days"></div>
             </div>
         `;
 
@@ -82,7 +82,7 @@ export const initializeDom = (handleWeatherRequest) => {
         if (elements.currentTemp) {
             elements.currentTemp.textContent = `${Math.round(
                 currentData.temp
-            )}°F`;
+            )}\u00B0F`;
         }
         if (elements.currentConditions) {
             elements.currentConditions.textContent =
@@ -91,7 +91,7 @@ export const initializeDom = (handleWeatherRequest) => {
         if (elements.feelsLike) {
             elements.feelsLike.textContent = `Feels like ${Math.round(
                 currentData.feelsLike
-            )};&degF`;
+            )}\u00B0F`;
         }
         // Update weather details
         if (elements.humidity) {
@@ -135,8 +135,12 @@ export const initializeDom = (handleWeatherRequest) => {
                 )}</div>
                 ${iconHtml}
                 <div class="day-temps">
-                    <span class="temp-max">${Math.round(day.tempMax)}°</span> / 
-                    <span class="temp-min">${Math.round(day.tempMin)}°</span>
+                    <span class="temp-max">${Math.round(
+                        day.tempMax
+                    )}\u00B0F</span> / 
+                    <span class="temp-min">${Math.round(
+                        day.tempMin
+                    )}\u00B0F</span>
                 </div>
                 <div class="day-precip">${day.precipProb}%</div>
             `;
@@ -158,8 +162,7 @@ export const initializeDom = (handleWeatherRequest) => {
         }
     };
 
-    const handleSearch = async () => {
-        const location = elements.searchInput.value.trim();
+    const showWeatherData = async (location) => {
         if (!location) {
             alert('Please enter a location');
         }
@@ -171,6 +174,15 @@ export const initializeDom = (handleWeatherRequest) => {
             console.error('Search error', error);
             alert('Error fetching weather data');
         }
+    };
+
+    const handleDefaultPage = async (defaultPage) => {
+        showWeatherData(defaultPage);
+    };
+
+    const handleSearch = async () => {
+        const location = elements.searchInput.value.trim();
+        showWeatherData(location);
     };
 
     const handleKeyPress = (e) => {
@@ -206,5 +218,6 @@ export const initializeDom = (handleWeatherRequest) => {
 
     return {
         handleSearch,
+        handleDefaultPage,
     };
 };
