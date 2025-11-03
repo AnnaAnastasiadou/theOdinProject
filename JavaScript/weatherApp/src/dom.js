@@ -27,8 +27,12 @@ export const initializeDom = (handleWeatherRequest) => {
                         <div class="details-value" id="humidity"></div> 
                     </div>
                     <div class="detail-card">
-                        <div class="details-label">Wind</div>
+                        <div class="details-label">Wind Speed</div>
                         <div class="details-value" id="wind"></div> 
+                    </div>
+                    <div class="detail-card">
+                        <div class="details-label">Wind Direction</div>
+                        <div class="details-value" id="wind-dir"></div> 
                     </div>
                     <div class="detail-card">
                         <div class="details-label">Pressure</div>
@@ -43,6 +47,10 @@ export const initializeDom = (handleWeatherRequest) => {
                         <div class="details-value" id="visibility"></div> 
                     </div>
                     <div class="detail-card">
+                        <div class="details-label">Cloud Cover</div>
+                        <div class="details-value" id="cloud-cover"></div> 
+                    </div>
+                    <div class="detail-card">
                         <div class="details-label">Sunrise</div>
                         <div class="details-value" id="sunrise"></div> 
                     </div>
@@ -53,6 +61,22 @@ export const initializeDom = (handleWeatherRequest) => {
                     <div class="detail-card">
                         <div class="details-label">Precipitation</div>
                         <div class="details-value" id="precipitation"></div> 
+                    </div>
+                    <div class="detail-card">
+                        <div class="details-label">Precipitation Type</div>
+                        <div class="details-value" id="precip-type"></div> 
+                    </div>
+                    <div class="detail-card">
+                        <div class="details-label">Precipitation Probability</div>
+                        <div class="details-value" id="precip-prob"></div> 
+                    </div>
+                    <div class="detail-card">
+                        <div class="details-label">Snow</div>
+                        <div class="details-value" id="snow"></div> 
+                    </div>
+                    <div class="detail-card">
+                        <div class="details-label">Snow Depth</div>
+                        <div class="details-value" id="snow-depth"></div> 
                     </div>
                 </div>
             </div>
@@ -72,6 +96,7 @@ export const initializeDom = (handleWeatherRequest) => {
     };
 
     const updateCurrentWeather = (currentData) => {
+        console.log(currentData);
         if (!currentData) return;
 
         // Update main weather info
@@ -98,9 +123,12 @@ export const initializeDom = (handleWeatherRequest) => {
             elements.humidity.textContent = `${currentData.humidity}%`;
         }
         if (elements.wind) {
-            elements.humidity.textContent = `${Math.round(
+            elements.wind.textContent = `${Math.round(
                 currentData.windspeed
             )} mph`;
+        }
+        if (elements.windDir) {
+            elements.windDir.textContent = `${currentData.winddir || 0}°`;
         }
         if (elements.pressure) {
             elements.pressure.textContent = `${currentData.pressure} mb`;
@@ -109,13 +137,36 @@ export const initializeDom = (handleWeatherRequest) => {
             elements.uvIndex.textContent = currentData.uvIndex || 'N/A';
         }
         if (elements.visibility) {
-            elements.visibility.textContent = `${currentData.visibility}% mi`;
+            elements.visibility.textContent = `${
+                currentData.visibility || 0
+            } mi`;
+        }
+        if (elements.cloudCover) {
+            elements.cloudCover.textContent = `${currentData.cloudcover || 0}%`;
         }
         if (elements.sunrise) {
             elements.sunrise.textContent = currentData.sunrise || 'N/A';
         }
         if (elements.sunset) {
             elements.sunset.textContent = currentData.sunset || 'N/A';
+        }
+        if (elements.precipitation) {
+            elements.precipitation.textContent = `${
+                currentData.precip || 0
+            } in`;
+        }
+        if (elements.precipType) {
+            elements.precipType.textContent =
+                currentData.preciptype?.join(', ') || 'None';
+        }
+        if (elements.precipProb) {
+            elements.precipProb.textContent = `${currentData.precipprob || 0}%`;
+        }
+        if (elements.snow) {
+            elements.snow.textContent = `${currentData.snow || 0} in`;
+        }
+        if (elements.snowDepth) {
+            elements.snowDepth.textContent = `${currentData.snowdepth || 0} in`;
         }
     };
 
@@ -206,12 +257,18 @@ export const initializeDom = (handleWeatherRequest) => {
     elements.feelsLike = document.getElementById('feels-like');
     elements.humidity = document.getElementById('humidity');
     elements.wind = document.getElementById('wind');
+    elements.windDir = document.getElementById('wind-dir');
     elements.pressure = document.getElementById('pressure');
     elements.uvIndex = document.getElementById('uv-index');
     elements.visibility = document.getElementById('visibility');
+    elements.cloudCover = document.getElementById('cloud-cover');
     elements.sunrise = document.getElementById('sunrise');
     elements.sunset = document.getElementById('sunset');
     elements.precipitation = document.getElementById('precipitation');
+    elements.precipType = document.getElementById('precip-type');
+    elements.precipProb = document.getElementById('precip-prob');
+    elements.snow = document.getElementById('snow');
+    elements.snowDepth = document.getElementById('snow-depth');
     elements.forecastContainer = document.getElementById('forecast-container');
 
     setUpEventListeners();

@@ -22,27 +22,28 @@ export const getWeatherData = async (location) => {
             temp: current.temp,
             feelsLike: current.feelslike,
             conditions: current.conditions,
-            icon: current.icon,
-            tempMax: days[0].tempmax,
-            tempMin: days[0].tempmin,
 
             // Secondary details
             humidity: current.humidity,
             pressure: current.pressure,
             windspeed: current.windspeed,
-            windDirection: current.winddir,
+            winddir: current.winddir,
             uvIndex: current.uvindex,
-            cloudCover: current.cloudcover,
+            visibility: current.visibility,
+            cloudcover: current.cloudcover,
             sunrise: current.sunrise,
             sunset: current.sunset,
 
             // Snow and precipitation details
             snow: current.snow,
+            snowdepth: current.snowdepth,
             precip: current.precip,
+            preciptype: current.preciptype,
+            precipprob: current.precipprob,
         };
 
         // Weekly Forecast
-        const forecastData = days.slice(0, 8).map((day) => ({
+        const forecastData = days.slice(1, 8).map((day) => ({
             date: day.datetime,
             tempMax: day.tempmax,
             tempMin: day.tempmin,
