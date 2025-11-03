@@ -26,38 +26,56 @@ export const initializeDom = (handleWeatherRequest) => {
                 </div>
                 <div class="weather-details">
                     <div class="detail-card">
-                        <div class="details-label">Humidity</div>
+                        <div class="details-label">
+                            <i class="fa-solid fa-droplet"></i>
+                            Humidity
+                        </div>
                         <div class="details-value" id="humidity"></div> 
                     </div>
                     <div class="detail-card">
-                        <div class="details-label">Wind</div>
+                        <div class="details-label">
+                            <i class="fa-solid fa-wind"></i>
+                            Wind
+                        </div>
                         <i class="fas fa-arrow-up wind-arrow" id="wind-arrow"></i> 
                         <span class="details-value" id="wind"></span> 
                     </div>
                     <div class="detail-card">
-                        <div class="details-label">Pressure</div>
+                        <div class="details-label">
+                            <i class="fa-solid fa-gauge"></i>
+                            Pressure
+                        </div>
                         <div class="details-value" id="pressure"></div> 
                     </div>
                     <div class="detail-card">
-                        <div class="details-label">UV Index</div>
+                        <div class="details-label">
+                            <i class="fa-solid fa-sun"></i>
+                            UV Index
+                        </div>
                         <div class="details-value" id="uv-index"></div> 
                     </div>
                     <div class="detail-card">
-                        <div class="details-label">Visibility</div>
+                        <div class="details-label">
+                            <i class="fa-solid fa-eye"></i>
+                            Visibility
+                        </div>
                         <div class="details-value" id="visibility"></div> 
                     </div>
                     <div class="detail-card">
-                        <div class="details-label">Cloud Cover</div>
+                        <div class="details-label">
+                            <i class="fa-solid fa-cloud"></i>
+                            Cloud Cover
+                        </div>
                         <div class="details-value" id="cloud-cover"></div> 
                     </div>
-                    <div class="detail-card">
-                        <div class="details-label">Sunrise</div>
-                        <div class="details-value" id="sunrise"></div> 
+                    <div class="detail-card" id="sun-diagram">
+                        <div id="sun-arc-wrapper"></div>
+                        <div id="sunrise-sunset">
+                            <div class="details-value" id="sunrise"></div>
+                            <div class="details-value" id="sunset"></div>
+                        </div>
                     </div>
-                    <div class="detail-card">
-                        <div class="details-label">Sunset</div>
-                        <div class="details-value" id="sunset"></div> 
-                    </div>                   
+             
                 </div>
             </div>
             <div class="forecast-section">
@@ -142,10 +160,21 @@ export const initializeDom = (handleWeatherRequest) => {
         }
 
         if (elements.sunrise) {
-            elements.sunrise.textContent = currentData.sunrise || 'N/A';
+            elements.sunrise.innerHTML = `
+                <div class="sunrise-text">Sunrise</div>
+                <div class="sunrise-time">${
+                    currentData.sunrise.substring(0, 5) || 'N/A'
+                }</div>
+            `;
         }
+
         if (elements.sunset) {
-            elements.sunset.textContent = currentData.sunset || 'N/A';
+            elements.sunset.innerHTML = `
+                <div class="sunset-text">Sunset</div>
+                <div class="sunset-time">${
+                    currentData.sunset.substring(0, 5) || 'N/A'
+                }</div>
+            `;
         }
     };
 
@@ -156,7 +185,7 @@ export const initializeDom = (handleWeatherRequest) => {
         forecastData.forEach((day) => {
             const dayCard = document.createElement('div');
             dayCard.classList.add('forecast-card');
-            const iconHtml = `<div class="day-icon">${day.icon}</div>`;
+            const iconHtml = `<div class="day-icon">${day.conditions}</div>`;
 
             dayCard.innerHTML = `
                 <div class="day-date">${new Date(day.date).toLocaleDateString(

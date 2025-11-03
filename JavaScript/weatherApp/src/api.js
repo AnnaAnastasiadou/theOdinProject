@@ -13,7 +13,7 @@ export const getWeatherData = async (location) => {
         const weatherData = await response.json();
         const current = weatherData.currentConditions;
         const days = weatherData.days || [];
-        console.log(current);
+        console.log(days);
         // Current conditions
         const currentData = {
             location: weatherData.resolvedAddress,
@@ -43,7 +43,7 @@ export const getWeatherData = async (location) => {
             tempMax: day.tempmax,
             tempMin: day.tempmin,
             conditions: day.conditions,
-            icon: day.icon,
+            precipType: day.preciptype,
             precipProb: day.precipprob,
         }));
         return {
