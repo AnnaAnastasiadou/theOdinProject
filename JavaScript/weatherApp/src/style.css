@@ -165,6 +165,14 @@ body {
     color: var(--text-primary);
 }
 
+.conditions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
 #sun-diagram {
     width: 100%;
 }
@@ -230,21 +238,22 @@ body {
 }
 
 .forecast-days {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 500px;
     margin: 0 auto;
-}
-
-.forecast-card {
     background: var(--glass);
     padding: 25px 20px;
     border-radius: 16px;
-    text-align: center;
-    border: 1px solid var(--border);
-    backdrop-filter: blur(10px);
+}
+
+.forecast-card {
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 1rem;
 }
 
 .forecast-card:hover {
@@ -254,9 +263,14 @@ body {
 
 .day-date {
     font-weight: 600;
-    margin-bottom: 15px;
+    /* margin-bottom: 15px; */
     font-size: 1rem;
     color: var(--text-primary);
+}
+
+.day-icon img {
+    width: 3rem;
+    height: auto;
 }
 
 .day-temps {

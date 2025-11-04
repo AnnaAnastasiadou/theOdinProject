@@ -1,4 +1,5 @@
 import sunImgUrl from '../assets/sun.png';
+import weatherIcons from './icons';
 
 export const initializeDom = (handleWeatherRequest) => {
     const elements = {
@@ -98,7 +99,6 @@ export const initializeDom = (handleWeatherRequest) => {
     };
 
     const updateCurrentWeather = (currentData) => {
-        console.log(currentData);
         if (!currentData) return;
 
         // Update main weather info
@@ -112,8 +112,12 @@ export const initializeDom = (handleWeatherRequest) => {
             )}\u00B0C`;
         }
         if (elements.currentConditions) {
-            elements.currentConditions.textContent =
-                currentData.conditions || 'Uknown Conditions';
+            elements.currentConditions.innerHTML = `
+            <img src="${weatherIcons[currentData.icon]}" alt=${
+                currentData.icon
+            } icon>
+            ${currentData.conditions}
+            `;
         }
         if (elements.allTemp) {
             elements.allTemp.textContent = `${Math.round(
@@ -189,7 +193,10 @@ export const initializeDom = (handleWeatherRequest) => {
         forecastData.forEach((day) => {
             const dayCard = document.createElement('div');
             dayCard.classList.add('forecast-card');
-            const iconHtml = `<div class="day-icon">${day.conditions}</div>`;
+            const iconHtml = `
+                <div class="day-icon">
+                    <img src="${weatherIcons[day.icon]}" alt="${day.icon}">
+                </div>`;
 
             dayCard.innerHTML = `
                 <div class="day-date">${new Date(day.date).toLocaleDateString(
@@ -205,7 +212,6 @@ export const initializeDom = (handleWeatherRequest) => {
                         day.tempMin
                     )}\u00B0C</span>
                 </div>
-                <div class="day-precip">${day.precipProb}%</div>
             `;
             elements.forecastContainer.appendChild(dayCard);
         });
@@ -215,7 +221,6 @@ export const initializeDom = (handleWeatherRequest) => {
         if (!weatherData) {
             throw new Error('No weather data received');
         }
-        console.log('Weather data received:', weatherData);
         updateCurrentWeather(weatherData.current);
         updateForecast(weatherData.forecast);
 
@@ -230,7 +235,6 @@ export const initializeDom = (handleWeatherRequest) => {
             alert('Please enter a location');
         }
         try {
-            console.log('Searching for', location);
             const weatherData = await handleWeatherRequest(location);
             updateWeatherDisplay(weatherData);
         } catch (error) {
