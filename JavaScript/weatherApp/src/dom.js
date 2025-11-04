@@ -69,10 +69,11 @@ export const initializeDom = (handleWeatherRequest) => {
                         <div class="details-value" id="cloud-cover"></div> 
                     </div>
                     <div class="detail-card" id="sun-diagram">
-                        <div id="sun-arc-wrapper"></div>
-                        <div id="sunrise-sunset">
-                            <div class="details-value" id="sunrise"></div>
-                            <div class="details-value" id="sunset"></div>
+                        <div id="sun-arc-wrapper">
+                            <div id="sunrise-sunset-wrapper">
+                                <div class="details-value" id="sunrise"></div>
+                                <div class="details-value" id="sunset"></div>
+                            </div>
                         </div>
                     </div>
              

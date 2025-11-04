@@ -165,23 +165,18 @@ body {
     color: var(--text-primary);
 }
 
-#sunrise-sunset {
-    margin: 0 auto;
+#sun-diagram {
     width: 100%;
+}
+
+#sunrise-sunset-wrapper {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    /* border-top: 1px solid white; */
-}
-
-#sunrise-sunset::before {
-    content: '';
-    position: absolute;
-    top: 45%;
-    width: 80%;
-    height: 1px;
-    background-color: white;
+    border-top: 1px solid rgb(130, 130, 130);
+    margin-top: 50%;
+    padding-top: 5%;
 }
 
 #sunrise,
@@ -190,22 +185,30 @@ body {
     flex-direction: column;
     font-size: 1.1rem;
     gap: 0.5rem;
-    transform: translateY(-4rem);
+}
+
+#sunrise {
+    transform: translateX(-50%);
+}
+
+#sunset {
+    transform: translateX(50%);
 }
 
 .sunset-text,
 .sunrise-text {
     font-size: 0.7rem;
+    font-weight: 300;
+    color: var(--text-secondary);
 }
 
 #sun-arc-wrapper {
     border-radius: 50% 50% 0% 0%;
-    /* background-color: yellow; */
-    border-top: 1px solid yellow;
-    width: 10rem;
-    height: 10rem;
+    border: 0;
+    border-top: 1px solid rgb(255, 200, 0);
+    width: 80%;
     margin: 0 auto;
-    /* aspect-ratio: 2 / 1; */
+    aspect-ratio: 1 / 1;
 }
 
 .forecast-section {
@@ -309,22 +312,6 @@ body {
     .details-value {
         font-size: 1.5rem;
     }
-
-    #sun-arc-wrapper {
-        width: 20rem;
-        height: 20rem;
-    }
-
-    #sunset,
-    #sunrise {
-        transform: translateY(-6rem);
-    }
-
-    #sunrise-sunset::before {
-        position: absolute;
-        top: 50%;
-        width: 90%;
-    }
 }
 
 @media (max-width: 480px) {
@@ -350,15 +337,5 @@ body {
 
     .forecast-card {
         padding: 20px 15px;
-    }
-
-    #sun-arc-wrapper {
-        width: 18rem;
-        height: 18rem;
-    }
-
-    #sunset,
-    #sunrise {
-        transform: translateY(-6rem);
     }
 }
