@@ -1,3 +1,5 @@
+import sunImgUrl from '../assets/sun.png';
+
 export const initializeDom = (handleWeatherRequest) => {
     const elements = {
         searchInput: document.getElementById('search-bar'),
@@ -72,6 +74,7 @@ export const initializeDom = (handleWeatherRequest) => {
                         <div id="sun-arc-wrapper">
                             <div id="sunrise-sunset-wrapper">
                                 <div class="details-value" id="sunrise"></div>
+                                <img src="${sunImgUrl}" alt="sun to moon gif"/>
                                 <div class="details-value" id="sunset"></div>
                             </div>
                         </div>
