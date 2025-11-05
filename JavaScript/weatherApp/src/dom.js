@@ -12,6 +12,35 @@ export const initializeDom = (handleWeatherRequest) => {
         return null;
     }
 
+    const createSearchLoader = () => {
+        const loader = document.createElement('div');
+        loader.id = 'search-loader';
+        loader.innerHTML = `<div class="search-spinner"></div>`;
+        loader.style.display = 'none';
+
+        const searchContainer = document.querySelector('.search-container');
+        if (searchContainer) {
+            elements.searchButton.parentNode.insertBefore(
+                loader,
+                elements.searchButton.nextSibling
+            );
+        }
+
+        return loader;
+    };
+
+    const showLoader = () => {
+        if (elements.loader) {
+            elements.loader.style.display = 'inline-block';
+        }
+    };
+
+    const hideLoader = () => {
+        if (elements.loader) {
+            elements.loader.style.display = 'none';
+        }
+    };
+
     const createWeatherContainer = () => {
         const weatherContainer = document.createElement('div');
         weatherContainer.id = 'weather-container';
@@ -283,6 +312,7 @@ export const initializeDom = (handleWeatherRequest) => {
         }
 
         hideError();
+        showLoader();
 
         try {
             const weatherData = await handleWeatherRequest(location);
@@ -305,6 +335,8 @@ export const initializeDom = (handleWeatherRequest) => {
                 );
             }
             // alert('Error fetching weather data');
+        } finally {
+            hideLoader();
         }
     };
 
@@ -333,6 +365,8 @@ export const initializeDom = (handleWeatherRequest) => {
     const weatherContainer = createWeatherContainer();
     const errorElement = createErrorElement();
     elements.errorElement = errorElement;
+    const loader = createSearchLoader();
+    elements.loader = loader;
     // Add references to the new elements
     elements.weatherContainer = weatherContainer;
     elements.errorElement = errorElement;

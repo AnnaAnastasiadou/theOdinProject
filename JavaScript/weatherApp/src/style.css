@@ -48,6 +48,7 @@ body {
 .search-bar {
     display: flex;
     gap: 15px;
+    position: relative;
 }
 
 #search-bar {
@@ -330,6 +331,35 @@ body {
     border-color: #d32f2f;
 }
 
+#search-loader {
+    /* width: 100%; */
+    display: inline-block;
+    margin: auto;
+    vertical-align: middle;
+    position: absolute;
+    top: 25%;
+    left: 80%;
+}
+
+.search-spinner {
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top: 3px solid #bbbbbb;
+    box-shadow: var(--shadow);
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     body {
@@ -365,6 +395,11 @@ body {
     .details-value {
         font-size: 1.5rem;
     }
+
+    #search-loader {
+        top: 10%;
+        left: 90%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -390,5 +425,10 @@ body {
 
     .forecast-card {
         padding: 20px 15px;
+    }
+
+    #search-loader {
+        top: 10%;
+        left: 90%;
     }
 }
