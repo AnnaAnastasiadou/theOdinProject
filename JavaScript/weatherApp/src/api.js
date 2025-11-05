@@ -50,7 +50,7 @@ export const getWeatherData = async (location) => {
             forecast: forecastData,
         };
     } catch (error) {
-        console.error(error.message);
-        return null;
+        // console.error(error.message);
+        throw error;
     }
 };

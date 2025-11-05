@@ -98,6 +98,47 @@ export const initializeDom = (handleWeatherRequest) => {
         return weatherContainer;
     };
 
+    const createErrorElement = () => {
+        // Create error element and insert it after the search button
+        const errorElement = document.createElement('div');
+        errorElement.id = 'search-error';
+        errorElement.className = 'search-error';
+        errorElement.style.display = 'none';
+        errorElement.innerHTML = `
+            <div class="error-content">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span class="error-text">Location "<span id="error-location-text"></span>" not found</span>
+            </div>
+        `;
+        elements.searchButton.parentNode.insertBefore(
+            errorElement,
+            elements.searchButton.nextSibling
+        );
+
+        return errorElement;
+    };
+
+    const showError = (location) => {
+        if (elements.errorElement) {
+            const errorLocationText = document.getElementById(
+                'error-location-text'
+            );
+            if (errorLocationText) {
+                errorLocationText.textContent = location;
+            }
+
+            elements.errorElement.style.display = 'block';
+            elements.searchInput.classList.add('error');
+        }
+    };
+
+    const hideError = () => {
+        if (elements.errorElement) {
+            elements.errorElement.style.display = 'none';
+            elements.searchInput.classList.remove('error');
+        }
+    };
+
     const updateCurrentWeather = (currentData) => {
         if (!currentData) return;
 
@@ -142,7 +183,7 @@ export const initializeDom = (handleWeatherRequest) => {
             elements.pressure.textContent = `${currentData.pressure} mb`;
         }
         if (elements.uvIndex) {
-            const uvValue = elements.uvIndex;
+            const uvValue = currentData.uvIndex;
 
             let uvText = '';
             if (isNaN(uvValue) || (uvValue >= 0 && uvValue <= 2)) {
@@ -221,6 +262,12 @@ export const initializeDom = (handleWeatherRequest) => {
         if (!weatherData) {
             throw new Error('No weather data received');
         }
+
+        if (!weatherData.current || !weatherData.forecast) {
+            throw new Error('Incomplete weather data received');
+        }
+
+        hideError();
         updateCurrentWeather(weatherData.current);
         updateForecast(weatherData.forecast);
 
@@ -234,12 +281,30 @@ export const initializeDom = (handleWeatherRequest) => {
         if (!location) {
             alert('Please enter a location');
         }
+
+        hideError();
+
         try {
             const weatherData = await handleWeatherRequest(location);
             updateWeatherDisplay(weatherData);
         } catch (error) {
-            console.error('Search error', error);
-            alert('Error fetching weather data');
+            if (error.response) {
+                console.error('Response status:', error.response.status);
+                console.error('Response data:', error.response.data);
+            }
+            if (
+                error.message.includes('not found') ||
+                error.message.includes('404') ||
+                error.message.includes('400') ||
+                error.response?.status === 404 ||
+                error.response?.status === 400
+            ) {
+                showError(
+                    location,
+                    `The location "${location}" does not exist or cannot be found. Please check the spelling and try again.`
+                );
+            }
+            // alert('Error fetching weather data');
         }
     };
 
@@ -261,12 +326,16 @@ export const initializeDom = (handleWeatherRequest) => {
     const setUpEventListeners = () => {
         elements.searchButton.addEventListener('click', handleSearch);
         elements.searchInput.addEventListener('keydown', handleKeyPress);
+        elements.searchInput.addEventListener('input', hideError);
     };
 
     // Initialize DOM elements
     const weatherContainer = createWeatherContainer();
+    const errorElement = createErrorElement();
+    elements.errorElement = errorElement;
     // Add references to the new elements
     elements.weatherContainer = weatherContainer;
+    elements.errorElement = errorElement;
     elements.locationName = document.getElementById('location-name');
     elements.currentTemp = document.getElementById('current-temp');
     elements.currentConditions = document.getElementById('current-conditions');
