@@ -1,11 +1,14 @@
 import sunImgUrl from '../assets/sun.png';
 import weatherIcons from './icons';
+import unitValues from './units';
 
 export const initializeDom = (handleWeatherRequest) => {
     const elements = {
         searchInput: document.getElementById('search-bar'),
         searchButton: document.getElementById('search-button'),
     };
+
+    let currentLocation = '';
 
     if (!elements.searchInput || !elements.searchButton) {
         console.error('Search elements not found');
@@ -118,10 +121,10 @@ export const initializeDom = (handleWeatherRequest) => {
             </div>
         `;
 
-        const searchContainer = document.querySelector('.search-container');
-        searchContainer.parentNode.insertBefore(
+        const unitsContainer = document.getElementById('units-container');
+        unitsContainer.parentNode.insertBefore(
             weatherContainer,
-            searchContainer.nextSibling
+            unitsContainer.nextSibling
         );
 
         return weatherContainer;
@@ -168,8 +171,10 @@ export const initializeDom = (handleWeatherRequest) => {
         }
     };
 
-    const updateCurrentWeather = (currentData) => {
+    const updateCurrentWeather = (currentData, units) => {
         if (!currentData) return;
+
+        const symbols = unitValues[units];
 
         // Update main weather info
         if (elements.locationName) {
@@ -179,7 +184,7 @@ export const initializeDom = (handleWeatherRequest) => {
         if (elements.currentTemp) {
             elements.currentTemp.textContent = `${Math.round(
                 currentData.temp
-            )}\u00B0C`;
+            )} ${symbols.temp}`;
         }
         if (elements.currentConditions) {
             elements.currentConditions.innerHTML = `
@@ -190,20 +195,20 @@ export const initializeDom = (handleWeatherRequest) => {
             `;
         }
         if (elements.allTemp) {
-            elements.allTemp.textContent = `${Math.round(
-                currentData.tempMax
-            )}\u00B0C / ${Math.round(
-                currentData.tempMin
-            )}\u00B0C - Feels like ${Math.round(currentData.feelsLike)}\u00B0C`;
+            elements.allTemp.textContent = `${Math.round(currentData.tempMax)}${
+                symbols.temp
+            } / ${Math.round(currentData.tempMin)}${
+                symbols.temp
+            } - Feels like ${Math.round(currentData.feelsLike)}${symbols.temp}`;
         }
         // Update weather details
         if (elements.humidity) {
             elements.humidity.textContent = `${currentData.humidity}%`;
         }
         if (elements.wind) {
-            elements.wind.textContent = `${Math.round(
-                currentData.windspeed
-            )} km/h`;
+            elements.wind.textContent = `${Math.round(currentData.windspeed)} ${
+                symbols.windspeed
+            }`;
         }
         if (elements.windArrow) {
             elements.windArrow.style.transform = `rotate(${currentData.winddir}deg)`;
@@ -229,9 +234,9 @@ export const initializeDom = (handleWeatherRequest) => {
             elements.uvIndex.textContent = uvText;
         }
         if (elements.visibility) {
-            elements.visibility.textContent = `${
-                currentData.visibility || 0
-            } km`;
+            elements.visibility.textContent = `${currentData.visibility || 0} ${
+                symbols.visibility
+            }`;
         }
         if (elements.cloudCover) {
             elements.cloudCover.textContent = `${currentData.cloudcover || 0}%`;
@@ -256,8 +261,10 @@ export const initializeDom = (handleWeatherRequest) => {
         }
     };
 
-    const updateForecast = (forecastData) => {
+    const updateForecast = (forecastData, units) => {
         if (!forecastData || !elements.forecastContainer) return;
+
+        const symbols = unitValues[units];
 
         elements.forecastContainer.innerHTML = '';
         forecastData.forEach((day) => {
@@ -275,19 +282,19 @@ export const initializeDom = (handleWeatherRequest) => {
                 )}</div>
                 ${iconHtml}
                 <div class="day-temps">
-                    <span class="temp-max">${Math.round(
-                        day.tempMax
-                    )}\u00B0C</span> / 
-                    <span class="temp-min">${Math.round(
-                        day.tempMin
-                    )}\u00B0C</span>
+                    <span class="temp-max">${Math.round(day.tempMax)}${
+                symbols.temp
+            }</span> / 
+                    <span class="temp-min">${Math.round(day.tempMin)}${
+                symbols.temp
+            }</span>
                 </div>
             `;
             elements.forecastContainer.appendChild(dayCard);
         });
     };
 
-    const updateWeatherDisplay = (weatherData) => {
+    const updateWeatherDisplay = (weatherData, units) => {
         if (!weatherData) {
             throw new Error('No weather data received');
         }
@@ -297,8 +304,8 @@ export const initializeDom = (handleWeatherRequest) => {
         }
 
         hideError();
-        updateCurrentWeather(weatherData.current);
-        updateForecast(weatherData.forecast);
+        updateCurrentWeather(weatherData.current, units);
+        updateForecast(weatherData.forecast, units);
 
         // Show the weather container
         if (elements.weatherContainer) {
@@ -306,17 +313,19 @@ export const initializeDom = (handleWeatherRequest) => {
         }
     };
 
-    const showWeatherData = async (location) => {
+    const showWeatherData = async (location, units = 'metric') => {
         if (!location) {
             alert('Please enter a location');
+            return;
         }
 
+        currentLocation = location;
         hideError();
         showLoader();
 
         try {
-            const weatherData = await handleWeatherRequest(location);
-            updateWeatherDisplay(weatherData);
+            const weatherData = await handleWeatherRequest(location, units);
+            updateWeatherDisplay(weatherData, units);
         } catch (error) {
             if (error.response) {
                 console.error('Response status:', error.response.status);
@@ -355,10 +364,59 @@ export const initializeDom = (handleWeatherRequest) => {
         }
     };
 
+    const toggleDropdownMenu = (e) => {
+        const button = e.target.closest('.dropdown-btn');
+        const dropdownList = button.nextElementSibling;
+        const closeListener = (clickEvent) => {
+            if (
+                !button.contains(clickEvent.target) &&
+                !dropdownList.contains(clickEvent.target)
+            ) {
+                dropdownList.classList.remove('visible');
+                button.classList.remove('visible');
+                document.removeEventListener('click', closeListener);
+            }
+        };
+        if (dropdownList.classList.contains('visible')) {
+            dropdownList.classList.remove('visible');
+            button.classList.remove('visible');
+        } else {
+            dropdownList.classList.add('visible');
+            button.classList.add('visible');
+
+            setTimeout(() => {
+                document.addEventListener('click', closeListener);
+            }, 0);
+        }
+    };
+
+    const unitsButtonClicked = (e) => {
+        // e.stopPropagation();
+        const value = e.target.getAttribute('value');
+        elements.unitListItems.forEach((item) => {
+            item.classList.remove('active');
+        });
+        e.target.classList.add('active');
+
+        if (currentLocation) {
+            showWeatherData(currentLocation, value);
+        }
+
+        return value;
+    };
+
     const setUpEventListeners = () => {
         elements.searchButton.addEventListener('click', handleSearch);
         elements.searchInput.addEventListener('keydown', handleKeyPress);
         elements.searchInput.addEventListener('input', hideError);
+        elements.unitsBtn.addEventListener('click', (e) =>
+            toggleDropdownMenu(e)
+        );
+        elements.unitOptions.addEventListener('click', (e) => {
+            if (e.target.classList.contains('dropdown-option')) {
+                unitsButtonClicked(e);
+            }
+        });
     };
 
     // Initialize DOM elements
@@ -370,6 +428,9 @@ export const initializeDom = (handleWeatherRequest) => {
     // Add references to the new elements
     elements.weatherContainer = weatherContainer;
     elements.errorElement = errorElement;
+    elements.unitsBtn = document.getElementById('units-btn');
+    elements.unitOptions = document.getElementById('unit-options');
+    elements.unitListItems = elements.unitOptions.querySelectorAll('li');
     elements.locationName = document.getElementById('location-name');
     elements.currentTemp = document.getElementById('current-temp');
     elements.currentConditions = document.getElementById('current-conditions');
@@ -390,5 +451,6 @@ export const initializeDom = (handleWeatherRequest) => {
     return {
         handleSearch,
         handleDefaultPage,
+        unitsButtonClicked,
     };
 };

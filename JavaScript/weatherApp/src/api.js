@@ -1,10 +1,10 @@
 import { WEATHER_API_KEY } from '../api-config.js';
 
-export const getWeatherData = async (location) => {
+export const getWeatherData = async (location, units) => {
     if (!location) {
         return;
     }
-    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&iconSet=icons2&key=${WEATHER_API_KEY}`;
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=${units}&iconSet=icons2&key=${WEATHER_API_KEY}`;
     try {
         const response = await fetch(url);
         if (!response.ok) {

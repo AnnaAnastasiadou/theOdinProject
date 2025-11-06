@@ -5,11 +5,11 @@
     --text-secondary: #d0d7e0;
     --accent: #3b82f6;
     --primary: #2563eb;
-    --secondary: #7c3aed;
+    --secondary: #413984;
     --dark: #1e293b;
     --light: #f8fafc;
     --glass: rgba(255, 255, 255, 0.1);
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     --transition: all 0.2s ease;
 }
 
@@ -30,8 +30,11 @@ body {
 .weather-app {
     max-width: 800px;
     margin: 0 auto;
-    background: var(--bg-secondary);
-    backdrop-filter: blur(10px);
+    background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.1) 0%,
+        rgba(124, 58, 237, 0.1) 100%
+    );
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: var(--shadow);
@@ -85,18 +88,76 @@ body {
 }
 
 #search-button:hover {
-    background: #0891b2;
+    background: var(--secondary);
     transform: translateY(-2px);
+}
+
+.dropdown-menu {
+    padding: 2rem;
+    position: relative;
+}
+
+.dropdown-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--glass);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    width: fit-content;
+    border: none;
+    box-shadow: 0.2rem 0.2rem 0.4rem black;
+    cursor: pointer;
+}
+
+.dropdown-btn.visible,
+.dropdown-btn:hover {
+    transform: translate(0.2rem, 0.2rem);
+    box-shadow: none;
+}
+
+.dropdown-btn i {
+    margin-left: 0.5rem;
+}
+
+.dropdown-list {
+    display: none;
+    transform: translateY(-1.5rem);
+    opacity: 0;
+    position: absolute;
+    top: 5rem;
+    background-color: var(--glass);
+    color: var(--text-primary);
+    border-radius: 10px;
+    list-style: none;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    width: fit-content;
+    transition: all 10s ease-in-out;
+}
+
+.dropdown-list li {
+    text-align: left;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dropdown-list li:hover,
+.dropdown-list li.active {
+    background-color: var(--glass);
+    border-bottom: 2px solid #1c192c;
+}
+
+.dropdown-list.visible {
+    display: block;
+    transform: translateY(0rem);
+    opacity: 1;
 }
 
 .current-weather {
     padding: 40px;
     text-align: center;
-    background: linear-gradient(
-        135deg,
-        rgba(59, 130, 246, 0.1) 0%,
-        rgba(124, 58, 237, 0.1) 100%
-    );
 }
 
 .location {
@@ -227,12 +288,13 @@ body {
 
 .forecast-section {
     padding: 40px;
-    background: var(--card-bg);
 }
 
 .forecast-title {
+    border-top: 1px solid var(--light);
     text-align: center;
     margin-bottom: 30px;
+    padding-top: 30px;
     font-size: 1.8rem;
     font-weight: 600;
     color: var(--text-primary);
