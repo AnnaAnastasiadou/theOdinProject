@@ -5,10 +5,11 @@
     --text-secondary: #d0d7e0;
     --accent: #3b82f6;
     --primary: #2563eb;
-    --secondary: #413984;
+    --secondary: #3f6f91;
     --dark: #1e293b;
     --light: #f8fafc;
     --glass: rgba(255, 255, 255, 0.1);
+    --units-button: rgb(11, 37, 71);
     --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     --transition: all 0.2s ease;
 }
@@ -99,7 +100,7 @@ body {
 
 .dropdown-btn {
     padding: 0.5rem 1rem;
-    background-color: var(--glass);
+    background-color: var(--units-button);
     color: var(--text-primary);
     font-size: 1rem;
     font-weight: 600;
@@ -126,7 +127,7 @@ body {
     opacity: 0;
     position: absolute;
     top: 5rem;
-    background-color: var(--glass);
+    background-color: var(--units-button);
     color: var(--text-primary);
     border-radius: 10px;
     list-style: none;
