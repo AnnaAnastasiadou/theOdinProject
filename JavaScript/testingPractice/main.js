@@ -1,3 +1,5 @@
+import { normalize } from 'yargs';
+
 const capitalize = (string) => {
     const capitalised = string.charAt(0).toUpperCase() + string.slice(1);
     return capitalised;
@@ -22,4 +24,30 @@ const calculator = {
     },
 };
 
-export { capitalize, reverseString, calculator };
+const ceasarCipher = (string, shift) => {
+    // check if a character is a letter
+    const isLetter = (char) => /[a-zA-Z]/.test(char);
+
+    const shiftChar = (char, shiftValue) => {
+        if (!isLetter(char)) {
+            return char;
+        }
+        // Get normalized shift - consider negative shifts
+        const charCode = char.charCodeAt(0);
+        const isUpper =
+            charCode >= 'A'.charCodeAt(0) && charCode <= 'Z'.charCodeAt(0);
+        const base = isUpper ? 'A'.charCodeAt(0) : 'a'.charCodeAt(0);
+
+        const normalizedShift = ((shiftValue % 26) + 26) % 26;
+        // Shift and wrap around the alphabet
+        const newCode = ((charCode - base + normalizedShift) % 26) + base;
+
+        return String.fromCharCode(newCode);
+    };
+    return string
+        .split('')
+        .map((char) => shiftChar(char, shift))
+        .join('');
+};
+
+export { capitalize, reverseString, calculator, ceasarCipher };

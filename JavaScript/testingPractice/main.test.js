@@ -1,4 +1,4 @@
-import { capitalize, reverseString, calculator } from './main.js';
+import { capitalize, reverseString, calculator, ceasarCipher } from './main.js';
 
 describe('capitalize function', () => {
     test('First letter capitalised', () => {
@@ -73,5 +73,20 @@ describe('calculator object', () => {
         test('get error when dividing with 0', () => {
             expect(() => calculator.divide(1, 0).toThrow());
         });
+    });
+});
+
+describe('ceasarCipher function', () => {
+    test('lowercase letter passed', () => {
+        expect(ceasarCipher('hello', 3)).toBe('khoor');
+    });
+    test('Mixed lower and uppercase pass', () => {
+        expect(ceasarCipher('heLlO', 3)).toBe('khOoR');
+    });
+    test('Punctuation unchanged', () => {
+        expect(ceasarCipher('Hello, World!', 3)).toBe('Khoor, Zruog!');
+    });
+    test('Wrapping from z to a success', () => {
+        expect(ceasarCipher('xyZ', 3)).toBe('abC');
     });
 });

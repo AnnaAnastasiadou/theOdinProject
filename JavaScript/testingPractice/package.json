@@ -400,6 +400,7 @@
     },
     "devDependencies": {
         "@babel/preset-env": "^7.28.5",
+        "eslint-plugin-jest": "^29.1.0",
         "html-webpack-plugin": "^5.6.4",
         "jest": "^30.2.0"
     },
@@ -413,7 +414,6 @@
     "author": "",
     "license": "ISC",
     "description": "",
-    "type": "module",
     "jest": {
         "transform": {
             "^.+\\.js$": "babel-jest"
@@ -422,6 +422,7 @@
             "js",
             "json",
             "node"
-        ]
+        ],
+        "silent": false
     }
 }
