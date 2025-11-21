@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        />
+        <title>Dynamic UI interactions Testing</title>
+    </head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        /* ----Dropdown Menu---- */
+        .dropdown-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            width: fit-content;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .dropdown-button,
+        .dropdown-list {
+            background-color: rgb(64, 64, 64);
+            box-shadow: 0.2rem 0.2rem 0.2rem black;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .dropdown-button {
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .dropdown-button:hover {
+            transform: scale(1.05);
+        }
+
+        .dropdown-button i {
+            color: white;
+            margin-left: 0.5rem;
+        }
+
+        .dropdown-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .dropdown-list.visible {
+            /* display: block; */
+            opacity: 1;
+            transform: translateY(0px);
+        }
+
+        .dropdown-option {
+            list-style: none;
+            padding: 0.5rem 1rem;
+            width: 100%;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .dropdown-option:hover {
+            background-color: rgb(203, 203, 203);
+            color: rgb(64, 64, 64);
+        }
+
+        /* ----Image Carousel---- */
+        .image-carousel {
+            margin: 5rem auto 0 auto;
+            width: 350px;
+            height: 350px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .left-arrow,
+        .right-arrow {
+            color: rgb(0, 0, 0);
+            z-index: 10;
+            border-radius: 50%;
+            border: 2px solid black;
+            background-color: rgb(197, 197, 197);
+            padding: 0.2rem;
+        }
+
+        .left-arrow:hover,
+        .right-arrow:hover {
+            color: rgb(77, 77, 77);
+            border-color: rgb(77, 77, 77);
+            cursor: pointer;
+        }
+
+        .left-arrow {
+            position: absolute;
+            top: 50%;
+            left: 1%;
+            transform: translateY(-50%);
+        }
+
+        .right-arrow {
+            position: absolute;
+            top: 50%;
+            right: 1%;
+            transform: translateY(-50%);
+        }
+
+        .slides {
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slides img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            display: block;
+        }
+
+        .slides img.active {
+            opacity: 1;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            background-color: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .dot:hover {
+            transform: scale(1.2);
+            background-color: #666;
+        }
+
+        .dot.active {
+            background-color: #333;
+            transform: scale(1.1);
+        }
+    </style>
+    <script>
+        // Dropdown Menu
+        const toggleMenu = () => {
+            const dropdownList = document.querySelector('.dropdown-list');
+            let isMenuVisible = false;
+            if (dropdownList) {
+                dropdownList.classList.toggle('visible');
+            } else {
+                console.error(
+                    "Error: Element with class '.dropdown-list' not found!"
+                );
+                return;
+            }
+            if (dropdownList.classList.contains('visible')) {
+                isMenuVisible = true;
+            }
+            const icon = document.querySelector('.dropdown-icon');
+            if (icon && isMenuVisible) {
+                icon.classList.remove('fa-caret-down');
+                icon.classList.add('fa-caret-up');
+            } else if (icon && !isMenuVisible) {
+                icon.classList.remove('fa-caret-up');
+                icon.classList.add('fa-caret-down');
+            } else {
+                console.error('Icon in the dropdown button not found!');
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropdownButton = document.querySelector('.dropdown-button');
+
+            if (dropdownButton) {
+                dropdownButton.addEventListener('click', () => {
+                    toggleMenu();
+                });
+            } else {
+                console.error(
+                    "Error: Element with class '.dropdown-button' not found!"
+                );
+            }
+        });
+
+        // Image Carousel
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slides img');
+            const leftArrow = document.querySelector('.left-arrow');
+            const rightArrow = document.querySelector('.right-arrow');
+            let currentSlide = 0;
+            let slideInterval;
+            const dots = [];
+
+            const showSlide = (index) => {
+                currentSlide = index;
+                slides.forEach((slide) => {
+                    slide.classList.remove('active');
+                });
+                slides[index].classList.add('active');
+                dots.forEach((dot) => {
+                    dot.classList.remove('active');
+                });
+                if (dots[index]) {
+                    dots[index].classList.add('active');
+                }
+            };
+
+            const nextSlide = () => {
+                const nextIndex =
+                    (currentSlide + 1 + slides.length) % slides.length;
+                showSlide(nextIndex);
+            };
+
+            const previousSlide = () => {
+                const previousIndex =
+                    (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(previousIndex);
+            };
+
+            const startSlideShow = () => {
+                slideInterval = setInterval(nextSlide, 5000);
+            };
+
+            const stopSlideShow = () => {
+                clearInterval(slideInterval);
+            };
+
+            // Initialize
+            showSlide(0);
+            startSlideShow();
+
+            // Event Listeners on arrows and dots
+            leftArrow.addEventListener('click', () => {
+                stopSlideShow();
+                nextSlide();
+                startSlideShow();
+            });
+            rightArrow.addEventListener('click', () => {
+                stopSlideShow();
+                previousSlide();
+                startSlideShow();
+            });
+
+            // Create dots
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'carousel-dots';
+            document.querySelector('.image-carousel').after(dotsContainer);
+
+            // Create dots dynamically based on slides length
+            for (let i = 0; i < slides.length; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'dot';
+                dot.setAttribute('data-index', i);
+                dotsContainer.appendChild(dot);
+                dots.push(dot);
+
+                // Click event to navigate to specific slide
+                dot.addEventListener('click', () => {
+                    stopSlideShow();
+                    showSlide(i);
+                    startSlideShow();
+                });
+            }
+        });
+    </script>
+    <body>
+        <div class="dropdown-menu">
+            <button class="dropdown-button">
+                Dropdown Menu
+                <i class="dropdown-icon fa-solid fa-caret-down"></i>
+            </button>
+            <ul class="dropdown-list">
+                <li class="dropdown-option">Option 1</li>
+                <li class="dropdown-option">Option 2</li>
+                <li class="dropdown-option">Option 3</li>
+            </ul>
+        </div>
+        <div class="image-carousel">
+            <div class="slides">
+                <img
+                    src="./images/field-9295186_1280.jpg"
+                    alt="A field of flowers"
+                />
+                <img
+                    src="./images/landscape-7373484_1280.jpg"
+                    alt="Mountain landscape with lake"
+                />
+                <img
+                    src="./images/man-sits-end-trolltunga-before-mountains.jpg"
+                    alt="Man on Trolltunga cliff"
+                />
+            </div>
+            <i class="left-arrow fa-solid fa-arrow-left"></i>
+            <i class="right-arrow fa-solid fa-arrow-right"></i>
+        </div>
+    </body>
+</html>

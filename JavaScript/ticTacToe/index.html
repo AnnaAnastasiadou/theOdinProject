@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <base href="/theOdinProject/tictactoe/" />
+        <link rel="stylesheet" href="styles.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <title>Tic Tac Toe</title>
+    </head>
+    <body>
+        <h1>Tic Tac Toe</h1>
+        <h2 id="welcome-message">
+            Welcome! Press the button below to start the game.
+        </h2>
+        <div id="game-container">
+            <div id="gameboard" class="disabled"></div>
+            <div id="win-line"></div>
+        </div>
+        <h2 id="game-status" class="hide"></h2>
+        <p id="results" class="hide"></p>
+        <button id="start-restart-game">Start Game</button>
+        <dialog id="players-form">
+            <div class="dialog-content">
+                <h3>Enter Player Names (optional)</h3>
+                <p class="form-description">
+                    You can enter custom names, or leave the fields empty to use
+                    the default names.
+                </p>
+                <label for="name1">Player 1 Name:</label>
+                <input id="name1" type="text" />
+                <label for="name2">Player 2 Name:</label>
+                <input id="name2" type="text" />
+                <div class="button-container">
+                    <button id="submit-names">Submit Names</button>
+                    <button id="close-dialog">Close</button>
+                </div>
+            </div>
+        </dialog>
+        <script src="script.js"></script>
+    </body>
+</html>

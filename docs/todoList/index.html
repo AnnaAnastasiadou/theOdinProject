@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do App</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<script defer src="/theOdinProject/todoList/main.js"></script><link href="/theOdinProject/todoList/style.css" rel="stylesheet"></head>
+<body>
+    <div class = "page-wrapper">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-note-sticky"></i>
+                <h2>TaskFlow</h2>
+            </div>
+        </header>
+        <div class="container">
+            <!-- Humburger Button -->
+             <div id="hamburger-btn">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <!-- Side Bar -->
+            <div class="sidebar">
+                    <h2>To-dos</h3>
+                    <div class="filters-list"></div>
+                    <h2>My Groups <i class="fas fa-plus" id="add-group-btn"></i></h3>
+                    <div class="groups-list"></div>
+            </div>
+            <!-- Main Content -->
+            <div class="content">
+                <div class="todos-page"></div>
+            </div>
+        </div>
+        <!-- Todo Modal -->
+        <div id="todoModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="todoModalTitle"></h2>
+                    <span class="close-modal">×</span>
+                </div>
+                <form id="todoForm" class="modal-form">
+                    <input type="hidden" id="todoId" name="id">
+                    <input type="hidden" id="todoGroupId" name="groupId">
+                    
+                    <div class="form-group">
+                        <label for="todoTitle">Title *</label>
+                        <input type="text" id="todoTitle" name="title" >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="todoDescription">Description *</label>
+                        <textarea id="todoDescription" name="description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="todoDueDate">Due Date *</label>
+                            <input type="date" id="todoDueDate" name="dueDate">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="todoPriority">Priority *</label>
+                            <select id="todoPriority" name="priority">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="todoNotes">Notes</label>
+                        <textarea id="todoNotes" name="notes" rows="3" placeholder="Add any additional notes..."></textarea>
+                    </div>
+
+                    <div class="form-group checklist-section">
+                        <label>Checklist</label>
+                        <div class="checklist-controls">
+                            <input type="text" id="newChecklistItem" placeholder="Enter checklist item..." />
+                            <button type="button" id="add-checklist-btn" class="add-btn">
+                                <i class="fa-solid fa-plus"></i> Add Item
+                            </button>
+                        </div>
+                        <ul class="checklist-items" id="checklistItems">
+                            <!-- Checklist items will be added here dynamically -->
+                        </ul>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn">Cancel</button>
+                        <button type="submit" id="submitTodoBtn" class="submit-btn"></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

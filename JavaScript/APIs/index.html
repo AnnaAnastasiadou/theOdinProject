@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <style>
+            html {
+                font-size: 16px;
+            }
+            .page-wrapper {
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2rem;
+            }
+            .search-container {
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+            }
+            .search-container label {
+                font-size: 1.3rem;
+            }
+            .search-text {
+                border: 1px solid brown;
+                outline: none;
+                font-size: 0.8rem;
+                padding: 0.5rem 1rem;
+            }
+            .search-text:focus {
+                outline: none;
+            }
+            .new-gif-btn {
+                background-color: brown;
+                color: beige;
+                border: 2px solid brown;
+                font-size: 1rem;
+                padding: 0.5rem;
+                cursor: pointer;
+            }
+            .new-gif-btn:hover {
+                background-color: beige;
+                color: brown;
+            }
+            .gif-display {
+                width: 80vw;
+                height: 50vh;
+                max-width: 600px;
+                font-size: 1.2rem;
+                background-color: #c7c7c7;
+                border: 2px dashed #565656;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .gif-display img {
+                width: 100%;
+                height: auto;
+            }
+            @media screen and (max-width: 600px) {
+                html {
+                    font-size: 14px;
+                }
+            }
+        </style>
+        <div class="page-wrapper">
+            <div class="search-container">
+                <label for="gif-search-input">Search Gif:</label>
+                <input
+                    id="gif-search-input"
+                    class="search-text"
+                    placeholder="e.g. dogs, space, tacos"
+                />
+                <button class="new-gif-btn">New Gif</button>
+            </div>
+            <div class="gif-display">
+                <p>Please enter search keyword for a GIF</p>
+            </div>
+        </div>
+        <script src="api-config.js"></script>
+        <script>
+            const newGifButton = document.querySelector('.new-gif-btn');
+            const searchInput = document.getElementById('gif-search-input');
+            const gifDisplay = document.querySelector('.gif-display');
+
+            const displayError = (errorMessage) => {
+                gifDisplay.innerHTML = '';
+                // Create an error paragraph
+                const p = document.createElement('p');
+                p.textContent = errorMessage;
+                gifDisplay.appendChild(p);
+
+                console.error('Fetch error', errorMessage);
+            };
+
+            const fetchNewGif = (searchValue) => {
+                // Disable the button while fetching to prevent multiple clicks
+                newGifButton.disabled = true;
+                newGifButton.textContent = 'Loading...';
+
+                fetch(
+                    `https://api.giphy.com/v1/gifs/translate?api_key=${GIPHY_API_KEY}&s=${searchValue}`
+                )
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error(
+                                `HTTP error! Status: ${response.status}`
+                            );
+                        }
+                        return response.json();
+                    })
+                    .then(function (response) {
+                        if (!response.data || !response.data.images) {
+                            throw new Error(
+                                'No results found for that search term.'
+                            );
+                        }
+                        // Clear the container and insert the new image
+                        gifDisplay.innerHTML = '';
+                        const img = document.createElement('img');
+                        img.src = response.data.images.original.url;
+                        img.alt = `GIF of: ${searchValue}`;
+                        gifDisplay.appendChild(img);
+                        gifDisplay.style.backgroundColor = 'transparent';
+                        gifDisplay.style.border = 'none';
+                    })
+                    .catch(function (error) {
+                        displayError(error.message);
+                    })
+                    .finally(function () {
+                        newGifButton.disabled = false;
+                        newGifButton.textContent = 'New Gif';
+                    });
+            };
+
+            const handleSearch = () => {
+                fetchNewGif(searchInput.value.trim());
+            };
+
+            newGifButton.addEventListener('click', handleSearch);
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+        </script>
+    </body>
+</html>
