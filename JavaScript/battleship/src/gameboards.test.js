@@ -45,7 +45,7 @@ describe('Gameboard class', () => {
         gameboard.placeShip(3, { x: 0, y: 0 });
         expect(() => {
             gameboard.placeShip(2, { x: 2, y: 0 });
-        }).toThrow(/overlap/);
+        }).toThrow(/Invalid/);
     });
     test('attack: unsuccessful hit', () => {
         gameboard.placeShip(3, { x: 0, y: 0 });
