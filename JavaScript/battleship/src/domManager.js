@@ -79,6 +79,85 @@ const DOMManager = {
         cell.classList.toggle('miss', !hasShip && wasAttacked);
     },
 
+    updateDockOrientation(axis) {
+        const bodies = document.querySelectorAll('.ship-body');
+        bodies.forEach((body) => {
+            if (axis === 'y') {
+                body.classList.remove('horizontal');
+                body.classList.add('vertical');
+            } else {
+                body.classList.remove('vertical');
+                body.classList.add('horizontal');
+            }
+        });
+    },
+
+    highlightShipPlacement(boardDiv, length, startCoord, orientation, isValid) {
+        this.clearPlacementHighlight(boardDiv);
+        const { x, y } = startCoord;
+
+        for (let i = 0; i < length; i++) {
+            const hx = orientation === 'horizontal' ? x + i : x;
+            const hy = orientation === 'horizontal' ? y : y + i;
+
+            const cell = boardDiv.querySelector(
+                `[data-x="${hx}"][data-y="${hy}"]`
+            );
+            if (cell) {
+                cell.classList.add(isValid ? 'hover-valid' : 'hover-invalid');
+            }
+        }
+    },
+
+    clearPlacementHighlight(boardDiv) {
+        const cells = boardDiv.querySelectorAll('.cell');
+        cells.forEach((cell) =>
+            cell.classList.remove('hover-valid', 'hover-invalid')
+        );
+    },
+
+    toggleShipBodies() {
+        const bodies = document.querySelectorAll('.ship-body');
+        bodies.forEach((body) => {
+            // body.classList.remove('horizontal', 'vertical');
+            body.classList.toggle('horizontal');
+            body.classList.toggle('vertical');
+        });
+    },
+
+    hideShipDock() {
+        document.querySelector('.ships-container').classList.add('hidden');
+    },
+
+    showShipDock() {
+        document.querySelector('.ships-container').classList.remove('hidden');
+    },
+
+    resetShipDock() {
+        document
+            .querySelectorAll('.ship-wrapper')
+            .forEach((wrapper) => wrapper.classList.remove('hidden'));
+    },
+
+    resetDock() {
+        document
+            .querySelectorAll('.ship-wrapper')
+            .forEach((el) => el.classList.remove('hidden'));
+        document.getElementById('rotate-btn').remove('hidden');
+    },
+
+    updateControls({
+        startDisabled,
+        randomizedDisabled,
+        clearDisabled,
+        rotateDisabled,
+    }) {
+        document.getElementById('start-game-btn').disabled = startDisabled;
+        document.getElementById('randomize-btn').disabled = randomizedDisabled;
+        document.getElementById('clear-btn').disabled = clearDisabled;
+        document.getElementById('rotate-btn').disabled = rotateDisabled;
+    },
+
     showGameMessage(text) {
         const modal = document.getElementById('game-message');
         const msgText = document.getElementById('game-message-text');

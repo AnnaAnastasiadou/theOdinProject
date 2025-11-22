@@ -5,13 +5,86 @@ export default class Gameboard {
         this.boardSize = boardSize;
         this.ships = [];
         this.missedAttacks = [];
-        this.attackReceived = new Set();
+        this.attackReceived = [];
     }
 
     resetBoard() {
         this.ships = [];
         this.missedAttacks = [];
-        this.attackReceived.clear();
+        this.attackReceived = [];
+    }
+
+    clearShips() {
+        this.ships = [];
+    }
+
+    canPlaceShip(length, startCoord, isVertical = false) {
+        const { x, y } = startCoord;
+
+        // boundary check
+        if (x < 0 || y < 0 || x >= 10 || y >= 10) return false;
+        if (isVertical === false) {
+            if (x + length > this.boardSize) return false;
+        } else {
+            if (y + length > this.boardSize) return false;
+        }
+
+        // overlap check against existing ships
+        for (let i = 0; i < length; i++) {
+            const checkX = isVertical ? x : x + i;
+            const checkY = isVertical ? y + i : y;
+
+            for (const ship of this.ships) {
+                for (const pos of ship.positions) {
+                    if (pos.x === checkX && pos.y === checkY) return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    placeShip(length, startCoord, isVertical = false) {
+        if (!this.canPlaceShip(length, startCoord, isVertical))
+            throw new Error('Invalid placement');
+
+        const ship = new Ship(length);
+        const positions = [];
+
+        for (let i = 0; i < length; i++) {
+            const x = startCoord.x + (isVertical ? 0 : i);
+            const y = startCoord.y + (isVertical ? i : 0);
+            positions.push({ x, y });
+        }
+
+        this.ships.push({
+            instance: ship,
+            positions,
+        });
+        return ship;
+
+        // const ship = new Ship(length);
+        // const positions = [];
+        // for (let i = 0; i < length; i++) {
+        //     const x = startCoord.x + (isVertical ? 0 : i);
+        //     const y = startCoord.y + (isVertical ? i : 0);
+        //     if (x > this.boardSize - 1 || y > this.boardSize - 1) {
+        //         throw new Error("Ship doesn't fit");
+        //     }
+        //     positions.push({ x, y });
+        // }
+        // // Prevent ship overlap
+        // for (const existingShip of this.ships) {
+        //     for (const pos of existingShip.positions) {
+        //         if (positions.some((p) => p.x === pos.x && p.y === pos.y)) {
+        //             throw new Error('Ships cannot overlap');
+        //         }
+        //     }
+        // }
+        // this.ships.push({
+        //     instance: ship,
+        //     positions,
+        // });
+        // return ship;
     }
 
     placeShipsRandomly() {
@@ -34,38 +107,8 @@ export default class Gameboard {
         });
     }
 
-    placeShip(length, startCoord, isVertical = false) {
-        const ship = new Ship(length);
-        const positions = [];
-
-        for (let i = 0; i < length; i++) {
-            const x = startCoord.x + (isVertical ? 0 : i);
-            const y = startCoord.y + (isVertical ? i : 0);
-            if (x > this.boardSize - 1 || y > this.boardSize - 1) {
-                throw new Error("Ship doesn't fit");
-            }
-            positions.push({ x, y });
-        }
-
-        // Prevent ship overlap
-        for (const existingShip of this.ships) {
-            for (const pos of existingShip.positions) {
-                if (positions.some((p) => p.x === pos.x && p.y === pos.y)) {
-                    throw new Error('Ships cannot overlap');
-                }
-            }
-        }
-
-        this.ships.push({
-            instance: ship,
-            positions,
-        });
-
-        return ship;
-    }
-
     receiveAttack(coordinates) {
-        this.attackReceived.add(coordinates);
+        this.attackReceived.push(coordinates);
         let hitShip = false;
         for (const ship of this.ships) {
             for (const pos of ship.positions) {
@@ -88,22 +131,17 @@ export default class Gameboard {
         };
     }
 
+    hasAtLeastOneShip() {
+        return this.ships.length > 0;
+    }
+
+    hasAllShipsPlaced() {
+        return this.ships.length === 5;
+    }
+
     allShipsSunk() {
         return this.ships.every((ship) => ship.instance.isSunk());
     }
-
-    isValidCoordinate(x, y) {
-        return x >= 0 && x <= this.boardSize && y >= 0 && y <= this.boardSize;
-    }
-
-    // Place
-    // placeDefaultShips() {
-    //     this.placeShip(5, { x: 0, y: 0 }, false);
-    //     this.placeShip(4, { x: 2, y: 2 }, true);
-    //     this.placeShip(3, { x: 5, y: 5 }, false);
-    //     this.placeShip(3, { x: 7, y: 1 }, true);
-    //     this.placeShip(2, { x: 8, y: 7 }, false);
-    // }
 
     getCellData(cellCoord) {
         const { x, y } = cellCoord;
