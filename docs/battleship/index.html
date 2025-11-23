@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Battleship</title>
+    <script defer src="main.js"></script></head>
+    <body>
+        <div id="game-container">
+            <h1>Battleship</h1>
+            <div class="controls">
+                <div>
+                    <button id="rotate-btn">Rotate Ship</button>
+                    <button id="clear-btn">Clear Grid</button>
+                </div>
+                <div class="ships-container">
+                    <div class="ship-wrapper">
+                        <h3>Carrier</h3>
+                        <div
+                            class="ship-body horizontal"
+                            draggable="true"
+                            data-length="5"
+                            id="carrier"
+                        >
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                        </div>
+                    </div>
+
+                    <div class="ship-wrapper">
+                        <h3>Battleship</h3>
+                        <div
+                            class="ship-body horizontal"
+                            draggable="true"
+                            data-length="4"
+                            id="battleship"
+                        >
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                        </div>
+                    </div>
+
+                    <div class="ship-wrapper">
+                        <h3>Cruiser</h3>
+                        <div
+                            class="ship-body horizontal"
+                            draggable="true"
+                            data-length="3"
+                            id="cruiser"
+                        >
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                        </div>
+                    </div>
+                    <div class="ship-wrapper">
+                        <h3>Submarine</h3>
+                        <div
+                            class="ship-body horizontal"
+                            draggable="true"
+                            data-length="3"
+                            id="submarine"
+                        >
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                        </div>
+                    </div>
+                    <div class="ship-wrapper">
+                        <h3>Destroyer</h3>
+                        <div
+                            class="ship-body horizontal"
+                            draggable="true"
+                            data-length="2"
+                            id="destroyer"
+                        >
+                            <div class="ship-cell"></div>
+                            <div class="ship-cell"></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button id="randomize-btn">Randomize Ships</button>
+                    <button id="start-game-btn">Start Game</button>
+                </div>
+            </div>
+            <div class="boards-container">
+                <div class="board-wrapper">
+                    <h2>Your Grid</h2>
+                    <div id="player1-board" class="board"></div>
+                </div>
+                <div class="board-wrapper">
+                    <h2>Computer's Grid</h2>
+                    <div id="player2-board" class="board"></div>
+                </div>
+            </div>
+            <div id="game-message" class="hidden">
+                <div id="game-message-box">
+                    <p id="game-message-text"></p>
+                    <button id="restart-game-btn">Restart Game</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
