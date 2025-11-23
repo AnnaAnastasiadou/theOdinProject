@@ -316,3 +316,23 @@ h1 {
         opacity: 1;
     }
 }
+
+@media screen and (max-width: 480px) {
+    html {
+        font-size: 14px;
+    }
+
+    .board-wrapper {
+        padding: 0.5rem 0;
+        gap: 0.5rem;
+    }
+
+    .board-wrapper h2 {
+        font-size: 1.3rem;
+        padding: 0.5rem;
+    }
+
+    .board {
+        transform: scale(0.9);
+    }
+}
