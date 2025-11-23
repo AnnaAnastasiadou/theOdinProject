@@ -4,7 +4,7 @@
     "main": "main.js",
     "scripts": {
         "test": "jest",
-        "build": "webpack --config webpack.config.js",
+        "build": "NODE_ENV=production webpack --config webpack.config.js",
         "start": "webpack serve --open",
         "watch": "jest --watch \\.test\\.js$",
         "dev": "concurrently \"npm run start\" \"npm run watch\""
@@ -21,6 +21,7 @@
         "css-loader": "^7.1.2",
         "html-webpack-plugin": "^5.6.4",
         "jest": "^30.2.0",
+        "mini-css-extract-plugin": "^2.9.4",
         "style-loader": "^4.0.0",
         "webpack": "^5.102.1",
         "webpack-cli": "^6.0.1",
